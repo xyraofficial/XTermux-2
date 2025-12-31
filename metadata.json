@@ -1,0 +1,9 @@
+{
+  "name": "XTermux – TermuxToolBox 2",
+  "description": "A comprehensive documentation and setup guide for Termux users. Features package lists, setup guides, and troubleshooting tips in a clean, iOS-style interface.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

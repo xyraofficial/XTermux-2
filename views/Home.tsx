@@ -1,0 +1,168 @@
+
+import React, { useState, useEffect } from 'react';
+import { Bot, RefreshCw, FolderCog, Trash2, Zap, Hexagon, Terminal, PenTool, Copy, Package, BookOpen } from 'lucide-react';
+import { showToast } from '../components/Toast';
+
+interface HomeProps {
+  onNavigate: (view: string) => void;
+  initialCommand?: {label: string, cmd: string} | null;
+  onCommandStarted?: () => void;
+}
+
+const HISTORY_KEY = 'xtermux_exec_history';
+
+const QUICK_ACTIONS = [
+    { label: 'Update', cmd: 'pkg update && pkg upgrade', icon: <RefreshCw size={20} />, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
+    { label: 'Storage', cmd: 'termux-setup-storage', icon: <FolderCog size={20} />, color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/20' },
+    { label: 'Clear', cmd: 'clear', icon: <Trash2 size={20} />, color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' },
+    { label: 'My IP', cmd: 'ifconfig', icon: <Zap size={20} />, color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20' },
+];
+
+const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarted }) => {
+  const [sysStats, setSysStats] = useState({ cpu: 12, ram: 42 });
+  const [history] = useState<string[]>(() => {
+    const saved = localStorage.getItem(HISTORY_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setSysStats({
+            cpu: Math.floor(Math.random() * 25) + 5,
+            ram: Math.floor(Math.random() * 5) + 38,
+        });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="p-5 space-y-6 pb-32 md:px-8 lg:px-12">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-black text-white tracking-tighter uppercase md:text-4xl">XTermux</h2>
+          <div className="flex items-center gap-1.5 mt-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">System Online</span>
+          </div>
+        </div>
+        <div onClick={() => onNavigate('ABOUT')} className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-lg cursor-pointer active:scale-90 transition-transform md:w-14 md:h-14">
+           <Hexagon size={24} className="text-accent md:w-7 md:h-7" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-2">
+          <MetricItem label="CPU Usage" value={`${sysStats.cpu}%`} color="text-accent" progress={sysStats.cpu} />
+          <MetricItem label="RAM Usage" value={`${sysStats.ram}%`} color="text-blue-400" progress={sysStats.ram} />
+      </div>
+
+      {/* Main Feature Grid */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {/* AI Chat Card */}
+          <button onClick={() => onNavigate('AI_CHAT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+              <Bot size={120} className="absolute -right-4 -bottom-4 text-accent opacity-5 group-hover:opacity-10 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 bg-accent rounded-xl"><Bot size={20} className="text-black" /></div>
+                  <span className="text-[10px] font-black text-accent uppercase tracking-widest">X-Vision AI</span>
+                </div>
+                <h3 className="text-xl font-black text-white mb-1">AI Intelligence</h3>
+                <p className="text-[12px] text-zinc-500">Analyze errors and chat with neural AI.</p>
+              </div>
+          </button>
+
+          {/* Tools Registry Card */}
+          <button onClick={() => onNavigate('PACKAGES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+              <Package size={120} className="absolute -right-4 -bottom-4 text-purple-500 opacity-5 group-hover:opacity-10 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 bg-purple-500 rounded-xl"><Package size={20} className="text-black" /></div>
+                  <span className="text-[10px] font-black text-purple-500 uppercase tracking-widest">Registry</span>
+                </div>
+                <h3 className="text-xl font-black text-white mb-1">Tools Library</h3>
+                <p className="text-[12px] text-zinc-500">Search 2000+ packages and installations.</p>
+              </div>
+          </button>
+
+          {/* Guides Card */}
+          <button onClick={() => onNavigate('GUIDES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+              <BookOpen size={120} className="absolute -right-4 -bottom-4 text-orange-400 opacity-5 group-hover:opacity-10 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 bg-orange-500 rounded-xl"><BookOpen size={20} className="text-black" /></div>
+                  <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">Tutorials</span>
+                </div>
+                <h3 className="text-xl font-black text-white mb-1">User Guides</h3>
+                <p className="text-[12px] text-zinc-500">Step-by-step Termux configurations.</p>
+              </div>
+          </button>
+
+          {/* GitHub Tools Card */}
+          <button onClick={() => onNavigate('SCRIPTS')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+              <Terminal size={120} className="absolute -right-4 -bottom-4 text-green-500 opacity-5 group-hover:opacity-10 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 bg-green-500 rounded-xl"><Terminal size={20} className="text-black" /></div>
+                  <span className="text-[10px] font-black text-green-500 uppercase tracking-widest">Repository</span>
+                </div>
+                <h3 className="text-xl font-black text-white mb-1">GitHub Scripts</h3>
+                <p className="text-[12px] text-zinc-500">Install specialized tools and scripts.</p>
+              </div>
+          </button>
+
+          {/* Architect Card */}
+          <button onClick={() => onNavigate('ARCHITECT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+              <PenTool size={120} className="absolute -right-4 -bottom-4 text-blue-400 opacity-5 group-hover:opacity-10 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 bg-blue-500 rounded-xl"><PenTool size={20} className="text-black" /></div>
+                  <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Forge</span>
+                </div>
+                <h3 className="text-xl font-black text-white mb-1">X-Architect</h3>
+                <p className="text-[12px] text-zinc-500">Generate complex script blueprints.</p>
+              </div>
+          </button>
+      </div>
+
+      <div className="grid grid-cols-4 gap-3 lg:gap-4">
+        {QUICK_ACTIONS.map((action, idx) => (
+            <button key={idx} className="flex flex-col items-center gap-2 p-3 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:bg-zinc-900 transition-all active:scale-95 lg:p-5">
+                <div className={`p-2 rounded-xl ${action.bg}`}>{action.icon}</div>
+                <span className="text-[10px] font-bold text-zinc-500 lg:text-[11px]">{action.label}</span>
+            </button>
+        ))}
+      </div>
+
+      <div className="bg-zinc-900/40 border border-zinc-800 rounded-[2rem] p-5 md:p-8">
+          <div className="flex items-center justify-between mb-4">
+              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Command History</span>
+          </div>
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {history.length > 0 ? history.slice(0, 4).map((cmd, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-black/30 rounded-xl border border-zinc-800/50 group">
+                      <code className="text-[11px] text-zinc-400 truncate flex-1 font-mono">{cmd}</code>
+                      <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Copied', 'success'); }} className="p-1.5 text-zinc-600 hover:text-accent opacity-0 group-hover:opacity-100 transition-all">
+                          <Copy size={14} />
+                      </button>
+                  </div>
+              )) : (
+                  <div className="py-2 text-center text-[10px] text-zinc-600 font-bold uppercase md:col-span-2">No recent activity</div>
+              )}
+          </div>
+      </div>
+    </div>
+  );
+};
+
+const MetricItem: React.FC<{label: string, value: string, color: string, progress: number}> = ({ label, value, color, progress }) => (
+    <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl space-y-3 shadow-xl md:p-6">
+        <div className="flex items-center justify-between">
+            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">{label}</span>
+            <span className={`text-xs font-mono font-bold ${color}`}>{value}</span>
+        </div>
+        <div className="w-full h-1.5 bg-black rounded-full overflow-hidden">
+            <div className={`h-full transition-all duration-1000 ease-out ${color.replace('text', 'bg')}`} style={{ width: `${Math.min(100, progress)}%` }} />
+        </div>
+    </div>
+);
+
+export default Home;
