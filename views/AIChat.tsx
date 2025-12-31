@@ -1,11 +1,16 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, Mic, MicOff, Eraser, X, Plus, Sparkles, Volume2, VolumeX, Copy, ThumbsUp, ThumbsDown, Share2, RotateCcw, Check, Globe, ExternalLink, ShieldCheck, Cpu } from 'lucide-react';
-import { GoogleGenAI, GoogleGenAIOptions } from "@google/genai";
+import Groq from 'groq-sdk';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
+
+const groq = new Groq({
+  apiKey: "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",
+  dangerouslyAllowBrowser: true
+});
 
 interface GroundingSource {
   title: string;
@@ -88,47 +93,35 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const genAI = new GoogleGenAI((process.env as any).API_KEY || '');
-      const model = (genAI as any).getGenerativeModel({ 
-        model: 'gemini-1.5-flash',
-        systemInstruction: `Anda adalah "X-Intelligence". Berikan jawaban teknis, singkat, dan gunakan Markdown.`,
-      });
-      const parts: any[] = [{ text: userMessage }];
-      if (currentImage) {
-        parts.push({ inlineData: { mimeType: 'image/jpeg', data: currentImage.split(',')[1] } });
-      }
-
-      // Pesan model dimulai dengan content kosong, kursor tidak akan muncul jika content kosong
+      // Create assistant message with streaming state
       setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
 
-      const streamResult = await model.generateContentStream({
-        contents: [{ role: 'user', parts }],
-        generationConfig: {
-          maxOutputTokens: 2000,
-        },
+      const stream = await groq.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown.",
+          },
+          {
+            role: "user",
+            content: userMessage,
+          },
+        ],
+        model: "llama-3.3-70b-versatile",
+        stream: true,
       });
 
       let fullContent = '';
-      let sources: GroundingSource[] = [];
 
-      for await (const chunk of streamResult) {
-        const chunkText = chunk.text;
+      for await (const chunk of stream) {
+        const chunkText = chunk.choices[0]?.delta?.content || '';
         if (chunkText) {
           fullContent += chunkText;
           
-          const grounding = chunk.candidates?.[0]?.groundingMetadata?.groundingChunks;
-          if (grounding) {
-            grounding.forEach((c: any) => {
-              if (c.web && !sources.find(s => s.uri === c.web.uri)) {
-                sources.push({ title: c.web.title, uri: c.web.uri });
-              }
-            });
-          }
-
           setMessages(prev => {
             const last = prev[prev.length - 1];
             if (last.role === 'model' && last.isStreaming) {
-              return [...prev.slice(0, -1), { ...last, content: fullContent, sources: sources.length > 0 ? sources : undefined }];
+              return [...prev.slice(0, -1), { ...last, content: fullContent }];
             }
             return prev;
           });
