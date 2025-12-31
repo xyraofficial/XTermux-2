@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, Mic, MicOff, Eraser, X, Plus, Sparkles, Volume2, VolumeX, Copy, ThumbsUp, ThumbsDown, Share2, RotateCcw, Check, Globe, ExternalLink, ShieldCheck, Cpu } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, GoogleGenAIOptions } from "@google/genai";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
@@ -88,8 +88,8 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const genAI = new GoogleGenAI(process.env.API_KEY || '');
-      const model = genAI.getGenerativeModel({ 
+      const genAI = new GoogleGenAI((process.env as any).API_KEY || '');
+      const model = (genAI as any).getGenerativeModel({ 
         model: 'gemini-1.5-flash',
         systemInstruction: `Anda adalah "X-Intelligence". Berikan jawaban teknis, singkat, dan gunakan Markdown.`,
       });
