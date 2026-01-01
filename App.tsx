@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Home, Package, BookOpen, Bot, User, Palette, PenTool, Terminal, Cpu } from 'lucide-react';
 import { ViewState } from './types';
@@ -10,9 +11,6 @@ import AboutView from './views/About';
 import AIChatView from './views/AIChat';
 import ScriptsView from './views/Scripts';
 import ArchitectView from './views/Architect';
-import LoginView from './views/Login';
-
-import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Legal Views
 import HelpView from './views/legal/Help';
@@ -28,7 +26,7 @@ const ACCENT_COLORS = [
   { name: 'Hacker Red', hex: '#ef4444' },
 ];
 
-const AppContent: React.FC = () => {
+const App: React.FC = () => {
   const getInitialView = (): ViewState => {
     const path = window.location.pathname.toLowerCase();
     if (path === '/help') return ViewState.HELP;
@@ -47,8 +45,6 @@ const AppContent: React.FC = () => {
   const [showThemePicker, setShowThemePicker] = useState(false);
   const [pendingCommand, setPendingCommand] = useState<{label: string, cmd: string} | null>(null);
   const [savedCount, setSavedCount] = useState(0);
-  
-  const { user, loading } = useAuth();
 
   useEffect(() => {
     const updateSavedCount = () => {
@@ -83,6 +79,15 @@ const AppContent: React.FC = () => {
     localStorage.setItem('xtermux_accent', accentColor);
   }, [accentColor]);
 
+  useEffect(() => {
+    const handleRunCommand = (e: any) => {
+        setPendingCommand({ label: 'Execute', cmd: e.detail.cmd });
+        navigate(ViewState.HOME);
+    };
+    // window.addEventListener('run-termux-cmd', handleRunCommand);
+    return () => { /* window.removeEventListener('run-termux-cmd', handleRunCommand); */ };
+  }, []);
+
   const navigate = (view: ViewState) => {
     setCurrentView(view);
     let path = '/';
@@ -113,15 +118,6 @@ const AppContent: React.FC = () => {
   };
 
   const renderContent = () => {
-    if (loading) return (
-      <div className="h-full flex flex-col items-center justify-center">
-        <div className="w-12 h-12 border-4 border-accent/20 border-t-accent rounded-full animate-spin mb-4" />
-        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Synching Neural Link</p>
-      </div>
-    );
-
-    if (!user) return <LoginView />;
-
     const viewProps = { className: "h-full animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out" };
     switch (currentView) {
       case ViewState.HOME: return <div {...viewProps}><HomeView onNavigate={(v) => navigate(ViewState[v as keyof typeof ViewState])} initialCommand={pendingCommand} onCommandStarted={() => setPendingCommand(null)} /></div>;
@@ -187,11 +183,11 @@ const AppContent: React.FC = () => {
         </div>
       )}
 
-      <main className={`flex-1 max-w-5xl mx-auto w-full relative ${[ViewState.AI_CHAT, ViewState.ARCHITECT, ViewState.ABOUT].includes(currentView) || !user ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}>
+      <main className={`flex-1 max-w-5xl mx-auto w-full relative ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}>
         {renderContent()}
       </main>
 
-      {!isLegalView && user && (
+      {!isLegalView && (
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-900 pb-[env(safe-area-inset-bottom)]">
             <div className="max-w-5xl mx-auto flex items-center justify-around h-[70px] px-2">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={20} />} label="Home" />
@@ -219,12 +215,6 @@ const AppContent: React.FC = () => {
     </div>
   );
 };
-
-const App: React.FC = () => (
-  <AuthProvider>
-    <AppContent />
-  </AuthProvider>
-);
 
 const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
   <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
