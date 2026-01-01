@@ -2657,323 +2657,40 @@ export const PACKAGES: PackageItem[] = [
 export const GUIDES: GuideItem[] = [
   {
     id: 'setup-1',
-    title: 'Initial Setup',
-    description: 'Essential first steps after installing Termux.',
+    title: 'Termux Basic Setup',
+    description: 'Essential first steps to configure your Termux environment safely.',
     steps: [
       {
-        title: 'Update Repositories',
-        content: 'Before installing anything, it is best practice to update the package lists and upgrade existing packages to their latest versions.',
+        title: 'Update Packages',
+        content: 'Keep your system up to date with core security and stability updates. This ensures all tools run correctly.',
         command: 'pkg update && pkg upgrade'
       },
       {
-        title: 'Grant Storage Permissions',
-        content: 'Termux needs permission to access your internal shared storage to save or read files outside its sandbox.',
+        title: 'Setup Storage',
+        content: 'Grant Termux permission to access your phone storage safely so you can manage your files.',
         command: 'termux-setup-storage'
+      },
+      {
+        title: 'Install Essential Tools',
+        content: 'Install core utilities like git, curl, and wget needed for downloading most scripts.',
+        command: 'pkg install git curl wget -y'
       }
     ]
   },
   {
-    id: 'setup-2',
-    title: 'Development Environment',
-    description: 'Setting up a basic coding environment.',
+    id: 'perf-1',
+    title: 'Performance & Fixes',
+    description: 'Safe optimizations and common error fixes for modern Android.',
     steps: [
       {
-        title: 'Install Core Tools',
-        content: 'Install Git and a text editor (Nano is beginner-friendly).',
-        command: 'pkg install git nano'
+        title: 'Fix Signal 9 (Android 12+)',
+        content: 'Prevent Android from killing Termux processes in the background automatically.',
+        command: 'pkg install termux-am && termux-am setup-signal-9'
       },
       {
-        title: 'Verify Installation',
-        content: 'Check versions to ensure successful installation.',
-        command: 'git --version && nano --version'
-      }
-    ]
-  },
-  {
-    id: 'android-structure',
-    title: 'Android Project Structure',
-    description: 'Comprehensive directory structure of a standard Android Studio project.',
-    steps: [
-      {
-        title: 'Project Root Directory',
-        content: 'The top-level structure containing project-wide configuration.',
-        command: `MyAndroidApp/
-├── .gradle/            # Gradle caching system
-├── .idea/              # IntelliJ/Android Studio config
-├── app/                # Main Application Module (Where code lives)
-├── build.gradle        # Top-level build configuration (Project)
-├── settings.gradle     # Defines which modules are included (e.g., ':app')
-├── gradle.properties   # Project-wide JVM args and properties
-├── local.properties    # SDK Location (Do not commit to Git)
-└── gradle/
-    └── wrapper/        # Gradle Wrapper files (gradle-wrapper.jar)`
-      },
-      {
-        title: 'The App Module',
-        content: 'This is where your actual source code resides.',
-        command: `app/
-├── build.gradle        # Module-level build config (Dependencies, SDK versions)
-├── proguard-rules.pro  # Rules for code shrinking/obfuscation
-├── libs/               # Local .jar/.aar libraries
-└── src/
-    ├── main/           # Main source set
-    │   ├── AndroidManifest.xml  # App Metadata (Permissions, Activities)
-    │   ├── java/       # Java/Kotlin Source Code
-    │   │   └── com.example.myapp/
-    │   │       ├── MainActivity.kt
-    │   │       └── ui/
-    │   └── res/        # Static Resources (UI)
-    └── test/           # Unit tests
-    └── androidTest/    # Instrumentation tests (UI tests)`
-      },
-      {
-        title: 'Resources (res/)',
-        content: 'All non-code assets like layouts, images, and strings.',
-        command: `res/
-├── drawable/           # Bitmaps (png, jpg) and Vector Drawables (.xml)
-├── layout/             # UI Layouts (activity_main.xml, fragment_home.xml)
-├── mipmap/             # App Launcher Icons (hdpi, xhdpi, etc.)
-├── values/             # Simple values
-│   ├── colors.xml      # Color definitions
-│   ├── strings.xml     # Text strings (Localization)
-│   ├── themes.xml      # App themes and styles
-│   └── dimens.xml      # Dimensions (dp/sp values)
-└── xml/                # Other XML configs (Network security, File paths)`
-      },
-      {
-        title: 'Root Access Note',
-        content: 'While exploring Android project structures is safe, modifying system-level application files on a live device usually requires **Root Access**. Use `tsu` (Termux SU) if you need to access protected directories like `/data/data/`.',
-        command: 'pkg install tsu'
-      }
-    ]
-  },
-  {
-    id: 'web-server',
-    title: 'Web Server Setup',
-    description: 'Host a website directly from your Android device.',
-    steps: [
-      {
-        title: 'Install Apache2',
-        content: 'Apache is a reliable and popular web server.',
-        command: 'pkg install apache2'
-      },
-      {
-        title: 'Start the Server',
-        content: 'Start the server daemon. It runs on port 8080 by default in Termux.',
-        command: 'apachectl start'
-      },
-      {
-        title: 'Test Localhost',
-        content: 'Open your browser and navigate to http://localhost:8080 to see the "It Works!" page.',
-      },
-      {
-        title: 'Locate Web Files',
-        content: 'Your HTML files should go into the following directory:',
-        command: 'cd $PREFIX/share/apache2/default-site/htdocs'
-      }
-    ]
-  },
-  {
-    id: 'ssh-server',
-    title: 'Remote Access (SSH)',
-    description: 'Control your Termux from your PC via WiFi.',
-    steps: [
-      {
-        title: 'Install OpenSSH',
-        content: 'Install the OpenSSH package which includes both client and server.',
-        command: 'pkg install openssh'
-      },
-      {
-        title: 'Set Password',
-        content: 'You need a password to log in remotely. Run this and follow the prompts.',
-        command: 'passwd'
-      },
-      {
-        title: 'Find Your IP',
-        content: 'Find your device IP address (look for wlan0).',
-        command: 'ifconfig'
-      },
-      {
-        title: 'Start Daemon',
-        content: 'Start the SSH daemon. It runs on port 8022 by default.',
-        command: 'sshd'
-      },
-      {
-        title: 'Connect from PC',
-        content: 'On your PC terminal, run: ssh [your-ip] -p 8022',
-        command: 'ssh 192.168.1.X -p 8022'
-      }
-    ]
-  },
-  {
-    id: 'proot-linux',
-    title: 'Linux Containers (PRoot)',
-    description: 'Run full Linux distributions (Ubuntu, Debian, etc) without root. The Docker alternative.',
-    steps: [
-      {
-        title: 'Install PRoot Distro',
-        content: 'PRoot Distro provides an easy way to manage Linux installations.',
-        command: 'pkg install proot-distro'
-      },
-      {
-        title: 'List Available Distros',
-        content: 'See what distributions are available for installation.',
-        command: 'proot-distro list'
-      },
-      {
-        title: 'Install Ubuntu',
-        content: 'Download and install Ubuntu filesystem.',
-        command: 'proot-distro install ubuntu'
-      },
-      {
-        title: 'Login',
-        content: 'Log into your new Ubuntu container.',
-        command: 'proot-distro login ubuntu'
-      }
-    ]
-  },
-  {
-    id: 'gui-desktop',
-    title: 'Desktop GUI (XFCE)',
-    description: 'Run a graphical desktop environment and view it via VNC.',
-    steps: [
-      {
-        title: 'Install X11 Repo',
-        content: 'Enable the X11 repository first.',
-        command: 'pkg install x11-repo'
-      },
-      {
-        title: 'Install XFCE & VNC',
-        content: 'Install the desktop environment and the VNC server.',
-        command: 'pkg install xfce4 tigervnc'
-      },
-      {
-        title: 'Configure Password',
-        content: 'Run the server once to set your connection password.',
-        command: 'vncserver'
-      },
-      {
-        title: 'Configure Startup',
-        content: 'Stop the server, then tell it to launch XFCE when it starts.',
-        command: 'vncserver -kill :1 && echo "startxfce4 &" > ~/.vnc/xstartup'
-      },
-      {
-        title: 'Start Server',
-        content: 'Start the VNC server again. Connect using a VNC Viewer app at 127.0.0.1:5901',
-        command: 'vncserver'
-      }
-    ]
-  },
-  {
-    id: 'git-workflow',
-    title: 'Basic Git Workflow',
-    description: 'Essential commands for version control.',
-    steps: [
-      {
-        title: 'Configure Identity',
-        content: 'Tell Git who you are (do this once).',
-        command: 'git config --global user.name "Your Name" && git config --global user.email "you@example.com"'
-      },
-      {
-        title: 'Clone Repository',
-        content: 'Download a project from GitHub.',
-        command: 'git clone https://github.com/username/repo.git'
-      },
-      {
-        title: 'Stage & Commit',
-        content: 'Track changes and save them.',
-        command: 'git add . && git commit -m "My first commit"'
-      },
-      {
-        title: 'Push Changes',
-        content: 'Upload your commits to the remote server.',
-        command: 'git push origin main'
-      }
-    ]
-  },
-  {
-    id: 'python-venv',
-    title: 'Python Environment',
-    description: 'Best practices for Python development using virtual environments.',
-    steps: [
-      {
-        title: 'Install Python',
-        content: 'Ensure Python is installed.',
-        command: 'pkg install python'
-      },
-      {
-        title: 'Create Virtual Env',
-        content: 'Create a localized environment named "myenv" to avoid cluttering global packages.',
-        command: 'python -m venv myenv'
-      },
-      {
-        title: 'Activate Environment',
-        content: 'Enter the environment. Your prompt should change.',
-        command: 'source myenv/bin/activate'
-      },
-      {
-        title: 'Install Packages',
-        content: 'Install libraries safely inside the environment.',
-        command: 'pip install requests flask'
-      }
-    ]
-  },
-  {
-    id: 'xtermux-structure',
-    title: 'XTermux Structure (Android)',
-    description: 'Architecture overview of the XTermux application for mobile designers.',
-    steps: [
-      {
-        title: 'Tech Stack',
-        content: 'XTermux is built using modern web technologies optimized for mobile usage via Termux or browser.',
-        command: `Frontend Framework: React 18
-Build Tool: Vite
-Styling: Tailwind CSS
-Icons: Lucide React
-AI Engine: Google Gemini SDK`
-      },
-      {
-        title: 'Directory Structure',
-        content: 'The project follows a standard React application structure.',
-        command: `XTermux/
-├── src/
-│   ├── components/    // Reusable UI blocks (Card, Header)
-│   ├── views/         // Main pages (Home, Packages, AI)
-│   ├── constants.ts   // Data (Packages list, Scripts list)
-│   ├── types.ts       // TypeScript interfaces
-│   ├── App.tsx        // Main Router/Layout
-│   └── index.css      // Tailwind imports
-├── public/            // Static assets
-├── index.html         // Entry point
-├── vite.config.ts     // Build configuration
-└── package.json       // Dependencies`
-      }
-    ]
-  },
-  {
-    id: 'mobile-ui-ux',
-    title: 'Mobile UI/UX Principles',
-    description: 'Guidelines for designing mobile-first terminal interfaces.',
-    steps: [
-      {
-        title: 'Touch Targets',
-        content: 'Ensure all interactive elements are at least 44x44px for easy tapping.',
-        command: `// Tailwind class for touch target
-className="min-h-[44px] min-w-[44px] flex items-center justify-center"`
-      },
-      {
-        title: 'Dark Mode First',
-        content: 'For developer tools, dark mode reduces eye strain. Use slate/zinc palettes.',
-        command: `background: #09090b (Zinc 950)
-surface: #18181b (Zinc 900)
-border: #27272a (Zinc 800)`
-      },
-      {
-        title: 'Visual Hierarchy',
-        content: 'Use font weight and color opacity to denote importance.',
-        command: `Primary: Text-White Font-Bold
-Secondary: Text-Zinc-400 Font-Medium
-Tertiary: Text-Zinc-600 Text-XS Uppercase`
+        title: 'Optimize Repositories',
+        content: 'Choose the fastest mirror for your location to speed up your package downloads.',
+        command: 'termux-change-repo'
       }
     ]
   }
