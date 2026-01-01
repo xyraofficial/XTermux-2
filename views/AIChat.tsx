@@ -8,7 +8,7 @@ import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 
 const groq = new Groq({
-  apiKey: (process.env as any).GROQ_API_KEY || "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",
+  apiKey: "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",
   dangerouslyAllowBrowser: true
 });
 
