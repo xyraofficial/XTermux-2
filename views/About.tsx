@@ -99,47 +99,10 @@ const About: React.FC = () => {
         </div>
       </div>
 
-      {/* Preferences Section */}
       <div className="max-w-2xl mx-auto space-y-4">
-        <h3 className="text-xs font-black text-zinc-600 uppercase tracking-widest px-2">System Preferences</h3>
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-lg">
-          <div className="divide-y divide-zinc-800">
-            <div className="p-4 flex items-center justify-between hover:bg-zinc-800/30 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
-                  <Bell size={18} />
-                </div>
-                <div>
-                  <p className="text-sm font-bold">Notifications</p>
-                  <p className="text-[10px] text-zinc-500 uppercase font-bold">Show alerts</p>
-                </div>
-              </div>
-              <div className="w-10 h-6 bg-zinc-800 rounded-full relative cursor-pointer group">
-                <div className="absolute left-1 top-1 w-4 h-4 bg-zinc-600 rounded-full group-hover:scale-110 transition-all" />
-              </div>
-            </div>
-            
-            <div className="p-4 flex items-center justify-between hover:bg-zinc-800/30 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
-                  <Moon size={18} />
-                </div>
-                <div>
-                  <p className="text-sm font-bold">Hacker Mode</p>
-                  <p className="text-[10px] text-zinc-500 uppercase font-bold">Deep dark theme</p>
-                </div>
-              </div>
-              <div className="w-10 h-6 bg-accent rounded-full relative cursor-pointer">
-                <div className="absolute right-1 top-1 w-4 h-4 bg-black rounded-full" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* App Info Card */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 text-center relative overflow-hidden group">
-         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        {/* App Info Card */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 text-center relative overflow-hidden group">
+           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
          
          <div className="relative z-10 flex flex-col items-center">
             <div className="w-20 h-20 bg-zinc-950 rounded-[1.5rem] flex items-center justify-center border border-zinc-800 shadow-xl mb-4 group-hover:scale-105 transition-transform duration-500 group-hover:border-green-500/30 overflow-hidden relative">

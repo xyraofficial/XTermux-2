@@ -169,22 +169,6 @@ const AppContent: React.FC = () => {
           </header>
       )}
 
-      {showThemePicker && (
-        <div className="fixed top-20 right-4 z-[60] bg-zinc-900 border border-zinc-800 p-4 rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-          <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-3">System Accent</p>
-          <div className="flex gap-3">
-            {ACCENT_COLORS.map(color => (
-              <button
-                key={color.hex}
-                onClick={() => { setAccentColor(color.hex); setShowThemePicker(false); }}
-                className={`w-10 h-10 rounded-xl border-2 transition-all hover:scale-110 ${accentColor === color.hex ? 'border-white scale-110 shadow-lg shadow-black' : 'border-zinc-800'}`}
-                style={{ backgroundColor: color.hex }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
       <main className={`flex-1 max-w-5xl mx-auto w-full relative ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}>
         {renderContent()}
       </main>
