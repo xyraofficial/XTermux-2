@@ -19,7 +19,7 @@ export const chatMessages = pgTable("chat_messages", {
 
 export const insertChatSessionSchema = createInsertSchema(chatSessions);
 export const selectChatSessionSchema = createSelectSchema(chatSessions);
-export const insertChatMessageSchema = createInsertSchema(chatMessages).omit({ id: true, createdAt: true });
+export const insertChatMessageSchema = createInsertSchema(chatMessages);
 export const selectChatMessageSchema = createSelectSchema(chatMessages);
 
 export type ChatSession = z.infer<typeof selectChatSessionSchema>;

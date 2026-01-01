@@ -34,7 +34,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async addMessage(message: InsertChatMessage): Promise<ChatMessage> {
-    const [newMessage] = await db.insert(chatMessages).values(message).returning();
+    const [newMessage] = await db.insert(chatMessages).values({
+      sessionId: message.sessionId,
+      role: message.role,
+      content: message.content,
+      image: message.image
+    }).returning();
     return newMessage;
   }
 
