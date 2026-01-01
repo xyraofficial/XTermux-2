@@ -2,20 +2,16 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/sessions",
-      "destination": "/api/sessions/index.ts"
+      "source": "/api/login",
+      "destination": "/api/login.ts"
     },
     {
-      "source": "/api/sessions/:id",
-      "destination": "/api/sessions/[id].ts"
+      "source": "/api/register",
+      "destination": "/api/register.ts"
     },
     {
-      "source": "/api/messages",
-      "destination": "/api/messages/index.ts"
-    },
-    {
-      "source": "/api/messages/:sessionId",
-      "destination": "/api/messages/[sessionId].ts"
+      "source": "/api/chats",
+      "destination": "/api/chats.ts"
     },
     {
       "source": "/(.*)",
