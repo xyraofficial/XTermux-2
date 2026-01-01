@@ -10,7 +10,8 @@ export enum ViewState {
   ARCHITECT = 'ARCHITECT',
   HELP = 'HELP',
   PRIVACY = 'PRIVACY',
-  TERMS = 'TERMS'
+  TERMS = 'TERMS',
+  PROFILE = 'PROFILE'
 }
 
 export interface PackageItem {
