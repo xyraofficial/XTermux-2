@@ -22,7 +22,12 @@ export const ToastContainer: React.FC = () => {
     const handleToast = (e: Event) => {
       const detail = (e as CustomEvent<ToastEvent>).detail;
       const id = Date.now();
-      setToasts(prev => [...prev, { ...detail, id }]);
+      
+      setToasts(prev => {
+        // Prevent duplicate messages appearing at the same time
+        if (prev.some(t => t.message === detail.message)) return prev;
+        return [...prev, { ...detail, id }];
+      });
       
       // Auto dismiss
       setTimeout(() => {
@@ -39,7 +44,7 @@ export const ToastContainer: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-4 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4">
+    <div className="fixed bottom-24 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4">
       {toasts.map(t => (
         <div 
             key={t.id} 
