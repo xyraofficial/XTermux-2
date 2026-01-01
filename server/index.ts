@@ -15,6 +15,11 @@ app.post("/api/sessions", async (req, res) => {
   res.json(session);
 });
 
+app.patch("/api/sessions/:id", async (req, res) => {
+  await storage.updateSessionTitle(parseInt(req.params.id), req.body.title);
+  res.sendStatus(204);
+});
+
 app.delete("/api/sessions/:id", async (req, res) => {
   await storage.deleteSession(parseInt(req.params.id));
   res.sendStatus(204);

@@ -16,6 +16,7 @@ export interface IStorage {
   addMessage(message: InsertChatMessage): Promise<ChatMessage>;
   clearSession(sessionId: number): Promise<void>;
   deleteSession(sessionId: number): Promise<void>;
+  updateSessionTitle(sessionId: number, title: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -44,6 +45,10 @@ export class DatabaseStorage implements IStorage {
   async deleteSession(sessionId: number): Promise<void> {
     await db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId));
     await db.delete(chatSessions).where(eq(chatSessions.id, sessionId));
+  }
+
+  async updateSessionTitle(sessionId: number, title: string): Promise<void> {
+    await db.update(chatSessions).set({ title }).where(eq(chatSessions.id, sessionId));
   }
 }
 

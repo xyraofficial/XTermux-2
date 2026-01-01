@@ -142,6 +142,17 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Update session title if it's the first message
+      if (messages.length === 0) {
+        const title = userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage;
+        await fetch(`/api/sessions/${currentSessionId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title })
+        });
+        setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, title } : s));
+      }
+
       await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
