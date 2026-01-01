@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { db } from './db.js';
-import { users } from './schema.js';
+import { db } from './db.ts';
+import { users } from './schema.ts';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
