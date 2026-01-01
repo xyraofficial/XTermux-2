@@ -37,7 +37,7 @@ const AppContent: React.FC = () => {
   const getInitialView = (): ViewState => {
     const path = window.location.pathname.toLowerCase();
     if (path === '/help') return ViewState.HELP;
-    if (path === '/privacy') return ViewState.TERMS; // Just fallback
+    if (path === '/privacy') return ViewState.PRIVACY;
     if (path === '/terms') return ViewState.TERMS;
     if (path === '/architect') return ViewState.ARCHITECT;
     if (path === '/packages') return ViewState.PACKAGES;
@@ -95,6 +95,9 @@ const AppContent: React.FC = () => {
       case ViewState.GUIDES: path = '/guides'; break;
       case ViewState.SCRIPTS: path = '/scripts'; break;
       case ViewState.ABOUT: path = '/about'; break;
+      case ViewState.HELP: path = '/help'; break;
+      case ViewState.PRIVACY: path = '/privacy'; break;
+      case ViewState.TERMS: path = '/terms'; break;
       default: path = '/';
     }
     window.history.pushState({}, '', path);
@@ -109,6 +112,9 @@ const AppContent: React.FC = () => {
       case ViewState.GUIDES: return 'Guides';
       case ViewState.ABOUT: return 'Me';
       case ViewState.AI_CHAT: return 'AI Assistant';
+      case ViewState.HELP: return 'Help Center';
+      case ViewState.PRIVACY: return 'Privacy Policy';
+      case ViewState.TERMS: return 'Terms of Service';
       default: return 'XTermux';
     }
   };
