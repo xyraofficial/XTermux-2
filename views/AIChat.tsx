@@ -161,10 +161,10 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const newUserMsg: any = { 
+      const newUserMsg = { 
         role: 'user', 
         content: userMessage, 
-        image: currentImage || undefined,
+        image: currentImage || null,
         createdAt: serverTimestamp()
       };
 
@@ -177,7 +177,7 @@ const AIChat: React.FC = () => {
         await updateDoc(doc(db, 'sessions', activeSessionId), { title });
       }
 
-      setMessages(prev => [...prev, { ...newUserMsg, isStreaming: false, createdAt: new Date() }]);
+      setMessages(prev => [...prev, { role: 'user', content: userMessage, image: currentImage || undefined, isStreaming: false, createdAt: new Date() }]);
       setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
 
       const stream = await groq.chat.completions.create({
