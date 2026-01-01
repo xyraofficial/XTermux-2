@@ -2,8 +2,20 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "http://0.0.0.0:5001/api/$1"
+      "source": "/api/sessions",
+      "destination": "/api/sessions/index.ts"
+    },
+    {
+      "source": "/api/sessions/:id",
+      "destination": "/api/sessions/[id].ts"
+    },
+    {
+      "source": "/api/messages",
+      "destination": "/api/messages/index.ts"
+    },
+    {
+      "source": "/api/messages/:sessionId",
+      "destination": "/api/messages/[sessionId].ts"
     },
     {
       "source": "/(.*)",
