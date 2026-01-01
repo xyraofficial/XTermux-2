@@ -22,7 +22,7 @@ const Troubleshoot: React.FC = () => {
   const handleAnalyzeError = async () => {
     if (!errorLog.trim()) return;
 
-    const apiKey = process.env.API_KEY;
+    const apiKey = process.env.API_KEY || process.env.GROQ_API_KEY;
     if (!apiKey) {
         showToast("API Key missing", "error");
         return;

@@ -101,7 +101,13 @@ const Architect: React.FC = () => {
     setPendingResult(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const apiKey = process.env.API_KEY || process.env.GROQ_API_KEY;
+      if (!apiKey) {
+        showToast('API Key missing', 'error');
+        setIsGenerating(false);
+        return;
+      }
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: 'gemini-3-pro-preview',
         contents: `I need a professional script for Termux. User request: "${prompt}".
