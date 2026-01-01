@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, Mic, MicOff, Eraser, X, Plus, Sparkles, Volume2, VolumeX, Copy, ThumbsUp, ThumbsDown, Share2, RotateCcw, Check, Globe, ExternalLink, ShieldCheck, Cpu } from 'lucide-react';
 import Groq from 'groq-sdk';
@@ -37,14 +36,7 @@ const SUGGESTIONS = [
 ];
 
 const AIChat: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const saved = localStorage.getItem(CHAT_STORAGE_KEY);
-    if (saved) {
-        try { return JSON.parse(saved); } catch (e) { console.error(e); }
-    }
-    return [];
-  });
-  
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -55,7 +47,29 @@ const AIChat: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages.filter(m => !m.isStreaming)));
+    fetch('/api/messages')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setMessages(data.map((m: any) => ({
+            role: m.role,
+            content: m.content,
+            image: m.image || undefined
+          })));
+        } else {
+          const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+          if (saved) {
+            try { setMessages(JSON.parse(saved)); } catch (e) { console.error(e); }
+          }
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages.filter(m => !m.isStreaming)));
+    }
     scrollToBottom();
   }, [messages]);
 
@@ -69,11 +83,17 @@ const AIChat: React.FC = () => {
     setIsClearModalOpen(true);
   };
 
-  const confirmClearChat = () => {
-    setMessages([]);
-    localStorage.removeItem(CHAT_STORAGE_KEY);
-    showToast('Memori dibersihkan', 'info');
-    setIsClearModalOpen(false);
+  const confirmClearChat = async () => {
+    try {
+      await fetch('/api/messages', { method: 'DELETE' });
+      setMessages([]);
+      localStorage.removeItem(CHAT_STORAGE_KEY);
+      showToast('Memori dibersihkan', 'info');
+      setIsClearModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      showToast("Gagal menghapus riwayat.", "error");
+    }
   };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,40 +112,38 @@ const AIChat: React.FC = () => {
     const userMessage = finalInput.trim() || (selectedImage ? "Analisis gambar ini." : "");
     const currentImage = selectedImage;
     
-    setMessages(prev => [...prev, { role: 'user', content: userMessage, image: currentImage || undefined }]);
+    const newUserMsg: Message = { role: 'user', content: userMessage, image: currentImage || undefined };
+    setMessages(prev => [...prev, newUserMsg]);
     setInput('');
     setSelectedImage(null);
     setIsLoading(true);
 
     try {
-      // Create assistant message with streaming state
+      await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUserMsg)
+      });
+
       setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
 
       const stream = await groq.chat.completions.create({
         messages: [
-          {
-            role: "system",
-            content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown.",
-          },
-          {
-            role: "user",
-            content: userMessage,
-          },
+          { role: "system", content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown." },
+          { role: "user", content: userMessage }
         ],
         model: "llama-3.3-70b-versatile",
         stream: true,
       });
 
       let fullContent = '';
-
       for await (const chunk of stream) {
         const chunkText = chunk.choices[0]?.delta?.content || '';
         if (chunkText) {
           fullContent += chunkText;
-          
           setMessages(prev => {
             const last = prev[prev.length - 1];
-            if (last.role === 'model' && last.isStreaming) {
+            if (last && last.role === 'model' && last.isStreaming) {
               return [...prev.slice(0, -1), { ...last, content: fullContent }];
             }
             return prev;
@@ -133,15 +151,17 @@ const AIChat: React.FC = () => {
         }
       }
 
-      setMessages(prev => {
-        const last = prev[prev.length - 1];
-        return [...prev.slice(0, -1), { ...last, isStreaming: false }];
+      const finalModelMsg: Message = { role: 'model', content: fullContent, isStreaming: false };
+      await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(finalModelMsg)
       });
 
+      setMessages(prev => [...prev.slice(0, -1), finalModelMsg]);
     } catch (err) {
       console.error(err);
       showToast("Gagal terhubung ke AI.", "error");
-      setMessages(prev => prev.filter(m => m.content !== '' || !m.isStreaming));
     } finally {
       setIsLoading(false);
     }
