@@ -12,11 +12,6 @@ const groq = new Groq({
   dangerouslyAllowBrowser: true
 });
 
-interface GroundingSource {
-  title: string;
-  uri: string;
-}
-
 interface Message {
   role: 'user' | 'model';
   content: string;
@@ -28,6 +23,7 @@ interface ChatSession {
   id: number;
   title: string;
   createdAt: string;
+  messages: Message[];
 }
 
 const AIChat: React.FC = () => {
@@ -37,7 +33,6 @@ const AIChat: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
@@ -45,87 +40,64 @@ const AIChat: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    loadSessions();
-  }, []);
-
-  const loadSessions = async () => {
-    try {
-      const res = await fetch('/api/sessions');
-      if (!res.ok) throw new Error('Failed to fetch sessions');
-      const data = await res.json();
-      setSessions(data);
-      if (data.length > 0 && !currentSessionId) {
-        selectSession(data[0].id);
-      } else if (data.length === 0) {
-        createNewChat();
-      }
-    } catch (err) {
-      console.error('Session load error:', err);
-      showToast("Gagal memuat chat. Pastikan backend aktif.", "error");
-    }
-  };
-
-  const createNewChat = async () => {
-    // Check if we already have an empty session to avoid duplicates
-    const emptySession = sessions.find(s => s.title === 'New Chat');
-    if (emptySession) {
-      if (currentSessionId !== emptySession.id) {
-        selectSession(emptySession.id);
-      }
-      setIsSidebarOpen(false);
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'New Chat' })
-      });
-      const newSession = await res.json();
-      setSessions(prev => [newSession, ...prev]);
-      setCurrentSessionId(newSession.id);
-      setMessages([]);
-      setIsSidebarOpen(false);
-    } catch (err) {
-      console.error(err);
-      showToast("Gagal membuat chat baru", "error");
-    }
-  };
-
-  const selectSession = async (id: number) => {
-    setCurrentSessionId(id);
-    setIsSidebarOpen(false);
-    try {
-      const res = await fetch(`/api/messages/${id}`);
-      const data = await res.json();
-      setMessages(data.map((m: any) => ({
-        role: m.role,
-        content: m.content,
-        image: m.image || undefined
-      })));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const deleteSession = async (e: React.MouseEvent, id: number) => {
-    e.stopPropagation();
-    try {
-      await fetch(`/api/sessions/${id}`, { method: 'DELETE' });
-      setSessions(prev => prev.filter(s => s.id !== id));
-      if (currentSessionId === id) {
-        setCurrentSessionId(null);
-        setMessages([]);
-        if (sessions.length > 1) {
-          const next = sessions.find(s => s.id !== id);
-          if (next) selectSession(next.id);
+    const savedSessions = localStorage.getItem('xtermux_chat_sessions');
+    if (savedSessions) {
+      try {
+        const parsed = JSON.parse(savedSessions);
+        setSessions(parsed);
+        if (parsed.length > 0) {
+          selectSession(parsed[0].id, parsed);
         } else {
           createNewChat();
         }
+      } catch (e) {
+        createNewChat();
       }
-    } catch (err) {
-      console.error(err);
+    } else {
+      createNewChat();
+    }
+  }, []);
+
+  const saveToLocalStorage = (newSessions: ChatSession[]) => {
+    localStorage.setItem('xtermux_chat_sessions', JSON.stringify(newSessions));
+  };
+
+  const createNewChat = () => {
+    const newSession: ChatSession = {
+      id: Date.now(),
+      title: 'New Chat',
+      createdAt: new Date().toISOString(),
+      messages: []
+    };
+    const updatedSessions = [newSession, ...sessions];
+    setSessions(updatedSessions);
+    setCurrentSessionId(newSession.id);
+    setMessages([]);
+    saveToLocalStorage(updatedSessions);
+    setIsSidebarOpen(false);
+  };
+
+  const selectSession = (id: number, currentSessions = sessions) => {
+    const session = currentSessions.find(s => s.id === id);
+    if (session) {
+      setCurrentSessionId(id);
+      setMessages(session.messages);
+      setIsSidebarOpen(false);
+    }
+  };
+
+  const deleteSession = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    const updatedSessions = sessions.filter(s => s.id !== id);
+    setSessions(updatedSessions);
+    saveToLocalStorage(updatedSessions);
+    
+    if (currentSessionId === id) {
+      if (updatedSessions.length > 0) {
+        selectSession(updatedSessions[0].id, updatedSessions);
+      } else {
+        createNewChat();
+      }
     }
   };
 
@@ -148,41 +120,25 @@ const AIChat: React.FC = () => {
     const currentImage = selectedImage;
     
     const newUserMsg: Message = { role: 'user', content: userMessage, image: currentImage || undefined };
-    setMessages(prev => [...prev, newUserMsg]);
+    const updatedMessages = [...messages, newUserMsg];
+    setMessages(updatedMessages);
     setInput('');
     setSelectedImage(null);
     setIsLoading(true);
 
     try {
-      // Update session title if it's the first message
-      if (messages.length === 0) {
-        const title = userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage;
-        await fetch(`/api/sessions/${currentSessionId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title })
-        });
-        setSessions(prev => prev.map(s => s.id === currentSessionId ? { ...s, title } : s));
-      }
-
-      await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...newUserMsg, sessionId: currentSessionId })
-      });
-
-      setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
-
       const stream = await groq.chat.completions.create({
         messages: [
           { role: "system", content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown." },
-          { role: "user", content: userMessage }
+          ...updatedMessages.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content })),
         ],
         model: "llama-3.3-70b-versatile",
         stream: true,
       });
 
       let fullContent = '';
+      setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
+
       for await (const chunk of stream) {
         const chunkText = chunk.choices[0]?.delta?.content || '';
         if (chunkText) {
@@ -198,13 +154,20 @@ const AIChat: React.FC = () => {
       }
 
       const finalModelMsg: Message = { role: 'model', content: fullContent, isStreaming: false };
-      await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...finalModelMsg, sessionId: currentSessionId })
-      });
+      const finalMessages = [...updatedMessages, finalModelMsg];
+      setMessages(finalMessages);
 
-      setMessages(prev => [...prev.slice(0, -1), finalModelMsg]);
+      // Update session title and messages in localStorage
+      const title = messages.length === 0 
+        ? (userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage)
+        : (sessions.find(s => s.id === currentSessionId)?.title || 'New Chat');
+
+      const updatedSessions = sessions.map(s => 
+        s.id === currentSessionId ? { ...s, title, messages: finalMessages } : s
+      );
+      setSessions(updatedSessions);
+      saveToLocalStorage(updatedSessions);
+
     } catch (err) {
       console.error(err);
       showToast("Gagal terhubung ke AI.", "error");
@@ -407,10 +370,14 @@ const AIChat: React.FC = () => {
           isOpen={isClearModalOpen}
           title="Hapus Chat"
           message="Hapus seluruh pesan di sesi ini?"
-          onConfirm={async () => {
+          onConfirm={() => {
               if (currentSessionId) {
-                  await fetch(`/api/messages/${currentSessionId}`, { method: 'DELETE' });
+                  const updatedSessions = sessions.map(s => 
+                    s.id === currentSessionId ? { ...s, messages: [] } : s
+                  );
+                  setSessions(updatedSessions);
                   setMessages([]);
+                  saveToLocalStorage(updatedSessions);
                   setIsClearModalOpen(false);
                   showToast("Chat dibersihkan", "info");
               }
