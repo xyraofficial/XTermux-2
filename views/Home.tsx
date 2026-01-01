@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { Bot, RefreshCw, FolderCog, Trash2, Zap, Hexagon, Terminal, PenTool, Copy, Package, BookOpen } from 'lucide-react';
+import { Bot, Hexagon, Terminal, PenTool, Copy, Package, BookOpen } from 'lucide-react';
 import { showToast } from '../components/Toast';
 
 interface HomeProps {
@@ -10,20 +9,6 @@ interface HomeProps {
 }
 
 const HISTORY_KEY = 'xtermux_exec_history';
-
-const QUICK_ACTIONS = [
-    { label: 'Update', cmd: 'pkg update && pkg upgrade', icon: <RefreshCw size={20} />, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
-    { label: 'Storage', cmd: 'termux-setup-storage', icon: <FolderCog size={20} />, color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/20' },
-    { label: 'Clear', cmd: 'clear', icon: <Trash2 size={20} />, color: 'text-red-400', bg: 'bg-red-400/10', border: 'border-red-400/20' },
-    { label: 'My IP', cmd: 'ifconfig', icon: <Zap size={20} />, color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20' },
-];
-
-const handleQuickAction = (cmd: string) => {
-    // const event = new CustomEvent('run-termux-cmd', { detail: { cmd } });
-    // window.dispatchEvent(event);
-    navigator.clipboard.writeText(cmd);
-    showToast(`Copied: ${cmd.split(' ')[0]}...`, 'success');
-};
 
 const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarted }) => {
   const [sysStats, setSysStats] = useState({ cpu: 12, ram: 42 });
@@ -128,19 +113,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
                 <p className="text-[12px] text-zinc-500">Generate complex script blueprints.</p>
               </div>
           </button>
-      </div>
-
-      <div className="grid grid-cols-4 gap-3 lg:gap-4">
-        {QUICK_ACTIONS.map((action, idx) => (
-            <button 
-                key={idx} 
-                onClick={() => handleQuickAction(action.cmd)}
-                className="flex flex-col items-center gap-2 p-3 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:bg-zinc-900 transition-all active:scale-95 lg:p-5 group"
-            >
-                <div className={`p-2 rounded-xl transition-transform group-hover:scale-110 ${action.bg} ${action.color}`}>{action.icon}</div>
-                <span className="text-[10px] font-bold text-zinc-500 lg:text-[11px]">{action.label}</span>
-            </button>
-        ))}
       </div>
 
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-[2rem] p-5 md:p-8">
