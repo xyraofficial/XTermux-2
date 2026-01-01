@@ -21,34 +21,34 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   async getSessions(): Promise<ChatSession[]> {
-    return db.select().from(chatSessions).orderBy(desc(chatSessions.createdAt)).all();
+    return await db.select().from(chatSessions).orderBy(desc(chatSessions.createdAt));
   }
 
   async createSession(session: InsertChatSession): Promise<ChatSession> {
-    const [newSession] = db.insert(chatSessions).values(session).returning().all();
+    const [newSession] = await db.insert(chatSessions).values(session).returning();
     return newSession;
   }
 
   async getMessages(sessionId: number): Promise<ChatMessage[]> {
-    return db.select().from(chatMessages).where(eq(chatMessages.sessionId, sessionId)).orderBy(chatMessages.id).all();
+    return await db.select().from(chatMessages).where(eq(chatMessages.sessionId, sessionId)).orderBy(chatMessages.id);
   }
 
   async addMessage(message: InsertChatMessage): Promise<ChatMessage> {
-    const [newMessage] = db.insert(chatMessages).values(message).returning().all();
+    const [newMessage] = await db.insert(chatMessages).values(message).returning();
     return newMessage;
   }
 
   async clearSession(sessionId: number): Promise<void> {
-    db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId)).run();
+    await db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId));
   }
 
   async deleteSession(sessionId: number): Promise<void> {
-    db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId)).run();
-    db.delete(chatSessions).where(eq(chatSessions.id, sessionId)).run();
+    await db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId));
+    await db.delete(chatSessions).where(eq(chatSessions.id, sessionId));
   }
 
   async updateSessionTitle(sessionId: number, title: string): Promise<void> {
-    db.update(chatSessions).set({ title }).where(eq(chatSessions.id, sessionId)).run();
+    await db.update(chatSessions).set({ title }).where(eq(chatSessions.id, sessionId));
   }
 }
 
