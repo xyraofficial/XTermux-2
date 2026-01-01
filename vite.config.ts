@@ -10,9 +10,6 @@ export default defineConfig({
     port: 5000,
     host: '0.0.0.0',
     allowedHosts: true,
-    proxy: {
-      '/api': 'http://0.0.0.0:3001',
-    },
   },
   define: {
     'process.env.API_KEY': JSON.stringify(process.env.API_KEY || process.env.GROQ_API_KEY || ''),

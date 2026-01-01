@@ -6,7 +6,6 @@ import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 import IOSModal from '../components/IOSModal';
-import { useAuth } from '../contexts/AuthContext';
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || 'dummy_key',
@@ -40,65 +39,27 @@ const AIChat: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { token, user } = useAuth();
-
   useEffect(() => {
-    if (token) {
-      fetch('/api/chats', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setSessions(data);
-          selectSession(data[0].id, data);
+    const savedSessions = localStorage.getItem('xtermux_chat_sessions');
+    if (savedSessions) {
+      try {
+        const parsed = JSON.parse(savedSessions);
+        setSessions(parsed);
+        if (parsed.length > 0) {
+          selectSession(parsed[0].id, parsed);
         } else {
           createNewChat();
         }
-      })
-      .catch(() => {
-        const savedSessions = localStorage.getItem('xtermux_chat_sessions');
-        if (savedSessions) {
-          try {
-            const parsed = JSON.parse(savedSessions);
-            setSessions(parsed);
-            if (parsed.length > 0) {
-              selectSession(parsed[0].id, parsed);
-            } else {
-              createNewChat();
-            }
-          } catch (e) {
-            createNewChat();
-          }
-        } else {
-          createNewChat();
-        }
-      });
+      } catch (e) {
+        createNewChat();
+      }
     } else {
       createNewChat();
     }
-  }, [token]);
-
-  const saveToBackend = async (session: ChatSession) => {
-    if (!token) return;
-    try {
-      await fetch('/api/chats', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(session)
-      });
-    } catch (err) {
-      console.error('Failed to sync chat:', err);
-    }
-  };
+  }, []);
 
   const saveToLocalStorage = (newSessions: ChatSession[]) => {
     localStorage.setItem('xtermux_chat_sessions', JSON.stringify(newSessions));
-    const current = newSessions.find(s => s.id === currentSessionId);
-    if (current) saveToBackend(current);
   };
 
   const createNewChat = () => {
