@@ -18,6 +18,12 @@ const QUICK_ACTIONS = [
     { label: 'My IP', cmd: 'ifconfig', icon: <Zap size={20} />, color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/20' },
 ];
 
+const handleQuickAction = (cmd: string) => {
+    const event = new CustomEvent('run-termux-cmd', { detail: { cmd } });
+    window.dispatchEvent(event);
+    showToast(`Command: ${cmd.split(' ')[0]}...`, 'info');
+};
+
 const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarted }) => {
   const [sysStats, setSysStats] = useState({ cpu: 12, ram: 42 });
   const [history] = useState<string[]>(() => {
@@ -125,8 +131,12 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
 
       <div className="grid grid-cols-4 gap-3 lg:gap-4">
         {QUICK_ACTIONS.map((action, idx) => (
-            <button key={idx} className="flex flex-col items-center gap-2 p-3 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:bg-zinc-900 transition-all active:scale-95 lg:p-5">
-                <div className={`p-2 rounded-xl ${action.bg}`}>{action.icon}</div>
+            <button 
+                key={idx} 
+                onClick={() => handleQuickAction(action.cmd)}
+                className="flex flex-col items-center gap-2 p-3 bg-zinc-900/40 border border-zinc-800 rounded-2xl hover:bg-zinc-900 transition-all active:scale-95 lg:p-5 group"
+            >
+                <div className={`p-2 rounded-xl transition-transform group-hover:scale-110 ${action.bg} ${action.color}`}>{action.icon}</div>
                 <span className="text-[10px] font-bold text-zinc-500 lg:text-[11px]">{action.label}</span>
             </button>
         ))}
@@ -138,11 +148,16 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
               {history.length > 0 ? history.slice(0, 4).map((cmd, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-black/30 rounded-xl border border-zinc-800/50 group">
-                      <code className="text-[11px] text-zinc-400 truncate flex-1 font-mono">{cmd}</code>
-                      <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Copied', 'success'); }} className="p-1.5 text-zinc-600 hover:text-accent opacity-0 group-hover:opacity-100 transition-all">
-                          <Copy size={14} />
-                      </button>
+                  <div key={i} className="flex items-center justify-between p-3 bg-black/30 rounded-xl border border-zinc-800/50 group hover:border-accent/30 transition-colors">
+                      <code className="text-[11px] text-zinc-400 truncate flex-1 font-mono">{cmd} codes...</code>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                          <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Copied', 'success'); }} className="p-1.5 text-zinc-600 hover:text-accent">
+                              <Copy size={14} />
+                          </button>
+                          <button onClick={() => handleQuickAction(cmd)} className="p-1.5 text-zinc-600 hover:text-green-500">
+                              <Terminal size={14} />
+                          </button>
+                      </div>
                   </div>
               )) : (
                   <div className="py-2 text-center text-[10px] text-zinc-600 font-bold uppercase md:col-span-2">No recent activity</div>
