@@ -168,7 +168,7 @@ const AIChat: React.FC = () => {
           })),
           { role: 'user', content: userMessage }
         ],
-        model: "llama-3.3-70b-versatile",
+        model: "llama-3.1-8b-instant",
         stream: true,
       });
 
