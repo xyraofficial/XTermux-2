@@ -146,6 +146,11 @@ const Packages: React.FC = () => {
                 }`}
                 >
                 {cat.icon}{cat.name}
+                {cat.name === 'Saved' && favorites.length > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-accent text-black text-[9px] font-black rounded-full min-w-[16px] text-center">
+                    {favorites.length}
+                  </span>
+                )}
                 </button>
             ))}
             </div>

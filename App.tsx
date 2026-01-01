@@ -193,7 +193,6 @@ const App: React.FC = () => {
                   onClick={() => navigate(ViewState.PACKAGES)} 
                   icon={<Package size={20} />} 
                   label="Tools" 
-                  badge={savedCount > 0 ? savedCount : undefined}
                 />
                 <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={22} />} label="AI" />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={20} />} label="Guides" />
