@@ -51,6 +51,7 @@ const AIChat: React.FC = () => {
   const loadSessions = async () => {
     try {
       const res = await fetch('/api/sessions');
+      if (!res.ok) throw new Error('Failed to fetch sessions');
       const data = await res.json();
       setSessions(data);
       if (data.length > 0 && !currentSessionId) {
@@ -59,7 +60,8 @@ const AIChat: React.FC = () => {
         createNewChat();
       }
     } catch (err) {
-      console.error(err);
+      console.error('Session load error:', err);
+      showToast("Gagal memuat chat. Pastikan backend aktif.", "error");
     }
   };
 
