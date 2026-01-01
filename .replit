@@ -55,4 +55,3 @@ run = ["npm", "run", "dev"]
 [userenv]
 
 [userenv.shared]
-DATABASE_URL_EXTERNAL = "postgresql://neondb_owner:npg_mG1FSdUHy5Iv@ep-mute-wave-adqkumo1-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"

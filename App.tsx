@@ -10,7 +10,6 @@ import AboutView from './views/About';
 import AIChatView from './views/AIChat';
 import ScriptsView from './views/Scripts';
 import ArchitectView from './views/Architect';
-import ProfileView from './views/Profile';
 
 // Legal Views
 import HelpView from './views/legal/Help';
@@ -96,7 +95,6 @@ const AppContent: React.FC = () => {
       case ViewState.GUIDES: path = '/guides'; break;
       case ViewState.SCRIPTS: path = '/scripts'; break;
       case ViewState.ABOUT: path = '/about'; break;
-      case ViewState.PROFILE: path = '/profile'; break;
       default: path = '/';
     }
     window.history.pushState({}, '', path);
@@ -110,7 +108,6 @@ const AppContent: React.FC = () => {
       case ViewState.SCRIPTS: return 'Scripts';
       case ViewState.GUIDES: return 'Guides';
       case ViewState.ABOUT: return 'Me';
-      case ViewState.PROFILE: return 'Profile';
       case ViewState.AI_CHAT: return 'AI Assistant';
       default: return 'XTermux';
     }
@@ -125,7 +122,6 @@ const AppContent: React.FC = () => {
       case ViewState.SCRIPTS: return <div {...viewProps}><ScriptsView /></div>;
       case ViewState.GUIDES: return <div {...viewProps}><GuidesView /></div>;
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
-      case ViewState.PROFILE: return <div {...viewProps}><ProfileView /></div>;
       case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
