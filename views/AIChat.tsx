@@ -161,7 +161,7 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const newUserMsg: Message = { 
+      const newUserMsg: any = { 
         role: 'user', 
         content: userMessage, 
         image: currentImage || undefined,
@@ -177,13 +177,13 @@ const AIChat: React.FC = () => {
         await updateDoc(doc(db, 'sessions', activeSessionId), { title });
       }
 
-      setMessages(prev => [...prev, { ...newUserMsg, isStreaming: false }]);
+      setMessages(prev => [...prev, { ...newUserMsg, isStreaming: false, createdAt: new Date() }]);
       setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
 
       const stream = await groq.chat.completions.create({
         messages: [
           { role: "system", content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown." },
-          ...messages.map(m => ({ 
+          ...messages.filter(m => m.content).map(m => ({ 
             role: (m.role === 'model' ? 'assistant' : 'user') as "assistant" | "user" | "system", 
             content: m.content 
           })),
