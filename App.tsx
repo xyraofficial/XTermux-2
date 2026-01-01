@@ -44,6 +44,32 @@ const App: React.FC = () => {
   const [accentColor, setAccentColor] = useState(() => localStorage.getItem('xtermux_accent') || '#22c55e');
   const [showThemePicker, setShowThemePicker] = useState(false);
   const [pendingCommand, setPendingCommand] = useState<{label: string, cmd: string} | null>(null);
+  const [savedCount, setSavedCount] = useState(0);
+
+  useEffect(() => {
+    const updateSavedCount = () => {
+      const saved = localStorage.getItem('xtermux_favorites');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setSavedCount(Array.isArray(parsed) ? parsed.length : 0);
+        } catch (e) {
+          setSavedCount(0);
+        }
+      } else {
+        setSavedCount(0);
+      }
+    };
+
+    updateSavedCount();
+    window.addEventListener('storage', updateSavedCount);
+    // Custom event for internal updates since storage event only fires for other windows
+    window.addEventListener('favorites-updated', updateSavedCount);
+    return () => {
+      window.removeEventListener('storage', updateSavedCount);
+      window.removeEventListener('favorites-updated', updateSavedCount);
+    };
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--accent-color', accentColor);
@@ -162,7 +188,13 @@ const App: React.FC = () => {
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-900 pb-[env(safe-area-inset-bottom)]">
             <div className="max-w-5xl mx-auto flex items-center justify-around h-[70px] px-2">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={20} />} label="Home" />
-                <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={20} />} label="Tools" />
+                <NavButton 
+                  active={currentView === ViewState.PACKAGES} 
+                  onClick={() => navigate(ViewState.PACKAGES)} 
+                  icon={<Package size={20} />} 
+                  label="Tools" 
+                  badge={savedCount > 0 ? savedCount : undefined}
+                />
                 <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={22} />} label="AI" />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={20} />} label="Guides" />
                 <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={20} />} label="Me" />
@@ -173,9 +205,16 @@ const App: React.FC = () => {
   );
 };
 
-const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
+const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string; badge?: number}> = ({ active, onClick, icon, label, badge }) => (
   <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
-    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
+    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
+      {icon}
+      {badge !== undefined && (
+        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[8px] font-black text-black ring-2 ring-zinc-950">
+          {badge}
+        </span>
+      )}
+    </div>
     <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
     {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
   </button>

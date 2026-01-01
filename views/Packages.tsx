@@ -63,6 +63,10 @@ const Packages: React.FC = () => {
         const exists = prev.includes(id);
         const newFavs = exists ? prev.filter(fid => fid !== id) : [...prev, id];
         localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavs));
+        
+        // Dispatch custom event to notify App.tsx
+        window.dispatchEvent(new Event('favorites-updated'));
+        
         showToast(exists ? 'Removed from favorites' : 'Added to favorites', exists ? 'info' : 'success');
         return newFavs;
     });
