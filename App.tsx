@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Home, Package, BookOpen, Bot, User, Palette, PenTool, Terminal, Cpu } from 'lucide-react';
 import { ViewState } from './types';
@@ -19,7 +18,7 @@ import HelpView from './views/legal/Help';
 import PrivacyView from './views/legal/Privacy';
 import TermsView from './views/legal/Terms';
 
-import { ToastContainer, showToast } from './components/Toast';
+import { ToastContainer } from './components/Toast';
 
 const ACCENT_COLORS = [
   { name: 'Classic Green', hex: '#22c55e' },
@@ -27,6 +26,14 @@ const ACCENT_COLORS = [
   { name: 'Sky Blue', hex: '#0ea5e9' },
   { name: 'Hacker Red', hex: '#ef4444' },
 ];
+
+const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
+  <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
+    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
+    <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
+    {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
+  </button>
+);
 
 const AppContent: React.FC = () => {
   const { token, isLoading } = useAuth();
@@ -65,8 +72,6 @@ const AppContent: React.FC = () => {
     };
 
     updateSavedCount();
-    
-    // Listen for custom event from Packages view
     window.addEventListener('favorites-updated', updateSavedCount);
     window.addEventListener('storage', updateSavedCount);
     const interval = setInterval(updateSavedCount, 2000);
@@ -81,15 +86,6 @@ const AppContent: React.FC = () => {
     document.documentElement.style.setProperty('--accent-color', accentColor);
     localStorage.setItem('xtermux_accent', accentColor);
   }, [accentColor]);
-
-  useEffect(() => {
-    const handleRunCommand = (e: any) => {
-        setPendingCommand({ label: 'Execute', cmd: e.detail.cmd });
-        navigate(ViewState.HOME);
-    };
-    // window.addEventListener('run-termux-cmd', handleRunCommand);
-    return () => { /* window.removeEventListener('run-termux-cmd', handleRunCommand); */ };
-  }, []);
 
   const navigate = (view: ViewState) => {
     setCurrentView(view);
@@ -222,28 +218,10 @@ const AppContent: React.FC = () => {
   );
 };
 
-const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
-  <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
-    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
-    <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
-    {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
-  </button>
-);
-
 const App: React.FC = () => (
   <AuthProvider>
     <AppContent />
   </AuthProvider>
-);
-
-export default App;
-
-const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
-  <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
-    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
-    <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
-    {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
-  </button>
 );
 
 export default App;
