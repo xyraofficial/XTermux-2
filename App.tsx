@@ -44,6 +44,31 @@ const App: React.FC = () => {
   const [accentColor, setAccentColor] = useState(() => localStorage.getItem('xtermux_accent') || '#22c55e');
   const [showThemePicker, setShowThemePicker] = useState(false);
   const [pendingCommand, setPendingCommand] = useState<{label: string, cmd: string} | null>(null);
+  const [savedCount, setSavedCount] = useState(0);
+
+  useEffect(() => {
+    const updateSavedCount = () => {
+      const saved = localStorage.getItem('xtermux_favorites');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setSavedCount(Array.isArray(parsed) ? parsed.length : 0);
+        } catch (e) {
+          setSavedCount(0);
+        }
+      } else {
+        setSavedCount(0);
+      }
+    };
+
+    updateSavedCount();
+    window.addEventListener('storage', updateSavedCount);
+    const interval = setInterval(updateSavedCount, 1000);
+    return () => {
+      window.removeEventListener('storage', updateSavedCount);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--accent-color', accentColor);
@@ -162,7 +187,21 @@ const App: React.FC = () => {
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-900 pb-[env(safe-area-inset-bottom)]">
             <div className="max-w-5xl mx-auto flex items-center justify-around h-[70px] px-2">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={20} />} label="Home" />
-                <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={20} />} label="Tools" />
+                <NavButton 
+                  active={currentView === ViewState.PACKAGES} 
+                  onClick={() => navigate(ViewState.PACKAGES)} 
+                  icon={
+                    <div className="relative">
+                      <Package size={20} />
+                      {savedCount > 0 && (
+                        <span className="absolute -top-1.5 -right-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent px-1 text-[9px] font-black text-black ring-2 ring-zinc-950">
+                          {savedCount}
+                        </span>
+                      )}
+                    </div>
+                  } 
+                  label="Tools" 
+                />
                 <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={22} />} label="AI" />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={20} />} label="Guides" />
                 <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={20} />} label="Me" />

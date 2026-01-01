@@ -135,13 +135,18 @@ const Packages: React.FC = () => {
                 <button
                 key={cat.name}
                 onClick={() => setSelectedCategory(cat.name)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full border whitespace-nowrap text-[12px] font-bold transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full border whitespace-nowrap text-[12px] font-bold transition-all relative ${
                     selectedCategory === cat.name
                     ? 'bg-accent/10 border-accent/50 text-accent'
                     : 'bg-zinc-900/50 border-zinc-800 text-zinc-500'
                 }`}
                 >
                 {cat.icon}{cat.name}
+                {cat.name === 'Saved' && favorites.length > 0 && (
+                  <span className="absolute -top-1.5 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent px-1 text-[9px] font-black text-black ring-2 ring-zinc-950">
+                    {favorites.length}
+                  </span>
+                )}
                 </button>
             ))}
             </div>
