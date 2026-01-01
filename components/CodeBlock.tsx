@@ -9,7 +9,7 @@ interface CodeBlockProps {
 }
 
 const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash' }) => {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = React.useState(false);
   
   const normalizedLabel = label?.toLowerCase() || 'bash';
   const isTerminal = ['bash', 'sh', 'zsh', 'shell', 'termux', 'console', 'cmd'].includes(normalizedLabel);

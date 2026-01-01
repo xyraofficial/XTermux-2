@@ -8,7 +8,7 @@ import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 
 const groq = new Groq({
-  apiKey: "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",
+  apiKey: import.meta.env.VITE_GROQ_API_KEY || "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",
   dangerouslyAllowBrowser: true
 });
 
@@ -203,11 +203,15 @@ const AIChat: React.FC = () => {
                                 : 'bg-zinc-900/60 border border-zinc-800 text-zinc-100 rounded-tl-none'
                             }`}>
                                 <div className="prose prose-invert prose-sm max-w-none prose-p:my-1.5 prose-code:text-accent prose-headings:text-white">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
-                                        code({inline, children}: any) {
-                                            return !inline ? <CodeBlock code={String(children).replace(/\n$/, '')} /> : <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-accent font-mono text-[12px]">{children}</code>
-                                        }
-                                    }}>
+                                    <ReactMarkdown 
+                                        remarkPlugins={[remarkGfm]} 
+                                        components={{
+                                            p: ({children}) => <div className="mb-4 last:mb-0">{children}</div>,
+                                            code({inline, children}: any) {
+                                                return !inline ? <CodeBlock code={String(children).replace(/\n$/, '')} /> : <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-accent font-mono text-[12px]">{children}</code>
+                                            }
+                                        }}
+                                    >
                                         {/* PERBAIKAN: Kursor hanya muncul jika content sudah ada teksnya agar tidak kotak kosong sendirian */}
                                         {msg.content + (msg.isStreaming && msg.content ? "▍" : "")}
                                     </ReactMarkdown>
