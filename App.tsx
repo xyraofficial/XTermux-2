@@ -62,9 +62,13 @@ const App: React.FC = () => {
     };
 
     updateSavedCount();
+    
+    // Listen for custom event from Packages view
+    window.addEventListener('favorites-updated', updateSavedCount);
     window.addEventListener('storage', updateSavedCount);
-    const interval = setInterval(updateSavedCount, 1000);
+    const interval = setInterval(updateSavedCount, 2000);
     return () => {
+      window.removeEventListener('favorites-updated', updateSavedCount);
       window.removeEventListener('storage', updateSavedCount);
       clearInterval(interval);
     };

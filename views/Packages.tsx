@@ -64,6 +64,8 @@ const Packages: React.FC = () => {
         const newFavs = exists ? prev.filter(fid => fid !== id) : [...prev, id];
         localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavs));
         showToast(exists ? 'Removed from favorites' : 'Added to favorites', exists ? 'info' : 'success');
+        // Notify App component to update badge
+        window.dispatchEvent(new CustomEvent('favorites-updated'));
         return newFavs;
     });
   };
@@ -142,7 +144,7 @@ const Packages: React.FC = () => {
                 }`}
                 >
                 {cat.icon}{cat.name}
-                {cat.name === 'Saved' && favorites.length > 0 && (
+                {cat.name === 'Saved' && favorites.length > 0 && selectedCategory !== 'Saved' && (
                   <span className="absolute -top-1.5 -right-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent px-1 text-[9px] font-black text-black ring-2 ring-zinc-950">
                     {favorites.length}
                   </span>
