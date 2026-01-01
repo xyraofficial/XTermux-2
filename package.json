@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "tsx server.ts & vite",
     "build": "vite build",
     "preview": "vite preview",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "server": "tsx server.ts"
   },
   "dependencies": {
     "@google/genai": "latest",
