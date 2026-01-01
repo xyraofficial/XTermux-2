@@ -10,9 +10,14 @@ export default async function handler(req: any, res: any) {
       const session = await storage.createSession(req.body);
       return res.status(200).json(session);
     }
-    return res.status(405).end();
+    return res.status(405).json({ error: 'Method not allowed' });
   } catch (err: any) {
-    console.error('API Error:', err);
-    return res.status(500).json({ error: err.message });
+    console.error('API Error in /api/sessions:', err);
+    // Explicitly return a JSON error even for server errors
+    return res.status(500).json({ 
+      error: 'Internal Server Error', 
+      message: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined 
+    });
   }
 }
