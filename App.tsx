@@ -208,7 +208,7 @@ const AppContent: React.FC = () => {
                 />
                 <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={22} />} label="AI" />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={20} />} label="Guides" />
-                <NavButton active={currentView === ViewState.PROFILE} onClick={() => navigate(ViewState.PROFILE)} icon={<User size={20} />} label="Me" />
+                <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={20} />} label="Me" />
             </div>
         </nav>
       )}

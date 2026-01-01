@@ -1,13 +1,63 @@
-import React from 'react';
-import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon } from 'lucide-react';
+import React, { useState } from 'react';
+import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield } from 'lucide-react';
 import { APP_VERSION } from '../constants';
 
 const About: React.FC = () => {
+  const [username] = useState('X-User');
+  const [avatar] = useState('');
+
   return (
-    <div className="space-y-6 animate-fade-in pb-24 px-4 pt-4">
+    <div className="space-y-6 animate-fade-in pb-32 px-4 pt-4">
       
+      {/* Profile Section */}
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="relative group">
+          <div className="h-32 w-full bg-gradient-to-r from-accent/20 to-accent/5 rounded-3xl border border-zinc-800" />
+          <div className="absolute -bottom-10 left-8">
+            <div className="relative">
+              <div className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden">
+                {avatar ? (
+                  <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <User size={40} className="text-zinc-600" />
+                )}
+              </div>
+              <button className="absolute -bottom-1 -right-1 p-2 bg-accent text-black rounded-xl shadow-lg hover:scale-110 transition-transform">
+                <Camera size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-black uppercase tracking-tight">{username}</h2>
+              <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">guest@xtermux.local</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4">
+              <Calendar className="text-accent" size={20} />
+              <div>
+                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Initialization</p>
+                <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>
+              </div>
+            </div>
+            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4">
+              <SecurityShield className="text-blue-400" size={20} />
+              <div>
+                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Security Status</p>
+                <p className="text-sm font-bold text-green-500">Local Only</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* App Info Card */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 text-center relative overflow-hidden group mt-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 text-center relative overflow-hidden group">
          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
          
          <div className="relative z-10 flex flex-col items-center">
@@ -20,7 +70,7 @@ const About: React.FC = () => {
                 <span className="text-[10px] font-bold px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded">v{APP_VERSION}</span>
                 <span className="text-[10px] font-bold px-2 py-0.5 bg-green-500/10 text-green-500 border border-green-500/20 rounded">STABLE</span>
             </div>
-            <p className="text-xs text-zinc-500 leading-relaxed max-w-xs">
+            <p className="text-xs text-zinc-500 leading-relaxed max-w-xs mx-auto">
                 The ultimate companion for Termux users. Comprehensive documentation, AI assistance, and package management.
             </p>
          </div>
@@ -65,7 +115,6 @@ const About: React.FC = () => {
            </div>
            
            <div className="grid grid-cols-1 divide-y divide-zinc-800">
-              {/* YouTube */}
               <a href="https://youtube.com/@Kz.tutorial" target="_blank" rel="noopener noreferrer" 
                  className="flex items-center justify-between p-4 hover:bg-zinc-800/50 transition-colors group">
                  <div className="flex items-center gap-4">
@@ -79,7 +128,6 @@ const About: React.FC = () => {
                  <ExternalLink size={14} className="text-zinc-600" />
               </a>
 
-              {/* TikTok */}
               <a href="https://www.tiktok.com/@kztutorial.dev?_r=1&_t=ZS-92bRt5Qgrsm" target="_blank" rel="noopener noreferrer" 
                  className="flex items-center justify-between p-4 hover:bg-zinc-800/50 transition-colors group">
                  <div className="flex items-center gap-4">
@@ -95,7 +143,6 @@ const About: React.FC = () => {
                  <ExternalLink size={14} className="text-zinc-600" />
               </a>
 
-              {/* Facebook */}
               <a href="https://www.facebook.com/pangkey.jul" target="_blank" rel="noopener noreferrer" 
                  className="flex items-center justify-between p-4 hover:bg-zinc-800/50 transition-colors group">
                  <div className="flex items-center gap-4">
@@ -109,7 +156,6 @@ const About: React.FC = () => {
                  <ExternalLink size={14} className="text-zinc-600" />
               </a>
 
-              {/* Email */}
               <a href="mailto:xyraofficialsup@gmail.com" 
                  className="flex items-center justify-between p-4 hover:bg-zinc-800/50 transition-colors group">
                  <div className="flex items-center gap-4">
