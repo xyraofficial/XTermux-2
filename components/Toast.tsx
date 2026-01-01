@@ -44,7 +44,7 @@ export const ToastContainer: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-24 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4">
+    <div className="fixed top-20 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4">
       {toasts.map(t => (
         <div 
             key={t.id} 
