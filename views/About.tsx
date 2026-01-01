@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield, Edit2, Check, X } from 'lucide-react';
 import { APP_VERSION } from '../constants';
 
@@ -6,7 +6,8 @@ const About: React.FC = () => {
   const [username, setUsername] = useState(() => localStorage.getItem('xtermux_username') || 'X-User');
   const [isEditing, setIsEditing] = useState(false);
   const [tempUsername, setTempUsername] = useState(username);
-  const [avatar] = useState('');
+  const [avatar, setAvatar] = useState(() => localStorage.getItem('xtermux_avatar') || '');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveUsername = () => {
     const trimmed = tempUsername.trim();
@@ -22,77 +23,109 @@ const About: React.FC = () => {
     setIsEditing(false);
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setAvatar(base64String);
+        localStorage.setItem('xtermux_avatar', base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in pb-32 px-4 pt-4">
       
       {/* Profile Section */}
-      <div className="max-w-2xl mx-auto space-y-6">
-        <div className="relative">
-          <div className="h-32 w-full bg-gradient-to-r from-accent/20 to-accent/5 rounded-3xl border border-zinc-800" />
-          <div className="absolute -bottom-10 left-6">
-            <div className="relative">
-              <div className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden shadow-2xl">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl relative mt-8">
+          <div className="absolute -top-12 left-6">
+            <div className="relative group/avatar">
+              <div 
+                onClick={handleImageClick}
+                className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden shadow-2xl cursor-pointer hover:border-accent/50 transition-all"
+              >
                 {avatar ? (
                   <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
                   <User size={40} className="text-zinc-600" />
                 )}
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
+                  <Camera size={20} className="text-white" />
+                </div>
               </div>
-              <button className="absolute -bottom-1 -right-1 p-2 bg-accent text-black rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all z-10">
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                accept="image/*" 
+                className="hidden" 
+              />
+              <button 
+                onClick={handleImageClick}
+                className="absolute -bottom-1 -right-1 p-2 bg-accent text-black rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all z-10"
+              >
                 <Camera size={16} />
               </button>
             </div>
           </div>
-        </div>
 
-        <div className="mt-14 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6 shadow-xl">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              {isEditing ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={tempUsername}
-                    onChange={(e) => setTempUsername(e.target.value)}
-                    className="bg-zinc-950 border border-accent/30 rounded-lg px-3 py-1 text-lg font-black uppercase tracking-tight text-white focus:outline-none focus:border-accent w-full"
-                    autoFocus
-                    onKeyDown={(e) => e.key === 'Enter' && handleSaveUsername()}
-                  />
-                  <button onClick={handleSaveUsername} className="p-2 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-colors shrink-0">
-                    <Check size={18} />
-                  </button>
-                  <button onClick={handleCancelEdit} className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors shrink-0">
-                    <X size={18} />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3 group/name">
-                  <h2 className="text-xl font-black uppercase tracking-tight">{username}</h2>
-                  <button 
-                    onClick={() => setIsEditing(true)}
-                    className="p-1.5 opacity-0 group-hover/name:opacity-100 text-zinc-500 hover:text-accent transition-all"
-                  >
-                    <Edit2 size={14} />
-                  </button>
-                </div>
-              )}
-              <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">guest@xtermux.local</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
-              <Calendar className="text-accent" size={20} />
-              <div>
-                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Initialization</p>
-                <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>
+          <div className="mt-14 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                {isEditing ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={tempUsername}
+                      onChange={(e) => setTempUsername(e.target.value)}
+                      className="bg-zinc-950 border border-accent/30 rounded-lg px-3 py-1 text-lg font-black uppercase tracking-tight text-white focus:outline-none focus:border-accent w-full"
+                      autoFocus
+                      onKeyDown={(e) => e.key === 'Enter' && handleSaveUsername()}
+                    />
+                    <button onClick={handleSaveUsername} className="p-2 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-colors shrink-0">
+                      <Check size={18} />
+                    </button>
+                    <button onClick={handleCancelEdit} className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors shrink-0">
+                      <X size={18} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3 group/name">
+                    <h2 className="text-xl font-black uppercase tracking-tight">{username}</h2>
+                    <button 
+                      onClick={() => setIsEditing(true)}
+                      className="p-1.5 opacity-0 group-hover/name:opacity-100 text-zinc-500 hover:text-accent transition-all"
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                  </div>
+                )}
+                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">guest@xtermux.local</p>
               </div>
             </div>
-            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
-              <SecurityShield className="text-blue-400" size={20} />
-              <div>
-                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Security Status</p>
-                <p className="text-sm font-bold text-green-500">Local Only</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
+                <Calendar className="text-accent" size={20} />
+                <div>
+                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Initialization</p>
+                  <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>
+                </div>
+              </div>
+              <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
+                <SecurityShield className="text-blue-400" size={20} />
+                <div>
+                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Security Status</p>
+                  <p className="text-sm font-bold text-green-500">Local Only</p>
+                </div>
               </div>
             </div>
           </div>
