@@ -64,6 +64,16 @@ const AIChat: React.FC = () => {
   };
 
   const createNewChat = async () => {
+    // Check if we already have an empty session to avoid duplicates
+    const emptySession = sessions.find(s => s.title === 'New Chat');
+    if (emptySession) {
+      if (currentSessionId !== emptySession.id) {
+        selectSession(emptySession.id);
+      }
+      setIsSidebarOpen(false);
+      return;
+    }
+
     try {
       const res = await fetch('/api/sessions', {
         method: 'POST',
