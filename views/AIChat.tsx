@@ -128,7 +128,28 @@ const AIChat: React.FC = () => {
   };
 
   const handleSend = async (customPrompt?: string) => {
-    if (!currentSessionId || !user) return;
+    if (!user) {
+      showToast("Silakan login untuk menggunakan AI Chat", "error");
+      return;
+    }
+    
+    // Auto-create session if none exists
+    let activeSessionId = currentSessionId;
+    if (!activeSessionId) {
+      try {
+        const docRef = await addDoc(collection(db, 'sessions'), {
+          title: 'New Chat',
+          userId: user.uid,
+          createdAt: serverTimestamp()
+        });
+        activeSessionId = docRef.id;
+        setCurrentSessionId(activeSessionId);
+      } catch (err) {
+        showToast("Gagal membuat sesi chat", "error");
+        return;
+      }
+    }
+
     const finalInput = customPrompt || input;
     if ((!finalInput.trim() && !selectedImage) || isLoading) return;
     
@@ -148,12 +169,12 @@ const AIChat: React.FC = () => {
       };
 
       // Add to session messages
-      const sessionMsgRef = await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), newUserMsg);
+      await addDoc(collection(db, 'sessions', activeSessionId, 'messages'), newUserMsg);
 
       // Update title if first message
       if (messages.length === 0) {
         const title = userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage;
-        await updateDoc(doc(db, 'sessions', currentSessionId), { title });
+        await updateDoc(doc(db, 'sessions', activeSessionId), { title });
       }
 
       setMessages(prev => [...prev, { ...newUserMsg, isStreaming: false }]);
@@ -193,7 +214,7 @@ const AIChat: React.FC = () => {
         createdAt: serverTimestamp()
       };
 
-      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), finalModelMsg);
+      await addDoc(collection(db, 'sessions', activeSessionId, 'messages'), finalModelMsg);
       setMessages(prev => [...prev.slice(0, -1), { ...finalModelMsg, isStreaming: false }]);
 
     } catch (err) {
