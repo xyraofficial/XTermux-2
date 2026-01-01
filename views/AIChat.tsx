@@ -130,7 +130,10 @@ const AIChat: React.FC = () => {
       const stream = await groq.chat.completions.create({
         messages: [
           { role: "system", content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown." },
-          ...updatedMessages.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content })),
+          ...updatedMessages.map(m => ({ 
+            role: (m.role === 'model' ? 'assistant' : 'user') as "assistant" | "user" | "system", 
+            content: m.content 
+          })),
         ],
         model: "llama-3.3-70b-versatile",
         stream: true,
