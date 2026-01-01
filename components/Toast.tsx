@@ -44,6 +44,8 @@ export const ToastContainer: React.FC = () => {
     setToasts(prev => prev.filter(t => t.id !== id));
   };
 
+  if (!toasts.length) return null;
+
   return (
     <div className="fixed top-6 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4">
       {toasts.map(t => (
