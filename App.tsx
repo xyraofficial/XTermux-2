@@ -216,7 +216,7 @@ const AppContent: React.FC = () => {
 
       <main 
         tabIndex={-1}
-        className={`flex-1 max-w-5xl mx-auto w-full relative outline-none focus:outline-none focus-visible:outline-none pb-safe ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-40 no-scrollbar'}`}
+        className={`flex-1 max-w-5xl mx-auto w-full relative outline-none focus:outline-none focus-visible:outline-none pb-safe ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden px-4 md:px-8 lg:px-12 scroll-smooth pb-44 no-scrollbar'}`}
       >
         {!session ? <Auth /> : renderContent()}
         {showThemePicker && (

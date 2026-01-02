@@ -284,26 +284,26 @@ const AIChat: React.FC = () => {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-8 lg:p-20 space-y-12 no-scrollbar scroll-smooth">
+        <div className="flex-1 overflow-y-auto p-4 md:p-12 lg:p-20 space-y-12 no-scrollbar scroll-smooth">
           {messages.length === 0 && !isLoading && (
-              <div className="h-full flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-1000">
-                  <div className="relative group mb-16">
-                    <div className="absolute inset-0 bg-accent/30 rounded-[4rem] blur-[80px] group-hover:bg-accent/50 transition-all duration-1000 animate-pulse" />
-                    <div className="relative w-44 h-44 bg-zinc-900/60 backdrop-blur-3xl rounded-[3.5rem] border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden group-hover:scale-110 transition-transform duration-700">
+              <div className="h-full flex flex-col items-center justify-center text-center p-4 md:p-8 animate-in fade-in zoom-in duration-1000">
+                  <div className="relative group mb-8 md:mb-16">
+                    <div className="absolute inset-0 bg-accent/30 rounded-[3rem] md:rounded-[4rem] blur-[60px] md:blur-[80px] group-hover:bg-accent/50 transition-all duration-1000 animate-pulse" />
+                    <div className="relative w-32 h-32 md:w-44 md:h-44 bg-zinc-900/60 backdrop-blur-3xl rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden group-hover:scale-110 transition-transform duration-700">
                         <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                        <Bot size={80} className="text-accent group-hover:rotate-6 transition-transform duration-700" />
+                        <Bot size={56} className="text-accent group-hover:rotate-6 transition-transform duration-700 md:size-20" />
                     </div>
                   </div>
-                  <div className="max-w-xl space-y-6">
-                    <h1 className="text-6xl font-black text-white uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-zinc-600 leading-none">
+                  <div className="max-w-xl space-y-4 md:space-y-6">
+                    <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-zinc-600 leading-none">
                       Nexus Link
                     </h1>
-                    <p className="text-[12px] text-zinc-500 font-black uppercase tracking-[0.6em] leading-relaxed opacity-60">
+                    <p className="text-[10px] md:text-[12px] text-zinc-500 font-black uppercase tracking-[0.4em] md:tracking-[0.6em] leading-relaxed opacity-60">
                       Neural Interface Operational
                     </p>
-                    <div className="flex flex-wrap justify-center gap-3 mt-12 pt-8 border-t border-white/[0.03]">
+                    <div className="flex flex-wrap justify-center gap-2 md:gap-3 mt-8 md:mt-12 pt-6 md:pt-8 border-t border-white/[0.03]">
                         {['Analyze Trace Log', 'Deploy Terminal Script', 'Master Exploitation'].map((hint) => (
-                            <button key={hint} onClick={() => setInput(hint)} className="px-6 py-3 bg-zinc-900/40 hover:bg-zinc-800 border border-white/5 rounded-[2rem] text-[11px] font-black text-zinc-500 uppercase tracking-widest transition-all hover:border-accent/40 hover:text-accent active:scale-95">
+                            <button key={hint} onClick={() => setInput(hint)} className="px-4 py-2 md:px-6 md:py-3 bg-zinc-900/40 hover:bg-zinc-800 border border-white/5 rounded-[1.5rem] md:rounded-[2rem] text-[9px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest transition-all hover:border-accent/40 hover:text-accent active:scale-95">
                                 {hint}
                             </button>
                         ))}
@@ -312,45 +312,45 @@ const AIChat: React.FC = () => {
               </div>
           )}
 
-          <div className="max-w-4xl mx-auto space-y-16 pb-32">
+          <div className="max-w-4xl mx-auto space-y-10 md:space-y-16 pb-32">
               {messages.map((msg, idx) => (
-                  <div key={idx} className={`flex gap-8 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-8 duration-700`}>
-                      <div className={`shrink-0 flex flex-col items-center gap-3`}>
+                  <div key={idx} className={`flex gap-4 md:gap-8 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-8 duration-700`}>
+                      <div className={`shrink-0 flex flex-col items-center gap-2 md:gap-3`}>
                         <div className={`relative group`}>
-                            {msg.role === 'model' && <div className="absolute inset-0 bg-accent/30 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />}
-                            <div className={`relative w-14 h-14 rounded-[1.5rem] flex items-center justify-center border shadow-2xl transition-all duration-700 ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
-                                {msg.role === 'user' ? <User size={26} className="text-zinc-400" /> : <Bot size={26} className="text-accent" />}
+                            {msg.role === 'model' && <div className="absolute inset-0 bg-accent/30 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />}
+                            <div className={`relative w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-[1.5rem] flex items-center justify-center border shadow-2xl transition-all duration-700 ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
+                                {msg.role === 'user' ? <User size={20} className="text-zinc-400 md:size-[26px]" /> : <Bot size={20} className="text-accent md:size-[26px]" />}
                             </div>
                         </div>
-                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">{msg.role === 'user' ? 'Client' : 'Nexus'}</span>
+                        <span className="text-[8px] md:text-[9px] font-black text-zinc-600 uppercase tracking-widest">{msg.role === 'user' ? 'Client' : 'Nexus'}</span>
                       </div>
                       <div className={`max-w-[85%] ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                           {(msg.content || (msg.isStreaming && isLoading)) && (
                               <div className={`relative group/msg transition-all duration-700 ${
                                   msg.role === 'user' 
-                                  ? 'bg-white text-black font-bold rounded-[2.5rem] rounded-tr-none px-8 py-6 shadow-2xl' 
-                                  : 'bg-zinc-900/40 backdrop-blur-3xl border border-white/[0.03] text-zinc-100 rounded-[2.5rem] rounded-tl-none px-8 py-8 md:px-10 md:py-10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]'
+                                  ? 'bg-white text-black font-bold rounded-[1.8rem] md:rounded-[2.5rem] rounded-tr-none px-5 py-4 md:px-8 md:py-6 shadow-2xl' 
+                                  : 'bg-zinc-900/40 backdrop-blur-3xl border border-white/[0.03] text-zinc-100 rounded-[1.8rem] md:rounded-[2.5rem] rounded-tl-none px-5 py-5 md:px-10 md:py-10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]'
                               }`}>
-                                  <div className={`prose prose-invert prose-base max-w-none prose-p:leading-relaxed prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase ${msg.role === 'user' ? 'prose-p:text-black prose-p:font-bold' : 'prose-p:text-zinc-300'}`}>
+                                  <div className={`prose prose-invert prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase ${msg.role === 'user' ? 'prose-p:text-black prose-p:font-bold' : 'prose-p:text-zinc-300'}`}>
                                       <ReactMarkdown 
                                           remarkPlugins={[remarkGfm]} 
                                           components={{
-                                              p: ({children}) => <div className="mb-6 last:mb-0">{children}</div>,
+                                              p: ({children}) => <div className="mb-4 md:mb-6 last:mb-0">{children}</div>,
                                               code({inline, children}: any) {
                                                   return !inline ? (
-                                                    <div className="my-10 relative group/codebox rounded-[2.5rem] overflow-hidden border border-white/10 shadow-3xl bg-black/80 backdrop-blur-xl">
+                                                    <div className="my-6 md:my-10 relative group/codebox rounded-2xl md:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-3xl bg-black/80 backdrop-blur-xl">
                                                       <CodeBlock code={String(children).replace(/\n$/, '')} />
                                                     </div>
-                                                  ) : <code className={`px-2 py-0.5 rounded font-bold font-mono text-[14px] ${msg.role === 'user' ? 'bg-black/10 text-black' : 'bg-accent/10 text-accent'}`}>{children}</code>
+                                                  ) : <code className={`px-2 py-0.5 rounded font-bold font-mono text-[13px] md:text-[14px] ${msg.role === 'user' ? 'bg-black/10 text-black' : 'bg-accent/10 text-accent'}`}>{children}</code>
                                               }
                                           }}
                                       >
                                           {msg.content + (msg.isStreaming && msg.content ? "▍" : "")}
                                       </ReactMarkdown>
                                   </div>
-                                  <div className={`absolute bottom-4 ${msg.role === 'user' ? 'left-6' : 'right-6'} opacity-0 group-hover/msg:opacity-100 transition-opacity`}>
-                                      <button onClick={() => { navigator.clipboard.writeText(msg.content); showToast('Buffer Updated', 'success'); }} className={`p-2.5 rounded-xl ${msg.role === 'user' ? 'hover:bg-black/10 text-black/40' : 'hover:bg-white/5 text-zinc-600'}`}>
-                                          <Copy size={16} />
+                                  <div className={`absolute bottom-3 md:bottom-4 ${msg.role === 'user' ? 'left-4 md:left-6' : 'right-4 md:right-6'} opacity-0 group-hover/msg:opacity-100 transition-opacity`}>
+                                      <button onClick={() => { navigator.clipboard.writeText(msg.content); showToast('Buffer Updated', 'success'); }} className={`p-1.5 md:p-2.5 rounded-xl ${msg.role === 'user' ? 'hover:bg-black/10 text-black/40' : 'hover:bg-white/5 text-zinc-600'}`}>
+                                          <Copy size={14} className="md:size-[16px]" />
                                       </button>
                                   </div>
                               </div>
@@ -373,9 +373,9 @@ const AIChat: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-8 bg-black/40 backdrop-blur-3xl border-t border-white/[0.03] shrink-0 z-40 pb-40">
+        <div className="p-4 md:p-8 bg-black/40 backdrop-blur-3xl border-t border-white/[0.03] shrink-0 z-40 pb-36 md:pb-40">
           <div className="max-w-4xl mx-auto">
-              <div className="flex items-center gap-4 bg-zinc-900/80 p-3 rounded-[3rem] border border-white/[0.05] focus-within:border-accent/40 transition-all shadow-3xl relative group">
+              <div className="flex items-center gap-2 md:gap-4 bg-zinc-900/80 p-2 md:p-3 rounded-[2rem] md:rounded-[3rem] border border-white/[0.05] focus-within:border-accent/40 transition-all shadow-3xl relative group">
                   <textarea
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
@@ -385,22 +385,22 @@ const AIChat: React.FC = () => {
                           handleSend();
                         }
                       }}
-                      placeholder="Enter command sequence..."
-                      className="flex-1 bg-transparent text-white py-4 px-8 resize-none focus:outline-none text-[16px] font-bold leading-tight max-h-40 no-scrollbar placeholder:text-zinc-700 self-center"
+                      placeholder="Enter command..."
+                      className="flex-1 bg-transparent text-white py-2 px-4 md:py-4 md:px-8 resize-none focus:outline-none text-[14px] md:text-[16px] font-bold leading-tight max-h-32 md:max-h-40 no-scrollbar placeholder:text-zinc-700 self-center"
                       rows={1}
                   />
 
-                  <div className="flex items-center gap-2 pr-2 shrink-0">
+                  <div className="flex items-center pr-1 md:pr-2 shrink-0">
                       <button 
                           onClick={() => handleSend()} 
                           disabled={!input.trim() || isLoading} 
-                          className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 active:scale-90 ${
+                          className={`w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 active:scale-90 ${
                               input.trim() && !isLoading 
                               ? 'bg-accent text-black shadow-[0_0_30px_rgba(var(--accent-rgb),0.4)] hover:scale-105' 
                               : 'bg-zinc-800 text-zinc-600 opacity-40'
                           }`}
                       >
-                          {isLoading ? <Loader2 size={24} className="animate-spin" /> : <Send size={24} strokeWidth={3} />}
+                          {isLoading ? <Loader2 size={18} className="animate-spin md:size-[24px]" /> : <Send size={18} strokeWidth={3} className="md:size-[24px]" />}
                       </button>
                   </div>
               </div>
