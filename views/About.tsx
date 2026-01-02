@@ -5,27 +5,58 @@ import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
 const About: React.FC = () => {
-  const [username, setUsername] = useState(() => localStorage.getItem('xtermux_username') || 'X-User');
+  const [username, setUsername] = useState('X-User');
   const [isEditing, setIsEditing] = useState(false);
-  const [tempUsername, setTempUsername] = useState(username);
-  const [avatar, setAvatar] = useState(() => localStorage.getItem('xtermux_avatar') || '');
-  const [userEmail, setUserEmail] = useState('guest@xtermux.local');
+  const [tempUsername, setTempUsername] = useState('');
+  const [avatar, setAvatar] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    const fetchProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        setUserEmail(user.email || 'user@supabase.local');
+        setUserEmail(user.email || '');
+        
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username, avatar_url')
+          .eq('id', user.id)
+          .single();
+          
+        if (profile) {
+          if (profile.username) {
+            setUsername(profile.username);
+            setTempUsername(profile.username);
+          } else {
+            setTempUsername('X-User');
+          }
+          if (profile.avatar_url) setAvatar(profile.avatar_url);
+        } else {
+          setTempUsername('X-User');
+        }
       }
-    });
+    };
+    fetchProfile();
   }, []);
 
-  const handleSaveUsername = () => {
+  const handleSaveUsername = async () => {
     const trimmed = tempUsername.trim();
     if (trimmed) {
-      setUsername(trimmed);
-      localStorage.setItem('xtermux_username', trimmed);
-      setIsEditing(false);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('profiles')
+          .upsert({ id: user.id, username: trimmed, updated_at: new Date().toISOString() });
+          
+        if (error) {
+          showToast('Gagal menyimpan username', 'error');
+        } else {
+          setUsername(trimmed);
+          setIsEditing(false);
+          showToast('Username diperbarui', 'success');
+        }
+      }
     }
   };
 
@@ -38,14 +69,26 @@ const About: React.FC = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         const base64String = reader.result as string;
-        setAvatar(base64String);
-        localStorage.setItem('xtermux_avatar', base64String);
+        
+        const { error } = await supabase
+          .from('profiles')
+          .upsert({ id: user.id, avatar_url: base64String, updated_at: new Date().toISOString() });
+          
+        if (error) {
+          showToast('Gagal menyimpan foto profil', 'error');
+        } else {
+          setAvatar(base64String);
+          showToast('Foto profil diperbarui', 'success');
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -126,7 +169,7 @@ const About: React.FC = () => {
                     </button>
                   </div>
                 )}
-                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">{userEmail}</p>
+                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">{userEmail || 'guest@xtermux.local'}</p>
               </div>
               <button 
                 onClick={handleSignOut}
