@@ -24,7 +24,12 @@ export const Auth: React.FC = () => {
         setIsResetting(false);
       } else if (isSignUp) {
         const { error } = await supabase.auth.signUp({ email, password });
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes('User already registered')) {
+            throw new Error('This email is already registered. Please sign in instead.');
+          }
+          throw error;
+        }
         showToast('Account created! Please check your email for confirmation.', 'success');
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
