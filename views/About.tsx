@@ -55,8 +55,6 @@ const About: React.FC = () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       showToast('Gagal keluar', 'error');
-    } else {
-      window.location.reload();
     }
   };
 
