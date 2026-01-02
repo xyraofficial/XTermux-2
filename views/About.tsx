@@ -198,6 +198,7 @@ const About: React.FC = () => {
                     </button>
                   </div>
                 )}
+                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">{userEmail}</p>
                 <div className="mt-2">
                   <span className={`text-[9px] font-black px-2 py-0.5 rounded-md border tracking-widest ${
                     role === 'ADMIN' 

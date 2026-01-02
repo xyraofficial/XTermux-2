@@ -161,7 +161,7 @@ const AppContent: React.FC = () => {
   );
 
   return (
-    <div className="h-[100dvh] bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden">
+    <div className="h-[100dvh] bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden relative">
       <style>{`
         :root { --accent-color: ${accentColor}; }
         .text-accent { color: var(--accent-color); }
@@ -169,6 +169,7 @@ const AppContent: React.FC = () => {
         .border-accent { border-color: var(--accent-color); }
         .bg-accent-10 { background-color: color-mix(in srgb, var(--accent-color), transparent 90%); }
         .bg-accent-20 { background-color: color-mix(in srgb, var(--accent-color), transparent 80%); }
+        body { background-color: #09090b; }
       `}</style>
 
       <ToastContainer />
