@@ -82,20 +82,26 @@ const About: React.FC = () => {
           const { data: newProfile } = await supabase.from('profiles').insert([
             { id: user.id, username: 'X-User', role: 'USER' }
           ]).select().single();
-          const userData = { ...user, profile: newProfile };
-          setUser(userData);
+          const freshUserData = { ...user, profile: newProfile };
+          setUser(freshUserData);
           setUsername(newProfile?.username || 'X-User');
+          
+          // Cache for next time
+          localStorage.setItem('user_profile_cache', JSON.stringify({
+            user: freshUserData,
+            username: newProfile?.username || 'X-User'
+          }));
         } else {
           const userData = { ...user, profile };
           setUser(userData);
           setUsername(profile.username || 'X-User');
+          
+          // Cache for next time
+          localStorage.setItem('user_profile_cache', JSON.stringify({
+            user: userData,
+            username: profile.username || 'X-User'
+          }));
         }
-        
-        // Cache for next time
-        localStorage.setItem('user_profile_cache', JSON.stringify({
-          user: userData,
-          username: name
-        }));
       }
     } catch (err) {
       console.error('Error fetching user:', err);

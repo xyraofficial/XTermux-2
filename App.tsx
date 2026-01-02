@@ -7,12 +7,12 @@ import { Auth } from './components/Auth';
 import { Session } from '@supabase/supabase-js';
 
 import AdminView from './views/Admin';
+import HomeView from './views/Home';
 import PackagesView from './views/Packages';
 import GuidesView from './views/Guides';
 import AboutView from './views/About';
 import AIChatView from './views/AIChat';
 import ScriptsView from './views/Scripts';
-import ArchitectView from './views/Architect';
 import ConfirmEmailView from './views/ConfirmEmail';
 import ResetPasswordView from './views/ResetPassword';
 
@@ -128,13 +128,12 @@ const AppContent: React.FC = () => {
     const viewProps = { className: "h-full animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out" };
     switch (currentView) {
       case ViewState.HOME: return <div {...viewProps}><HomeView onNavigate={(v) => navigate(ViewState[v as keyof typeof ViewState])} initialCommand={pendingCommand} onCommandStarted={() => setPendingCommand(null)} /></div>;
-      case ViewState.ARCHITECT: return <div {...viewProps}><ArchitectView /></div>;
       case ViewState.PACKAGES: return <div {...viewProps}><PackagesView /></div>;
       case ViewState.SCRIPTS: return <div {...viewProps}><ScriptsView /></div>;
       case ViewState.GUIDES: return <div {...viewProps}><GuidesView /></div>;
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
       case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
-      case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>; // Mapping ARCHITECT to AdminView for now
+      case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>;
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.TERMS: return <div {...viewProps}><TermsView onBack={() => navigate(ViewState.HOME)} /></div>;
@@ -226,7 +225,7 @@ const AppContent: React.FC = () => {
                       setAccentColor(color);
                       setShowThemePicker(false);
                     }}
-                    className={`w-full aspect-square rounded-2xl transition-all duration-300 shadow-lg \${accentColor === color ? 'ring-2 ring-white ring-offset-4 ring-offset-zinc-900 scale-90' : 'hover:scale-110 active:scale-95'}`}
+                    className={`w-full aspect-square rounded-2xl transition-all duration-300 shadow-lg ${accentColor === color ? 'ring-2 ring-white ring-offset-4 ring-offset-zinc-900 scale-90' : 'hover:scale-110 active:scale-95'}`}
                     style={{ backgroundColor: color }}
                   />
                 ))}
