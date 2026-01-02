@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Eraser, Plus, MessageSquare, Trash2, Menu, X, Copy, Check } from 'lucide-react';
+import { Send, Bot, User, Loader2, Eraser, Plus, MessageSquare, Trash2, Menu, X, Copy, Check, ThumbsUp, ThumbsDown, Share2 } from 'lucide-react';
 import Groq from 'groq-sdk';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -237,7 +237,8 @@ const AIChat: React.FC = () => {
               <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
                 {msg.role === 'user' ? <User size={14} className="text-zinc-400" /> : <Bot size={14} className="text-accent" />}
               </div>
-              <div className={`max-w-[85%] p-4 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-accent text-black font-bold rounded-tr-none' : 'bg-zinc-900/50 border border-white/5 text-zinc-300 rounded-tl-none overflow-x-auto'}`}>
+            <div className={`max-w-[85%] space-y-2 ${msg.role === 'user' ? 'ml-auto' : ''}`}>
+              <div className={`p-4 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-accent text-black font-bold rounded-tr-none' : 'bg-zinc-900/50 border border-white/5 text-zinc-300 rounded-tl-none overflow-x-auto'}`}>
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]} 
                   components={{ 
@@ -275,6 +276,33 @@ const AIChat: React.FC = () => {
                   {msg.content}
                 </ReactMarkdown>
               </div>
+              
+              {msg.role === 'model' && (
+                <div className="flex items-center gap-1 px-1">
+                  <button onClick={() => showToast("Feedback recorded", "success")} className="p-2 text-zinc-600 hover:text-accent transition-colors active:scale-90">
+                    <ThumbsUp size={14} />
+                  </button>
+                  <button onClick={() => showToast("Feedback recorded", "success")} className="p-2 text-zinc-600 hover:text-red-500 transition-colors active:scale-90">
+                    <ThumbsDown size={14} />
+                  </button>
+                  <button onClick={() => {
+                    navigator.clipboard.writeText(msg.content);
+                    showToast("Response copied", "success");
+                  }} className="p-2 text-zinc-600 hover:text-white transition-colors active:scale-90">
+                    <Copy size={14} />
+                  </button>
+                  <button onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({ title: 'AI Response', text: msg.content });
+                    } else {
+                      showToast("Sharing not supported", "info");
+                    }
+                  }} className="p-2 text-zinc-600 hover:text-white transition-colors active:scale-90">
+                    <Share2 size={14} />
+                  </button>
+                </div>
+              )}
+            </div>
             </div>
           ))
         )}
