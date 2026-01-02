@@ -300,30 +300,30 @@ export const Auth: React.FC = () => {
                   op: 60,
                   w: 400,
                   h: 400,
-                  nm: "Compact Shield",
+                  nm: "Simple Pulse",
                   ddd: 0,
                   assets: [],
                   layers: [
                     {
-                      ddd: 0, ind: 1, ty: 4, nm: "MainShield", sr: 1,
+                      ddd: 0, ind: 1, ty: 4, nm: "OuterRing", sr: 1,
                       ks: {
                         o: { a: 1, k: [
-                          { t: 0, s: [0], e: [100], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
-                          { t: 20, s: [100] }
+                          { t: 0, s: [30], e: [0], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
+                          { t: 60, s: [0] }
                         ]},
                         r: { a: 0, k: 0 },
                         p: { a: 0, k: [200, 200] },
                         a: { a: 0, k: [0, 0] },
                         s: { a: 1, k: [
-                          { t: 0, s: [0, 0], e: [100, 100], i: { x: 0.6, y: 1 }, o: { x: 0.4, y: 0 } },
-                          { t: 25, s: [100, 100] }
+                          { t: 0, s: [80, 80], e: [150, 150], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
+                          { t: 60, s: [150, 150] }
                         ]}
                       },
                       shapes: [
                         {
                           ty: "gr",
                           it: [
-                            { ty: "rc", s: { a: 0, k: [120, 150] }, r: 30 },
+                            { ty: "el", s: { a: 0, k: [200, 200] }, p: { a: 0, k: [0, 0] } },
                             { ty: "fl", c: { a: 0, k: [0, 0.66, 0.52, 1] } }
                           ]
                         }
@@ -331,24 +331,24 @@ export const Auth: React.FC = () => {
                       ip: 0, op: 60, st: 0
                     },
                     {
-                      ddd: 0, ind: 2, ty: 4, nm: "InternalGlow", sr: 1,
+                      ddd: 0, ind: 2, ty: 4, nm: "InnerShield", sr: 1,
                       ks: {
-                        o: { a: 1, k: [
-                          { t: 20, s: [0], e: [50], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
-                          { t: 40, s: [50], e: [0], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
-                          { t: 60, s: [0] }
-                        ]},
+                        o: { a: 0, k: 100 },
                         r: { a: 0, k: 0 },
                         p: { a: 0, k: [200, 200] },
                         a: { a: 0, k: [0, 0] },
-                        s: { a: 0, k: [80, 80] }
+                        s: { a: 1, k: [
+                          { t: 0, s: [90, 90], e: [100, 100], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
+                          { t: 30, s: [100, 100], e: [90, 90], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
+                          { t: 60, s: [90, 90] }
+                        ]}
                       },
                       shapes: [
                         {
                           ty: "gr",
                           it: [
-                            { ty: "rc", s: { a: 0, k: [100, 130] }, r: 25 },
-                            { ty: "fl", c: { a: 0, k: [1, 1, 1, 1] } }
+                            { ty: "rc", s: { a: 0, k: [100, 120] }, r: 25 },
+                            { ty: "fl", c: { a: 0, k: [0, 0.66, 0.52, 1] } }
                           ]
                         }
                       ],
@@ -359,7 +359,7 @@ export const Auth: React.FC = () => {
                 loop={true}
                 autoplay={true}
                 className="w-full h-full"
-                style={{ width: '80%', height: '80%', display: 'block' }}
+                style={{ width: '70%', height: '70%', display: 'block' }}
               />
             </div>
           </div>
