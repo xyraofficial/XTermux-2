@@ -94,6 +94,7 @@ const AIChat: React.FC = () => {
       showToast("Delete failed", "error");
     }
   };
+  const handleSend = async () => {
     if (!currentSessionId || !input.trim() || isLoading) return;
     const userMsg = input.trim();
     
