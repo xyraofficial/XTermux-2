@@ -61,8 +61,8 @@ const AppContent: React.FC = () => {
     if (path === '/guides') return ViewState.GUIDES;
     if (path === '/scripts') return ViewState.SCRIPTS;
     if (path === '/ai') return ViewState.AI_CHAT;
-    if (path === '/confirm-email') return ViewState.CONFIRM_EMAIL;
-    if (path === '/reset-password') return ViewState.RESET_PASSWORD;
+    if (path.includes('/confirm-email')) return ViewState.CONFIRM_EMAIL;
+    if (path.includes('/reset-password')) return ViewState.RESET_PASSWORD;
     return ViewState.HOME;
   };
 
