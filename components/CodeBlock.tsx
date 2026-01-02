@@ -42,22 +42,24 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash' }) => {
         <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">{label}</span>
       </div>
       
-      <div className="relative p-5 flex items-start gap-4">
-        <div className="flex-1 font-mono text-[11px] leading-relaxed">
+      <div className="relative p-5">
+        <div className="font-mono text-[11px] leading-relaxed break-all">
           <div className="flex items-start gap-2">
             {isTerminal && <span className="text-zinc-700 select-none font-bold mt-[1px]">$</span>}
-            <span className={`${getTextColor()} whitespace-pre-wrap font-bold break-all`} style={{ wordBreak: 'break-all' }}>
+            <span className={`${getTextColor()} whitespace-pre-wrap font-bold break-all`} style={{ wordBreak: 'break-all', overflowWrap: 'anywhere' }}>
               {code}
             </span>
           </div>
         </div>
         
-        <button
-          onClick={handleCopy}
-          className="shrink-0 p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-700 transition-all active:scale-90"
-        >
-          {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-        </button>
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={handleCopy}
+            className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-700 transition-all active:scale-90"
+          >
+            {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -61,14 +61,14 @@ const Scripts: React.FC = () => {
       </div>
 
       {selectedScript && (
-        <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-md p-4 flex items-end">
-          <div className="w-full bg-zinc-900 border border-white/10 rounded-t-[2.5rem] rounded-b-3xl flex flex-col max-h-[90vh] animate-in slide-in-from-bottom-full duration-300">
-            <div className="p-6 border-b border-white/5 flex items-center justify-between">
+        <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-md p-4 flex items-center justify-center">
+          <div className="w-full max-w-lg bg-zinc-900 border border-white/10 rounded-[2.5rem] flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300 shadow-2xl overflow-hidden">
+            <div className="p-6 border-b border-white/5 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
                 <Terminal className="text-green-500" size={20} />
-                <h3 className="font-black text-white uppercase tracking-widest">{selectedScript.name}</h3>
+                <h3 className="font-black text-white uppercase tracking-widest truncate">{selectedScript.name}</h3>
               </div>
-              <button onClick={() => setSelectedScript(null)} className="p-2 bg-zinc-800 rounded-full text-zinc-500"><X size={20} /></button>
+              <button onClick={() => setSelectedScript(null)} className="p-2 bg-zinc-800 rounded-full text-zinc-500 hover:text-white transition-colors"><X size={20} /></button>
             </div>
             <div className="p-6 overflow-y-auto space-y-6 no-scrollbar">
               <div className="space-y-2">
@@ -77,9 +77,11 @@ const Scripts: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Installation Command</span>
-                <CodeBlock code={selectedScript.installCommand} />
+                <div className="w-full">
+                  <CodeBlock code={selectedScript.installCommand} />
+                </div>
               </div>
-              <button onClick={() => window.open(selectedScript.githubUrl, '_blank')} className="w-full py-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center gap-3 text-white font-black text-xs uppercase tracking-widest">
+              <button onClick={() => window.open(selectedScript.githubUrl, '_blank')} className="w-full py-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-colors">
                 <Github size={18} /> View On GitHub
               </button>
             </div>
