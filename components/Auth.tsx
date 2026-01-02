@@ -309,27 +309,52 @@ export const Auth: React.FC = () => {
 
         <div className="flex flex-col items-center gap-12 flex-1 justify-center max-w-sm w-full">
           <div className="relative">
-            <div className="w-64 h-64 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-4 p-4">
+            <div className="w-64 h-64 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden animate-pulse-slow">
+              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-4 p-4 animate-float-icons">
                 {[...Array(20)].map((_, i) => (
                   <MessageSquare key={i} size={16} />
                 ))}
               </div>
               <div className="relative z-10 flex flex-col items-center">
                 <div className="flex gap-4 mb-4">
-                  <div className="w-12 h-12 bg-[#25d366] rounded-2xl flex items-center justify-center transform -rotate-12">
+                  <div className="w-12 h-12 bg-[#25d366] rounded-2xl flex items-center justify-center transform -rotate-12 animate-bounce-gentle">
                     <MessageSquare size={24} className="text-[#0b141a]" />
                   </div>
-                  <div className="w-12 h-12 bg-[#34b7f1] rounded-2xl flex items-center justify-center transform rotate-12">
+                  <div className="w-12 h-12 bg-[#34b7f1] rounded-2xl flex items-center justify-center transform rotate-12 animate-bounce-gentle delay-100">
                     <Globe size={24} className="text-[#0b141a]" />
                   </div>
                 </div>
-                <div className="w-16 h-16 bg-[#00a884] rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 bg-[#00a884] rounded-full flex items-center justify-center animate-spin-slow">
                   <Shield size={32} className="text-[#0b141a]" />
                 </div>
               </div>
             </div>
           </div>
+
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes pulse-slow {
+              0%, 100% { transform: scale(1); opacity: 0.8; }
+              50% { transform: scale(1.05); opacity: 1; }
+            }
+            @keyframes float-icons {
+              0% { transform: translateY(0) rotate(0deg); }
+              50% { transform: translateY(-10px) rotate(5deg); }
+              100% { transform: translateY(0) rotate(0deg); }
+            }
+            @keyframes bounce-gentle {
+              0%, 100% { transform: translateY(0) rotate(-12deg); }
+              50% { transform: translateY(-8px) rotate(-8deg); }
+            }
+            @keyframes spin-slow {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+            .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+            .animate-float-icons { animation: float-icons 6s ease-in-out infinite; }
+            .animate-bounce-gentle { animation: bounce-gentle 3s ease-in-out infinite; }
+            .animate-spin-slow { animation: spin-slow 8s linear infinite; }
+            .delay-100 { animation-delay: 100ms; }
+          `}} />
 
           <div className="text-center space-y-4">
             <h1 className="text-3xl font-normal">{t.welcome}</h1>
