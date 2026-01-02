@@ -57,15 +57,6 @@ const About: React.FC = () => {
       setLoading(false);
     }, 3000);
 
-    // Try to load cached profile first for instant UI after loading
-    const cached = localStorage.getItem('user_profile_cache');
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        setUser(parsed.user);
-        setUsername(parsed.username);
-      } catch (e) {}
-    }
     fetchUser();
     
     return () => clearTimeout(timer);
@@ -111,8 +102,63 @@ const About: React.FC = () => {
   };
 
   const handleSignOut = async () => {
+    localStorage.removeItem('user_profile_cache');
     await supabase.auth.signOut();
     window.location.reload();
+  };
+
+  const handleUpdateProfile = async (newUsername: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({ username: newUsername, updated_at: new Date().toISOString() })
+        .eq('id', user.id);
+
+      if (error) throw error;
+      
+      showToast('Profile updated successfully', 'success');
+      fetchUser();
+    } catch (err: any) {
+      showToast(err.message || 'Error updating profile', 'error');
+    }
+  };
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}-${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      showToast('Avatar updated', 'success');
+      fetchUser();
+    } catch (err: any) {
+      showToast(err.message || 'Error uploading avatar', 'error');
+    }
   };
 
   if (loading) return (
@@ -139,11 +185,22 @@ const About: React.FC = () => {
             {user?.profile?.avatar_url ? <img src={user.profile.avatar_url} className="w-full h-full object-cover" /> : <User size={40} className="text-zinc-700" />}
           </div>
           <button onClick={() => fileInputRef.current?.click()} className="absolute -bottom-1 -right-1 p-2.5 bg-accent text-black rounded-xl shadow-xl active:scale-90"><Camera size={16} /></button>
-          <input type="file" ref={fileInputRef} className="hidden" onChange={() => {}} />
+          <input type="file" ref={fileInputRef} className="hidden" onChange={handleAvatarUpload} />
         </div>
 
         <div className="space-y-1">
-          <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">{username}</h2>
+          <div className="flex items-center justify-center gap-2">
+            <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">{username}</h2>
+            <button 
+              onClick={() => {
+                const newName = prompt('Enter new username:', username);
+                if (newName && newName !== username) handleUpdateProfile(newName);
+              }}
+              className="p-1 text-zinc-600 hover:text-accent transition-colors"
+            >
+              <Edit2 size={14} />
+            </button>
+          </div>
           <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-[0.3em]">{user?.email}</p>
         </div>
 
