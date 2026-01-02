@@ -159,42 +159,50 @@ const Packages: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-4 space-y-6 pb-40">
-        <div className="grid gap-4">
+      <div className="p-6 space-y-8 pb-40">
+        <div className="grid gap-6">
             {visiblePackages.length > 0 ? (
               visiblePackages.map((pkg) => {
                 const isFav = favorites.includes(pkg.id);
                 const isInQueue = installQueue.includes(pkg.id);
                 return (
-                  <div key={pkg.id} className="group bg-zinc-900/40 border border-zinc-800/60 rounded-[1.5rem] p-5 hover:border-zinc-700 transition-all duration-300 relative">
-                    <div className="absolute top-5 right-5 flex items-center gap-2">
-                        <button 
-                          onClick={(e) => toggleQueue(e, pkg.id)}
-                          className={`p-2 rounded-xl transition-all active:scale-90 ${isInQueue ? 'bg-accent text-black' : 'bg-zinc-800 text-zinc-500 hover:text-white'}`}
-                          title="Add to Bulk Install Queue"
-                        >
-                          {isInQueue ? <Check size={18} /> : <Plus size={18} />}
-                        </button>
-                        <button 
-                          onClick={(e) => toggleFavorite(e, pkg.id)}
-                          className={`p-2 rounded-xl transition-all active:scale-90 ${isFav ? 'text-red-500 bg-red-500/10' : 'text-zinc-600 bg-zinc-800/50'}`}
-                        >
-                          <Heart size={18} className={isFav ? 'fill-current' : ''} />
-                        </button>
-                    </div>
-
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center group-hover:border-accent/30 transition-colors">
-                        <Package size={20} className="text-zinc-400 group-hover:text-accent" />
+                  <div key={pkg.id} className="group relative">
+                    <div className="absolute inset-0 bg-zinc-900/30 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-accent/30 transition-all duration-500" />
+                    <div className="relative p-6 md:p-8">
+                      <div className="absolute top-6 right-6 flex items-center gap-3">
+                          <button 
+                            onClick={(e) => toggleQueue(e, pkg.id)}
+                            className={`p-2.5 rounded-2xl transition-all active:scale-90 shadow-lg ${isInQueue ? 'bg-accent text-black' : 'bg-zinc-800/50 backdrop-blur-md text-zinc-500 hover:text-white border border-white/5'}`}
+                          >
+                            {isInQueue ? <Check size={18} /> : <Plus size={18} />}
+                          </button>
+                          <button 
+                            onClick={(e) => toggleFavorite(e, pkg.id)}
+                            className={`p-2.5 rounded-2xl transition-all active:scale-90 shadow-lg ${isFav ? 'text-red-500 bg-red-500/10 border border-red-500/20' : 'text-zinc-600 bg-zinc-800/50 backdrop-blur-md border border-white/5'}`}
+                          >
+                            <Heart size={18} className={isFav ? 'fill-current' : ''} />
+                          </button>
                       </div>
-                      <div>
-                          <h4 className="font-bold text-white text-[16px] tracking-tight">{pkg.name}</h4>
-                          <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">{pkg.category}</span>
+
+                      <div className="flex items-center gap-5 mb-6">
+                        <div className="w-14 h-14 rounded-[1.25rem] bg-zinc-900/80 border border-white/10 flex items-center justify-center group-hover:border-accent/50 group-hover:bg-zinc-800 transition-all duration-500 shadow-2xl">
+                          <Package size={24} className="text-zinc-400 group-hover:text-accent transition-colors" />
+                        </div>
+                        <div>
+                            <h4 className="font-black text-white text-lg tracking-tight group-hover:text-accent transition-colors">{pkg.name}</h4>
+                            <div className="flex items-center gap-2 mt-1">
+                              <div className="w-1 h-1 rounded-full bg-zinc-700" />
+                              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{pkg.category}</span>
+                            </div>
+                        </div>
+                      </div>
+
+                      <p className="text-sm text-zinc-400 mb-6 leading-relaxed font-medium line-clamp-2 pr-20">{pkg.description}</p>
+                      <div className="relative group/code">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-accent/20 to-transparent rounded-2xl blur opacity-0 group-hover/code:opacity-100 transition duration-500" />
+                        <CodeBlock code={pkg.installCommand} />
                       </div>
                     </div>
-
-                    <p className="text-[13px] text-zinc-400 mb-5 leading-relaxed font-medium line-clamp-2 pr-12">{pkg.description}</p>
-                    <CodeBlock code={pkg.installCommand} />
                   </div>
                 );
               })
