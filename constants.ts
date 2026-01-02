@@ -75,8 +75,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'sherlock-project',
     description: 'Hunt down social media accounts by username across social networks.',
     githubUrl: 'https://github.com/sherlock-project/sherlock',
-    category: 'OSINT',
-    installCommand: 'git clone https://github.com/sherlock-project/sherlock && cd sherlock && python3 -m pip install -r requirements.txt',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade. Pastikan internet stabil.',
     previewOutput: `
 [*] Checking username: user123
 [+] Instagram: https://instagram.com/user123
@@ -90,8 +90,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'sundowndev',
     description: 'Advanced information gathering framework for phone numbers.',
     githubUrl: 'https://github.com/sundowndev/phoneinfoga',
-    category: 'OSINT',
-    installCommand: 'pkg install phoneinfoga',
+    requiredPackages: ['phoneinfoga'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
     ____  __                      
    / __ \\/ /_  ____  ____  ___    
@@ -110,8 +110,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'm4ll0k',
     description: 'Email Information Gathering Tool.',
     githubUrl: 'https://github.com/m4ll0k/Infoga',
-    category: 'OSINT',
-    installCommand: 'git clone https://github.com/m4ll0k/Infoga && cd Infoga && python setup.py install',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
  _       __                   
 (_)___  / ____/____  ____ _____ 
@@ -130,8 +130,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 's0md3v',
     description: 'An advanced tool to find admin panels.',
     githubUrl: 'https://github.com/s0md3v/Breacher',
-    category: 'OSINT',
-    installCommand: 'git clone https://github.com/s0md3v/Breacher && cd Breacher && python breacher.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ____                  _               
  |  _ \\                | |              
@@ -150,8 +150,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'aboul3la',
     description: 'Fast subdomains enumeration tool for penetration testers.',
     githubUrl: 'https://github.com/aboul3la/Sublist3r',
-    category: 'OSINT',
-    installCommand: 'git clone https://github.com/aboul3la/Sublist3r && cd Sublist3r && pip install -r requirements.txt',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ____        _     _ _     _   _____
  / ___| _   _| |__ | (_)___| |_|___ / _ __
@@ -203,8 +203,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Datalux',
     description: 'OSINT Tool on Instagram to collect, analyze, and run reconnaissance.',
     githubUrl: 'https://github.com/Datalux/Osintgram',
-    category: 'OSINT',
-    installCommand: 'git clone https://github.com/Datalux/Osintgram && cd Osintgram && pip install -r requirements.txt',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ___       _       _                           
  / _ \\ ___ (_)_ __ | |_ __ _ _ __ __ _ _ __ ___ 
@@ -317,8 +317,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'KasRoudra',
     description: 'Ultimate Phishing Tool in Python3 with OTP support.',
     githubUrl: 'https://github.com/KasRoudra/PyPhisher',
-    category: 'Phishing',
-    installCommand: 'git clone https://github.com/KasRoudra/PyPhisher && cd PyPhisher && python3 pyphisher.py',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ____        ____  _     _     _
  |  _ \\ _   _|  _ \\| |__ (_)___| |__   ___ _ __
@@ -482,9 +482,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'threat9',
     description: 'Exploitation Framework for Embedded Devices.',
     githubUrl: 'https://github.com/threat9/routersploit',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/threat9/routersploit && cd routersploit && python3 -m pip install -r requirements.txt && python3 rsf.py',
-    isRoot: true,
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
       __
      /  \\
@@ -502,8 +501,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 's0md3v',
     description: 'Advanced XSS Detection Suite.',
     githubUrl: 'https://github.com/s0md3v/XSStrike',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/s0md3v/XSStrike && cd XSStrike && pip install -r requirements.txt',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
  __   __ _____ _____ _        _ _
  \\ \\ / // ____/ ____| |      (_) |
@@ -521,8 +520,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 's0md3v',
     description: 'A friend of SQLmap which does what SQLmap doesn\'t.',
     githubUrl: 'https://github.com/s0md3v/sqlmate',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/s0md3v/sqlmate && cd sqlmate && pip install -r requirements.txt',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ___  __ _ _ __ ___   __ _| |_ ___ 
  / __|/ _\` | '_ \` _ \\ / _\` | __/ _ \\
@@ -540,8 +539,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'commixproject',
     description: 'Automated All-in-One OS Command Injection and Exploitation Tool.',
     githubUrl: 'https://github.com/commixproject/commix',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/commixproject/commix && cd commix && python commix.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
    ___   ___  _ __ ___  _ __ ___ (_)_  __
   / __| / _ \\| '_ \` _ \\| '_ \` _ \\| \\ \\/ /
@@ -557,9 +556,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'derv82',
     description: 'Rewrite of the popular wireless network auditor. (Requires Root & Monitor Mode).',
     githubUrl: 'https://github.com/derv82/wifite2',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/derv82/wifite2 && cd wifite2 && sudo python Wifite.py',
-    isRoot: true,
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
    .               .    
  .´  ·  .     .  ·  \`.  Wifite2
@@ -577,9 +575,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'v1s1t0r1sh3r3',
     description: 'Multi-use bash script for Linux systems to audit wireless networks. (Requires Root).',
     githubUrl: 'https://github.com/v1s1t0r1sh3r3/airgeddon',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/v1s1t0r1sh3r3/airgeddon && cd airgeddon && sudo bash airgeddon.sh',
-    isRoot: true,
+    requiredPackages: ['bash', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ___ _       ___ ___  __  __  __  _  _ 
  /   (_) ___ /  _| __||  \\|  \\/  \\| \\| |
@@ -596,8 +593,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Cvar1984',
     description: 'Nmap shortcut and scanner for easier usage.',
     githubUrl: 'https://github.com/Cvar1984/Easymap',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/Cvar1984/Easymap && cd Easymap && sh install.sh',
+    requiredPackages: ['sh', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   _____                     __  __             
  | ____| __ _ ___ _   _    |  \\/  | __ _ _ __  
@@ -616,8 +613,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'karma9874',
     description: 'Remote Administration Tool for Android (Educational).',
     githubUrl: 'https://github.com/karma9874/AndroRAT',
-    category: 'Exploit',
-    installCommand: 'git clone https://github.com/karma9874/AndroRAT && cd AndroRAT && pip install -r requirements.txt',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
      _              _           ____      _  _____ 
     / \\   _ __   __| |_ __ ___ |  _ \\    / \\|_   _|
@@ -634,8 +631,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Rapid7',
     description: 'The world\'s most used penetration testing framework.',
     githubUrl: 'https://github.com/rapid7/metasploit-framework',
-    category: 'Exploit',
-    installCommand: 'pkg install metasploit',
+    requiredPackages: ['metasploit'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ______________________________________________________________________________
  |                                                                              |
@@ -654,8 +651,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'sqlmapproject',
     description: 'Automatic SQL injection and database takeover tool.',
     githubUrl: 'https://github.com/sqlmapproject/sqlmap',
-    category: 'Exploit',
-    installCommand: 'git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev && cd sqlmap-dev && python sqlmap.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
         ___
        __H__
@@ -677,8 +674,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'TheSpeedX',
     description: 'International SMS and Call Bomber (For Educational Purposes Only).',
     githubUrl: 'https://github.com/TheSpeedX/TBomb',
-    category: 'Spam',
-    installCommand: 'git clone https://github.com/TheSpeedX/TBomb.git && cd TBomb && ./TBomb.sh',
+    requiredPackages: ['bash', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
       _______  ____                  _
      |_   _| ||  _ \\                | |
@@ -695,8 +692,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'cyweb',
     description: 'DoS tool - DDoS Script (Python 3).',
     githubUrl: 'https://github.com/cyweb/hammer',
-    category: 'Spam',
-    installCommand: 'git clone https://github.com/cyweb/hammer && cd hammer && python3 hammer.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
       _   _                               
      | | | | __ _ _ __ ___  _ __ ___   ___
@@ -711,8 +708,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'XCHADX',
     description: 'Most powerful DoS tool (C Language).',
     githubUrl: 'https://github.com/XCHADX/XERXES',
-    category: 'Spam',
-    installCommand: 'git clone https://github.com/XCHADX/XERXES && cd XERXES && gcc xerxes.c -o xerxes',
+    requiredPackages: ['gcc', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
  XERXES - The most powerful DoS tool
  Usage: ./xerxes www.target.com 80
@@ -724,8 +721,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'jseidl',
     description: 'GoldenEye Layer 7 DoS Tool.',
     githubUrl: 'https://github.com/jseidl/GoldenEye',
-    category: 'Spam',
-    installCommand: 'git clone https://github.com/jseidl/GoldenEye && cd GoldenEye && python goldeneye.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
    GoldenEye v2.1 (Layer 7 DoS)
    [!] Usage: ./goldeneye.py <url> [options]
@@ -737,8 +734,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'gkbrk',
     description: 'Low bandwidth DoS tool.',
     githubUrl: 'https://github.com/gkbrk/slowloris',
-    category: 'Spam',
-    installCommand: 'git clone https://github.com/gkbrk/slowloris && cd slowloris && python3 slowloris.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
  Slowloris - Low bandwidth DoS tool
  [!] Attacking target...
@@ -751,8 +748,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'grafov',
     description: 'HULK (HTTP Unbearable Load King) DoS tool.',
     githubUrl: 'https://github.com/grafov/hulk',
-    category: 'Spam',
-    installCommand: 'git clone https://github.com/grafov/hulk && cd hulk && go run hulk.go',
+    requiredPackages: ['golang', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
  HULK - HTTP Unbearable Load King
  [!] Launching attack...
@@ -764,8 +761,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: '4L13199',
     description: 'SMS & Call Bomber tool.',
     githubUrl: 'https://github.com/4L13199/LITESPAM',
-    category: 'Spam',
-    installCommand: 'git clone https://github.com/4L13199/LITESPAM && cd LITESPAM && sh LITESPAM.sh',
+    requiredPackages: ['sh', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   _     _ _                               
  | |   (_) |_ ___ ___ _ __   __ _ _ __ ___ 
@@ -785,8 +782,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Gameye98',
     description: 'Tool installer for Termux. Installs various hacking tools easily.',
     githubUrl: 'https://github.com/Gameye98/Lazymux',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/Gameye98/Lazymux && cd Lazymux && python lazymux.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
     _                                    
    | |   __ _ _____   _ _ __ ___  _   ___
@@ -805,8 +802,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Rajkumrdusad',
     description: 'A Kali Linux hacking tools installer for Termux.',
     githubUrl: 'https://github.com/Rajkumrdusad/Tool-X',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/Rajkumrdusad/Tool-X.git && cd Tool-X && sh install.aex',
+    requiredPackages: ['sh', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   _______           _        __   __
  |__   __|         | |       \\ \\ / /
@@ -823,8 +820,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'rajkumardusad',
     description: 'A library of hacking tools for Termux.',
     githubUrl: 'https://github.com/rajkumardusad/onex',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/rajkumardusad/onex && cd onex && chmod +x onex && ./onex',
+    requiredPackages: ['sh', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
    ___  _   _ _______  __
   / _ \\| \\ | | ____\\ \\/ /
@@ -842,8 +839,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Manisso',
     description: 'Hacking Tools Pack based on Mr. Robot.',
     githubUrl: 'https://github.com/Manisso/fsociety',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/Manisso/fsociety && cd fsociety && python2 fsociety.py',
+    requiredPackages: ['python2', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   __              _      _         
  / _|___  ___  __(_) ___| |_ _   _ 
@@ -859,8 +856,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Mebus',
     description: 'Common User Password Profiler - Interactive password list generator.',
     githubUrl: 'https://github.com/Mebus/cupp',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/Mebus/cupp && cd cupp && python3 cupp.py -i',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ___  _   _  ___  ___
  / __|| | | || _ \\| _ \\
@@ -877,8 +874,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Cabbagec',
     description: 'A beautiful and reliable zsh configuration for Termux.',
     githubUrl: 'https://github.com/Cabbagec/termux-ohmyzsh',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/Cabbagec/termux-ohmyzsh && cd termux-ohmyzsh && ./install.sh',
+    requiredPackages: ['sh', 'git', 'zsh'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
    ____  __    __  ____  _  _  ____  __  __ 
   (  _ \\(  )  (  )(_  _)( \\/ )(  _ \\(  )(  )
@@ -895,8 +892,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'adi1090x',
     description: 'Change color schemes and fonts of Termux.',
     githubUrl: 'https://github.com/adi1090x/termux-style',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/adi1090x/termux-style && cd termux-style && ./install',
+    requiredPackages: ['sh', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   _______                                  _____ __        __
  |__   __|                                / ____|  |      | |
@@ -916,8 +913,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 's0md3v',
     description: 'Crack hashes in seconds using online databases.',
     githubUrl: 'https://github.com/s0md3v/Hash-Buster',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/s0md3v/Hash-Buster && cd Hash-Buster && make install',
+    requiredPackages: ['make', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   _  _          _        ___          _           
  | || |__ _ ___| |__    | _ )_  _ ___| |_ ___ _ _ 
@@ -934,8 +931,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'UltrafunkAmsterdam',
     description: 'Information Gathering Tool written in Python.',
     githubUrl: 'https://github.com/UltrafunkAmsterdam/WebKiller',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/UltrafunkAmsterdam/WebKiller && cd WebKiller && python3 webkiller.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
  __      __      ___.   ____  __._____________  .__  .__                
 /  \\    /  \\ ____\\_ |__|    |/ _|   \\______   \\ |  | |  |   ___________ 
@@ -954,8 +951,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'm4ll0k',
     description: 'Brute force web directory.',
     githubUrl: 'https://github.com/m4ll0k/CrawlBox',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/m4ll0k/CrawlBox && cd CrawlBox && python setup.py install',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
    __________  ___ _       ____  ____  __  __
   / ____/ __ \\/   | |     / / / / / __ )/ / / /
@@ -973,8 +970,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Gameye98',
     description: 'Brute force attack tool using Hydra.',
     githubUrl: 'https://github.com/Gameye98/Black-Hydra',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/Gameye98/Black-Hydra && cd Black-Hydra && python blackhydra.py',
+    requiredPackages: ['python', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   ____  _            _        _   _           _
  |  _ \\| | __ _  ___| | __   | | | |_   _  __| |_ __ __ _
@@ -993,8 +990,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'TechnicalMujeeb',
     description: 'Scripts installer for Termux.',
     githubUrl: 'https://github.com/TechnicalMujeeb/Termux-Lazyscript',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/TechnicalMujeeb/Termux-Lazyscript && cd Termux-Lazyscript && chmod +x * && ./setup.sh',
+    requiredPackages: ['sh', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   _______                                  
  |__   __|                                 
@@ -1013,8 +1010,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'MFDGaming',
     description: 'Install Ubuntu OS in Termux easily.',
     githubUrl: 'https://github.com/MFDGaming/ubuntu-in-termux',
-    category: 'Utility',
-    installCommand: 'git clone https://github.com/MFDGaming/ubuntu-in-termux && cd ubuntu-in-termux && chmod +x ubuntu.sh && ./ubuntu.sh',
+    requiredPackages: ['sh', 'git'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
    _   _ _                  _         
   | | | | |__  _   _ _ __ | |_ _   _ 
@@ -1031,8 +1028,8 @@ export const SCRIPTS: ScriptItem[] = [
     author: 'Kali Linux',
     description: 'Install Kali Nethunter rootless in Termux.',
     githubUrl: 'https://www.kali.org/docs/nethunter/nethunter-rootless/',
-    category: 'Utility',
-    installCommand: 'termux-setup-storage && pkg install wget && wget -O install-nethunter-termux https://offs.ec/2MceZWr && chmod +x install-nethunter-termux && ./install-nethunter-termux',
+    requiredPackages: ['wget', 'storage'],
+    setupInfo: 'Update Termux: pkg update && pkg upgrade.',
     previewOutput: `
   _  __     _ _    _  _     _   _  _          _           
  | |/ /__ _| (_)  | \\| |___| |_| || |_  _ _ _| |_ ___ _ _ 
