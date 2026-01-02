@@ -56,7 +56,7 @@ const AIChat: React.FC = () => {
       return;
     }
 
-    if (sessionsData && sessionsData.length > 0) {
+    if (sessionsData) {
       const formattedSessions: ChatSession[] = sessionsData.map((s: any) => ({
         id: s.id,
         title: s.title,
@@ -70,7 +70,9 @@ const AIChat: React.FC = () => {
       }));
 
       setSessions(formattedSessions);
-      selectSession(formattedSessions[0].id, formattedSessions);
+      if (formattedSessions.length > 0) {
+        selectSession(formattedSessions[0].id, formattedSessions);
+      }
     } else {
       createNewChat();
     }

@@ -32,7 +32,6 @@ const Packages: React.FC = () => {
   const [installQueue, setInstallQueue] = useState<string[]>([]);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [showQueueOverlay, setShowQueueOverlay] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   // Load persistence
   useEffect(() => {
@@ -56,7 +55,6 @@ const Packages: React.FC = () => {
     if (savedQueue) {
         try { setInstallQueue(JSON.parse(savedQueue)); } catch (e) { console.error(e); }
     }
-    setIsLoaded(true);
   }, []);
 
   const toggleFavorite = (e: React.MouseEvent, id: string) => {
@@ -96,7 +94,6 @@ const Packages: React.FC = () => {
   };
 
   const filteredPackages = useMemo(() => {
-    if (!isLoaded) return [];
     const filtered = PACKAGES.filter(pkg => {
       const matchesSearch = 
         pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
