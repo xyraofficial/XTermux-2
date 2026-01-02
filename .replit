@@ -57,3 +57,4 @@ run = ["npm", "run", "dev"]
 [userenv.shared]
 VITE_SUPABASE_URL = "https://phdhtvkfiqhhkfhxkdgh.supabase.co"
 VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZGh0dmtmaXFoaGtmaHhrZGdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczMzU2OTAsImV4cCI6MjA4MjkxMTY5MH0.PYJurX71i85qJTuVDJaffXhSgHYsy4lug2kmMOTM4tM"
+VITE_GROQ_API_KEY = "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"
