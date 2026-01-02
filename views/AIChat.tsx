@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Eraser, Plus, MessageSquare, Trash2, Menu, X } from 'lucide-react';
+import { Send, Bot, User, Loader2, Eraser, Plus, MessageSquare, Trash2, Menu, X, Copy, Check } from 'lucide-react';
 import Groq from 'groq-sdk';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -243,9 +243,32 @@ const AIChat: React.FC = () => {
                   components={{ 
                     code: ({ children, ...props }) => {
                       const inline = (props as any).inline;
-                      return inline 
-                        ? <code className="bg-white/10 px-1 rounded text-accent font-mono">{children}</code>
-                        : <div className="my-2 overflow-x-auto"><code className="block bg-black/40 p-3 rounded-lg border border-white/5 text-accent font-mono whitespace-pre">{children}</code></div>
+                      const content = String(children).replace(/\n$/, '');
+                      
+                      if (inline) {
+                        return <code className="bg-white/10 px-1 rounded text-accent font-mono">{children}</code>;
+                      }
+
+                      return (
+                        <div className="my-4 relative group/code">
+                          <div className="absolute right-2 top-2 z-10 opacity-0 group-hover/code:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(content);
+                                showToast("Copied to clipboard", "success");
+                              }}
+                              className="p-2 bg-zinc-800/80 hover:bg-zinc-700 border border-white/10 rounded-lg text-zinc-400 hover:text-white backdrop-blur-sm transition-all active:scale-90"
+                            >
+                              <Copy size={14} />
+                            </button>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <code className="block bg-black/40 p-4 rounded-xl border border-white/5 text-accent font-mono whitespace-pre leading-relaxed">
+                              {children}
+                            </code>
+                          </div>
+                        </div>
+                      );
                     }
                   }}
                 >
