@@ -43,10 +43,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash' }) => {
       </div>
       
       <div className="relative p-5 flex items-start gap-4">
-        <div className="flex-1 font-mono text-xs leading-relaxed overflow-x-auto no-scrollbar">
+        <div className="flex-1 font-mono text-[11px] leading-relaxed">
           <div className="flex items-start gap-2">
-            {isTerminal && <span className="text-zinc-700 select-none font-bold mt-[2px]">$</span>}
-            <span className={`${getTextColor()} whitespace-pre-wrap font-bold`} style={{ wordBreak: 'break-word' }}>
+            {isTerminal && <span className="text-zinc-700 select-none font-bold mt-[1px]">$</span>}
+            <span className={`${getTextColor()} whitespace-pre-wrap font-bold break-all`} style={{ wordBreak: 'break-all' }}>
               {code}
             </span>
           </div>
