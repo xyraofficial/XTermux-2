@@ -95,23 +95,22 @@ export const Auth: React.FC = () => {
   const handleSupportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    let body = encodeURIComponent(supportMessage);
-    body += encodeURIComponent('\n\n--Support Info--\nApp: XTermux\nLanguage: ' + language);
+    let body = `Support Message:\n${supportMessage}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
     
-    // Check if there are screenshots and add them as base64 or mention them
     const hasScreenshots = screenshots.some(s => s !== null);
     if (hasScreenshots) {
-      body += encodeURIComponent('\n\n--Screenshots Attached (Base64)--\n');
+      body += '\n\n--Screenshots Attached--\n(Note: Large screenshots may be truncated due to email link limits)\n';
       screenshots.forEach((s, i) => {
         if (s) {
-          // Truncate for mailto limits but try to include what we can
-          // Note: mailto has character limits, but this is the requested fix
-          body += encodeURIComponent(`\nScreenshot ${i + 1}:\n${s.substring(0, 1000)}... [truncated]`);
+          // Limit base64 length to prevent massive URLs that crash mail apps
+          // Most mail apps handle up to 2000-4000 chars total for the entire mailto URL
+          const truncatedBase64 = s.length > 1500 ? s.substring(0, 1500) + '...[truncated]' : s;
+          body += `\nScreenshot ${i + 1}:\n${truncatedBase64}\n`;
         }
       });
     }
 
-    const mailto = `mailto:xyraofficialsup@gmail.com?subject=Support Request&body=${body}`;
+    const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent('Support Request')}&body=${encodeURIComponent(body)}`;
     window.location.href = mailto;
     setStep('welcome');
     setSupportMessage('');
