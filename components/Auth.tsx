@@ -513,31 +513,43 @@ export const Auth: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#0b141a] text-[#e9edef] p-6">
-      <div className="w-full flex items-center justify-between mb-8">
+      <div className="w-full flex items-center justify-between mb-8 relative">
         <button 
           onClick={() => setStep('welcome')}
-          className="text-[#00a884] font-medium"
+          className="text-[#00a884] p-1 -ml-1"
         >
-          {t.cancel}
+          <LogIn className="rotate-180" size={24} />
         </button>
         <h2 className="text-xl font-medium">
           {isResetting ? t.resetPassword : (isSignUp ? t.createAccount : t.enterEmail)}
         </h2>
-        <button className="p-2 text-[#8696a0]">
+        <button 
+          onClick={() => setShowMenu(!showMenu)} 
+          className="p-2 text-[#8696a0]"
+        >
           <MoreVertical size={20} />
         </button>
+        
+        {showMenu && (
+          <div className="absolute top-12 right-0 w-48 bg-[#233138] rounded-lg shadow-xl z-50 py-2 border border-white/5 animate-in fade-in zoom-in-95 duration-200">
+            <button
+              onClick={() => {
+                setStep('support');
+                setShowMenu(false);
+              }}
+              className="w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm"
+            >
+              {t.help}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <p className="text-[#8696a0] text-sm leading-relaxed">
-            {isResetting 
-              ? 'XTermux will send an email to verify your address.'
-              : 'XTermux will need to verify your email address.'}
+            {isResetting ? t.verifyingReset : t.verifyingEmail}
           </p>
-          <button className="text-[#53bdeb] text-sm mt-2 font-medium">
-            What's my email?
-          </button>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-6">
