@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Hexagon, Terminal, PenTool, Copy, Package, BookOpen, User } from 'lucide-react';
+import { Bot, Hexagon, Terminal, PenTool, Copy, Package, BookOpen } from 'lucide-react';
 import { showToast } from '../components/Toast';
-import { supabase } from '../supabase';
 
 interface HomeProps {
   onNavigate: (view: string) => void;
@@ -13,28 +12,12 @@ const HISTORY_KEY = 'xtermux_exec_history';
 
 const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarted }) => {
   const [sysStats, setSysStats] = useState({ cpu: 12, ram: 42 });
-  const [username, setUsername] = useState('X-User');
   const [history] = useState<string[]>(() => {
     const saved = localStorage.getItem(HISTORY_KEY);
     return saved ? JSON.parse(saved) : [];
   });
   
   useEffect(() => {
-    const fetchProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('username')
-          .eq('id', user.id)
-          .single();
-        if (profile?.username) {
-          setUsername(profile.username);
-        }
-      }
-    };
-    fetchProfile();
-
     const interval = setInterval(() => {
         setSysStats({
             cpu: Math.floor(Math.random() * 25) + 5,
@@ -47,21 +30,12 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
   return (
     <div className="p-5 space-y-10 pb-32 md:px-8 lg:px-12">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-           <div 
-             onClick={() => onNavigate('ABOUT')}
-             className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-lg cursor-pointer active:scale-90 transition-transform overflow-hidden relative group"
-           >
-              <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <User size={24} className="text-accent" />
-           </div>
-           <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">Welcome Back</span>
-                <div className="w-1 h-1 rounded-full bg-accent animate-pulse" />
-              </div>
-              <h2 className="text-2xl font-black text-white tracking-tighter uppercase">{username}</h2>
-           </div>
+        <div>
+          <h2 className="text-3xl font-black text-white tracking-tighter uppercase md:text-4xl">XTermux</h2>
+          <div className="flex items-center gap-1.5 mt-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">System Online</span>
+          </div>
         </div>
         <div onClick={() => onNavigate('ABOUT')} className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-lg cursor-pointer active:scale-90 transition-transform md:w-14 md:h-14">
            <Hexagon size={24} className="text-accent md:w-7 md:h-7" />
