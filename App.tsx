@@ -53,6 +53,9 @@ const AppContent: React.FC = () => {
 
   const getInitialView = (): ViewState => {
     const path = window.location.pathname.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    
+    // Check path and search for confirm/reset keywords
     if (path === '/help') return ViewState.HELP;
     if (path === '/privacy') return ViewState.PRIVACY;
     if (path === '/terms') return ViewState.TERMS;
@@ -61,8 +64,11 @@ const AppContent: React.FC = () => {
     if (path === '/guides') return ViewState.GUIDES;
     if (path === '/scripts') return ViewState.SCRIPTS;
     if (path === '/ai') return ViewState.AI_CHAT;
-    if (path.includes('/confirm-email')) return ViewState.CONFIRM_EMAIL;
-    if (path.includes('/reset-password')) return ViewState.RESET_PASSWORD;
+    
+    // Improved detection for Supabase auth links
+    if (path.includes('confirm-email') || search.includes('type=signup')) return ViewState.CONFIRM_EMAIL;
+    if (path.includes('reset-password') || search.includes('type=recovery')) return ViewState.RESET_PASSWORD;
+    
     return ViewState.HOME;
   };
 
