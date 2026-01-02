@@ -11,7 +11,7 @@ import HomeView from './views/Home';
 import PackagesView from './views/Packages';
 import GuidesView from './views/Guides';
 import AboutView from './views/About';
-import AIChatView from './views/AIChat';
+import ArchitectView from './views/Architect';
 import ScriptsView from './views/Scripts';
 import ConfirmEmailView from './views/ConfirmEmail';
 import ResetPasswordView from './views/ResetPassword';
@@ -138,7 +138,7 @@ const AppContent: React.FC = () => {
       case ViewState.SCRIPTS: return <div {...viewProps}><ScriptsView /></div>;
       case ViewState.GUIDES: return <div {...viewProps}><GuidesView /></div>;
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
-      case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
+      case ViewState.AI_CHAT: return <div {...viewProps}><ArchitectView /></div>;
       case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>;
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
