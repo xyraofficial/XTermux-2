@@ -45,21 +45,36 @@ const AIChat: React.FC = () => {
         setCurrentSessionId(formatted[0].id);
         setMessages(formatted[0].messages);
       } else {
-        // Create initial session if none exists
-        const { data: newSession, error: createError } = await supabase
-          .from('chat_sessions')
-          .insert([{ user_id: user.id, title: 'New Conversation' }])
-          .select()
-          .single();
-        
-        if (newSession) {
-          setSessions([{ id: newSession.id, title: newSession.title, messages: [] }]);
-          setCurrentSessionId(newSession.id);
-          setMessages([]);
-        }
+        // Just set empty if no sessions
+        setSessions([]);
+        setCurrentSessionId(null);
+        setMessages([]);
       }
     } catch (err) {
       console.error('Fetch sessions failed:', err);
+    }
+  };
+
+  const createNewChat = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      const { data: newSession, error } = await supabase
+        .from('chat_sessions')
+        .insert([{ user_id: user.id, title: 'New Conversation' }])
+        .select()
+        .single();
+      
+      if (newSession) {
+        const sessionObj = { id: newSession.id, title: newSession.title, messages: [] };
+        setSessions(prev => [sessionObj, ...prev]);
+        setCurrentSessionId(newSession.id);
+        setMessages([]);
+        setIsSidebarOpen(false);
+      }
+    } catch (err) {
+      showToast("Failed to create new chat", "error");
     }
   };
 
@@ -85,7 +100,24 @@ const AIChat: React.FC = () => {
         return;
       }
 
-      const { data: msgData, error: msgError } = await supabase.from('chat_messages').insert([{ session_id: currentSessionId, role: 'user', content: userMsg }]).select().single();
+      // Automatically create session if it somehow went missing
+      let sessionId = currentSessionId;
+      if (!sessionId) {
+        const { data: newSession } = await supabase
+          .from('chat_sessions')
+          .insert([{ user_id: user.id, title: userMsg.slice(0, 30) }])
+          .select()
+          .single();
+        if (newSession) {
+          sessionId = newSession.id;
+          setCurrentSessionId(sessionId);
+          setSessions(prev => [{ id: newSession.id, title: newSession.title, messages: [] }, ...prev]);
+        } else {
+          throw new Error("Failed to create session");
+        }
+      }
+
+      const { data: msgData, error: msgError } = await supabase.from('chat_messages').insert([{ session_id: sessionId, role: 'user', content: userMsg }]).select().single();
       
       if (msgError) throw msgError;
 
@@ -118,14 +150,19 @@ const AIChat: React.FC = () => {
           });
         }
       }
-      await supabase.from('chat_messages').insert([{ session_id: currentSessionId, role: 'model', content: fullContent }]);
-    } catch (err) { showToast("AI Link Failed", "error"); } finally { setIsLoading(false); }
+      await supabase.from('chat_messages').insert([{ session_id: sessionId, role: 'model', content: fullContent }]);
+    } catch (err) { 
+      console.error(err);
+      showToast("AI Link Failed", "error"); 
+    } finally { 
+      setIsLoading(false); 
+    }
   };
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-black overflow-hidden relative">
+    <div className="flex flex-col h-[100dvh] bg-black overflow-hidden relative pb-safe">
       <header className="px-4 py-3 border-b border-white/5 bg-black/80 backdrop-blur-xl flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={() => setIsSidebarOpen(true)} className="p-2 bg-zinc-900 border border-white/5 rounded-xl text-zinc-400"><Menu size={18} /></button>
@@ -163,12 +200,23 @@ const AIChat: React.FC = () => {
       {isSidebarOpen && (
         <div className="fixed inset-0 z-[100] flex">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
-          <aside className="relative w-72 bg-zinc-950 h-full border-r border-white/10 p-4 animate-in slide-in-from-left duration-300">
-            <div className="flex items-center justify-between mb-6">
+          <aside className="relative w-72 bg-zinc-950 h-full border-r border-white/10 flex flex-col animate-in slide-in-from-left duration-300">
+            <div className="p-4 border-b border-white/5 flex items-center justify-between">
               <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Sessions</h3>
               <button onClick={() => setIsSidebarOpen(false)} className="text-zinc-600"><X size={18} /></button>
             </div>
-            <div className="space-y-2 overflow-y-auto h-full pb-20 no-scrollbar">
+            
+            <div className="p-4">
+              <button 
+                onClick={createNewChat}
+                className="w-full p-3 bg-accent/10 border border-accent/20 rounded-xl text-accent text-xs font-bold flex items-center justify-center gap-2 hover:bg-accent/20 transition-all"
+              >
+                <Plus size={16} />
+                New Conversation
+              </button>
+            </div>
+
+            <div className="flex-1 space-y-2 overflow-y-auto p-4 pt-0 no-scrollbar">
               {sessions.map(s => (
                 <div key={s.id} onClick={() => { setCurrentSessionId(s.id); setMessages(s.messages); setIsSidebarOpen(false); }} className={`p-3 rounded-xl border transition-all truncate text-xs font-bold ${currentSessionId === s.id ? 'bg-accent/10 border-accent/20 text-accent' : 'bg-transparent border-transparent text-zinc-500'}`}>
                   {s.title}
