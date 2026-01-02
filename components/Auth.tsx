@@ -27,9 +27,15 @@ export const Auth: React.FC = () => {
       describe: 'Describe your problem',
       next: 'NEXT',
       cancel: 'Cancel',
-      enterEmail: 'Enter email',
-      createAccount: 'Create account',
-      resetPassword: 'Reset password',
+      enterEmail: 'Login Account',
+      createAccount: 'Create Account',
+      resetPassword: 'Reset Password',
+      loginInfo: 'Login Info',
+      signupInfo: 'Signup Info',
+      resetInfo: 'Reset Password Info',
+      loginHelp: 'To access your account, enter your registered email and password. Use "Forgot password" if you cannot sign in.',
+      signupHelp: 'Create a new account by providing a valid email address and setting a secure password. You will need to verify your email.',
+      resetHelp: 'If you lost your password, enter your email address and we will send you a secure link to create a new one.',
       yourEmail: 'Your email',
       back: 'Back',
       emailPlaceholder: 'email@example.com',
@@ -74,9 +80,15 @@ export const Auth: React.FC = () => {
       describe: 'Jelaskan masalah Anda',
       next: 'LANJUT',
       cancel: 'Batal',
-      enterEmail: 'Masukkan email',
-      createAccount: 'Buat akun',
-      resetPassword: 'Atur ulang sandi',
+      enterEmail: 'Masuk Akun',
+      createAccount: 'Buat Akun',
+      resetPassword: 'Atur Ulang Sandi',
+      loginInfo: 'Info Login',
+      signupInfo: 'Info Daftar',
+      resetInfo: 'Info Atur Ulang Sandi',
+      loginHelp: 'Untuk mengakses akun Anda, masukkan email dan kata sandi yang terdaftar. Gunakan "Lupa kata sandi" jika Anda tidak dapat masuk.',
+      signupHelp: 'Buat akun baru dengan memberikan alamat email yang valid dan mengatur kata sandi yang aman. Anda perlu memverifikasi email Anda.',
+      resetHelp: 'Jika Anda kehilangan kata sandi, masukkan alamat email Anda dan kami akan mengirimkan tautan aman untuk membuat yang baru.',
       yourEmail: 'Email Anda',
       back: 'Kembali',
       emailPlaceholder: 'email@contoh.com',
@@ -121,9 +133,15 @@ export const Auth: React.FC = () => {
       describe: 'अपनी समस्या का वर्णन करें',
       next: 'अगला',
       cancel: 'रद्द करें',
-      enterEmail: 'ईमेल दर्ज करें',
+      enterEmail: 'खाता लॉगिन करें',
       createAccount: 'खाता बनाएं',
       resetPassword: 'पासवर्ड रीसेट करें',
+      loginInfo: 'लॉगिन जानकारी',
+      signupInfo: 'साइनअप जानकारी',
+      resetInfo: 'पासवर्ड रीसेट जानकारी',
+      loginHelp: 'अपने खाते तक पहुँचने के लिए, अपना पंजीकृत ईमेल और पासवर्ड दर्ज करें। यदि आप साइन इन नहीं कर सकते हैं तो "पासवर्ड भूल गए" का उपयोग करें।',
+      signupHelp: 'एक वैध ईमेल पता प्रदान करके और एक सुरक्षित पासवर्ड सेट करके एक नया खाता बनाएं। आपको अपना ईमेल सत्यापित करना होगा।',
+      resetHelp: 'यदि आप अपना पासवर्ड भूल गए हैं, तो अपना ईमेल पता दर्ज करें और हम आपको एक नया पासवर्ड बनाने के लिए एक सुरक्षित लिंक भेजेंगे।',
       yourEmail: 'आपका ईमेल',
       back: 'पीछे',
       emailPlaceholder: 'email@example.com',
@@ -531,16 +549,27 @@ export const Auth: React.FC = () => {
         </button>
         
         {showMenu && (
-          <div className="absolute top-12 right-0 w-48 bg-[#233138] rounded-lg shadow-xl z-50 py-2 border border-white/5 animate-in fade-in zoom-in-95 duration-200">
-            <button
-              onClick={() => {
-                setStep('support');
-                setShowMenu(false);
-              }}
-              className="w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm"
-            >
-              {t.help}
-            </button>
+          <div className="absolute top-12 right-0 w-64 bg-[#233138] rounded-lg shadow-xl z-50 py-2 border border-white/5 animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-4 py-2 border-b border-white/5 mb-1">
+              <p className="text-xs font-bold text-[#00a884] uppercase tracking-wider">
+                {isResetting ? t.resetInfo : (isSignUp ? t.signupInfo : t.loginInfo)}
+              </p>
+            </div>
+            <div className="px-4 py-2 text-sm text-[#8696a0] leading-relaxed">
+              {isResetting ? t.resetHelp : (isSignUp ? t.signupHelp : t.loginHelp)}
+            </div>
+            <div className="border-t border-white/5 mt-1 pt-1">
+              <button
+                onClick={() => {
+                  setStep('support');
+                  setShowMenu(false);
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm flex items-center gap-2"
+              >
+                <MessageSquare size={16} />
+                {t.help}
+              </button>
+            </div>
           </div>
         )}
       </div>
