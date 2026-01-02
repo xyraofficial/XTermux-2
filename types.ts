@@ -11,7 +11,8 @@ export enum ViewState {
   HELP = 'HELP',
   PRIVACY = 'PRIVACY',
   TERMS = 'TERMS',
-  CONFIRM_EMAIL = 'CONFIRM_EMAIL'
+  CONFIRM_EMAIL = 'CONFIRM_EMAIL',
+  RESET_PASSWORD = 'RESET_PASSWORD'
 }
 
 export interface PackageItem {
