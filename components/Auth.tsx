@@ -388,7 +388,7 @@ export const Auth: React.FC = () => {
 
         <div className="flex flex-col items-center gap-12 flex-1 justify-center max-w-sm w-full">
           <div className="relative">
-            <div className="w-64 h-64 flex items-center justify-center">
+            <div className="w-64 h-64 flex items-center justify-center bg-[#111b21] rounded-full overflow-hidden shadow-2xl border border-[#202c33]">
               <Lottie 
                 animationData={{
                   v: "5.7.1",
@@ -408,18 +408,21 @@ export const Auth: React.FC = () => {
                       nm: "Circle",
                       sr: 1,
                       ks: {
-                        o: { a: 0, k: 20 },
+                        o: { a: 0, k: 30 },
                         r: { a: 0, k: 0 },
                         p: { a: 0, k: [200, 200] },
                         a: { a: 0, k: [0, 0] },
-                        s: { a: 0, k: [100, 100] }
+                        s: { a: 1, k: [
+                          { t: 0, s: [0, 0], e: [100, 100], i: { x: 0.6, y: 1 }, o: { x: 0.4, y: 0 } },
+                          { t: 30, s: [100, 100] }
+                        ]}
                       },
                       shapes: [
                         {
                           ty: "gr",
                           it: [
                             { ty: "el", s: { a: 0, k: [300, 300] }, p: { a: 0, k: [0, 0] } },
-                            { ty: "fl", c: { a: 0, k: [0.1, 0.15, 0.18, 1] } }
+                            { ty: "fl", c: { a: 0, k: [0, 0.66, 0.52, 1] } }
                           ]
                         }
                       ],
@@ -461,7 +464,10 @@ export const Auth: React.FC = () => {
                           { t: 25, s: [150, 160] }
                         ]},
                         a: { a: 0, k: [0, 0] },
-                        s: { a: 0, k: [100, 100] }
+                        s: { a: 1, k: [
+                          { t: 5, s: [0, 0], e: [100, 100] },
+                          { t: 25, s: [100, 100] }
+                        ]}
                       },
                       shapes: [
                         {
@@ -484,7 +490,10 @@ export const Auth: React.FC = () => {
                           { t: 30, s: [250, 160] }
                         ]},
                         a: { a: 0, k: [0, 0] },
-                        s: { a: 0, k: [100, 100] }
+                        s: { a: 1, k: [
+                          { t: 10, s: [0, 0], e: [100, 100] },
+                          { t: 30, s: [100, 100] }
+                        ]}
                       },
                       shapes: [
                         {
@@ -500,7 +509,9 @@ export const Auth: React.FC = () => {
                   ]
                 }}
                 loop={true}
+                autoplay={true}
                 className="w-full h-full"
+                style={{ width: '100%', height: '100%' }}
               />
             </div>
           </div>
