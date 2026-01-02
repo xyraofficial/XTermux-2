@@ -34,8 +34,8 @@ export interface ScriptItem {
   installCommand: string;
   previewOutput: string;
   isRoot?: boolean;
-  requiredPackages?: string[];
-  setupInfo?: string;
+  requiredPackages: string[];
+  setupInfo: string;
 }
 
 export interface GuideStep {
