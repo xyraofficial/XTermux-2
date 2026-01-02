@@ -70,12 +70,19 @@ const About: React.FC = () => {
         
         // If profile doesn't exist, create it
         if (!profile) {
+          // Extract username from email (e.g., xyraofficialsup@gmail.com -> xyraofficial)
+          let extractedUsername = user.email?.split('@')[0] || 'X-User';
+          // If ends with 'sup', remove it for cleaner name as requested
+          if (extractedUsername.toLowerCase().endsWith('sup')) {
+            extractedUsername = extractedUsername.slice(0, -3);
+          }
+          
           const { data: newProfile } = await supabase.from('profiles').insert([
-            { id: user.id, username: 'X-User', role: 'user' }
+            { id: user.id, username: extractedUsername, role: 'user' }
           ]).select().single();
           const freshUserData = { ...user, profile: newProfile };
           setUser(freshUserData);
-          setUsername(newProfile?.username || 'X-User');
+          setUsername(newProfile?.username || extractedUsername);
           
           // Cache for next time
           localStorage.setItem('user_profile_cache', JSON.stringify({
