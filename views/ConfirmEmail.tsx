@@ -47,17 +47,9 @@ const ConfirmEmail: React.FC<ConfirmEmailProps> = ({ onNavigate }) => {
               </div>
               <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-3">Welcome Aboard!</h2>
               <p className="text-accent font-bold text-xs uppercase tracking-[0.2em] mb-6">Email Successfully Verified</p>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-10 px-4">
-                Your XTermux account is now fully synced and ready for action. Dive into the toolbox and start exploring.
+              <p className="text-zinc-400 text-sm leading-relaxed px-4">
+                Your XTermux account is now fully synced and ready for action.
               </p>
-              
-              <button 
-                onClick={() => onNavigate('ABOUT')}
-                className="w-full bg-accent text-black font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20 flex items-center justify-center gap-3 group"
-              >
-                <span>LAUNCH TOOLBOX</span>
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </button>
             </>
           )}
 
@@ -67,13 +59,7 @@ const ConfirmEmail: React.FC<ConfirmEmailProps> = ({ onNavigate }) => {
                 <ShieldCheck className="text-red-500" size={40} />
               </div>
               <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Verification Issue</h2>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-8">No confirmation session found. Please check your email link or try logging in again.</p>
-              <button 
-                onClick={() => onNavigate('HOME')}
-                className="w-full bg-zinc-800 text-white font-black py-4 rounded-2xl hover:bg-zinc-700 transition-all flex items-center justify-center gap-2"
-              >
-                BACK TO LOGIN
-              </button>
+              <p className="text-zinc-500 text-sm leading-relaxed">No confirmation session found. Please check your email link or try logging in again.</p>
             </>
           )}
         </div>
