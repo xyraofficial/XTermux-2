@@ -92,11 +92,26 @@ export const Auth: React.FC = () => {
     input.click();
   };
 
-  const handleSupportSubmit = async (e: React.FormEvent) => {
+  const handleSupportSubmit = async (e: React.FormEvent, platform: 'email' | 'whatsapp') => {
     e.preventDefault();
+    
+    const title = 'XTermux Support Request';
+    const description = supportMessage;
+    const supportInfo = `\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
+    const fullMessage = `Title: ${title}\nDescription: ${description}${supportInfo}`;
     
     const hasScreenshots = screenshots.some(s => s !== null);
     
+    if (platform === 'whatsapp') {
+      const whatsappUrl = `https://wa.me/62895325844479?text=${encodeURIComponent(fullMessage)}${hasScreenshots ? encodeURIComponent('\n\n(Note: Please attach your screenshots manually in WhatsApp)') : ''}`;
+      window.open(whatsappUrl, '_blank');
+      setStep('welcome');
+      setSupportMessage('');
+      setScreenshots([null, null, null]);
+      return;
+    }
+
+    // Email platform logic
     if (hasScreenshots && navigator.share) {
       try {
         const files: File[] = [];
@@ -112,8 +127,8 @@ export const Auth: React.FC = () => {
         if (navigator.canShare && navigator.canShare({ files })) {
           await navigator.share({
             files,
-            title: 'Support Request',
-            text: `Support Message:\n${supportMessage}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`
+            title: title,
+            text: fullMessage
           });
           setStep('welcome');
           setSupportMessage('');
@@ -125,13 +140,8 @@ export const Auth: React.FC = () => {
       }
     }
 
-    // Fallback to mailto if sharing is not supported or fails
-    let body = `Support Message:\n${supportMessage}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
-    if (hasScreenshots) {
-      body += '\n\n--Screenshots Captured--\nPlease attach the screenshots manually for better quality.';
-    }
-
-    const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent('Support Request')}&body=${encodeURIComponent(body)}`;
+    // Fallback to mailto
+    const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullMessage)}${hasScreenshots ? encodeURIComponent('\n\n--Screenshots Captured--\nPlease attach the screenshots manually for better quality.') : ''}`;
     window.location.href = mailto;
     setStep('welcome');
     setSupportMessage('');
@@ -328,13 +338,24 @@ export const Auth: React.FC = () => {
           <button onClick={(e) => handleHelpCenterClick(e)} className="text-[#53bdeb] text-left text-sm font-medium">
             Kunjungi Pusat Bantuan kami
           </button>
-          <button
-            onClick={handleSupportSubmit}
-            disabled={!supportMessage || loading}
-            className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95 disabled:bg-[#111b21] disabled:text-[#8696a0]"
-          >
-            {t.next}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={(e) => handleSupportSubmit(e, 'email')}
+              disabled={!supportMessage || loading}
+              className="flex-1 bg-[#202c33] text-[#e9edef] font-medium py-3 rounded-full hover:bg-[#2a3942] transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <Mail size={18} />
+              Email
+            </button>
+            <button
+              onClick={(e) => handleSupportSubmit(e, 'whatsapp')}
+              disabled={!supportMessage || loading}
+              className="flex-1 bg-[#25d366] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#20bd59] transition-colors active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <MessageSquare size={18} />
+              WhatsApp
+            </button>
+          </div>
         </div>
       </div>
     );
