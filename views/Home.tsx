@@ -48,7 +48,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       vault: "Gudang Alat",
       scripts: "Skrip",
       codex: "Kodeks",
-      forge: "Tempa",
+      forge: "AI ARCHITECT",
       profile: "Profil",
       protocolStart: "Mulai Protokol",
       disclaimer: "Penafian: Alat komunitas. Tidak berafiliasi dengan Termux resmi.",
@@ -137,7 +137,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             { id: 'PACKAGES', icon: Package, title: t.vault, color: 'purple-500' },
             { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500' },
             { id: 'GUIDES', icon: BookOpen, title: t.codex, color: 'orange-500' },
-            { id: 'ARCHITECT', icon: PenTool, title: t.forge, color: 'red-500' },
+            { id: 'ARCHITECT', icon: PenTool, title: 'AI ARCHITECT', color: 'red-500' },
             { id: 'ABOUT', icon: User, title: t.profile, color: 'zinc-400' }
           ].map((item) => (
             <button key={item.id} onClick={() => onNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">
