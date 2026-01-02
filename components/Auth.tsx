@@ -25,14 +25,44 @@ export const Auth: React.FC = () => {
       help: 'Help',
       support: 'Contact Support',
       describe: 'Describe your problem',
-      screenshot: 'Add screenshots (optional)',
       next: 'NEXT',
       cancel: 'Cancel',
       enterEmail: 'Enter email',
       createAccount: 'Create account',
       resetPassword: 'Reset password',
       yourEmail: 'Your email',
-      back: 'Back'
+      back: 'Back',
+      emailPlaceholder: 'email@example.com',
+      passwordLabel: 'Password',
+      passwordPlaceholder: '••••••••',
+      signIn: 'SIGN IN',
+      sendReset: 'SEND RESET LINK',
+      whatsMyEmail: "What's my email?",
+      forgotPassword: 'Forgot password?',
+      dontHaveAccount: "Don't have an account?",
+      alreadyHaveAccount: 'Already have an account?',
+      supportDisclaimer: 'By continuing, you authorize the XTermux Support Team to review technical information about your account to help answer your question. Messages from the XTermux Support Team may be AI-generated using secure technology from Meta. Your personal messages and calls remain end-to-end encrypted.',
+      learnMore: 'Learn more',
+      visitHelpCenter: 'Visit our Help Center',
+      lastUpdated: 'Last updated: January 2, 2026',
+      privacySection1Title: '1. Information We Collect',
+      privacySection1Content: 'We collect information you provide directly to us, such as your email address when you create an account or contact support.',
+      privacySection2Title: '2. How We Use Information',
+      privacySection2Content: 'We use your information to provide, maintain, and improve our services, including to personalize your experience and provide support.',
+      privacySection3Title: '3. Data Security',
+      privacySection3Content: 'We take reasonable measures to help protect information about you from loss, theft, misuse and unauthorized access.',
+      privacySection4Title: '4. Contact Us',
+      privacySection4Content: 'If you have any questions about this Privacy Policy, please contact us at xyraofficialsup@gmail.com.',
+      termsSection1Title: '1. Agreement to Terms',
+      termsSection1Content: 'By accessing XTermux, you agree to be bound by these Terms of Service.',
+      termsSection2Title: '2. Use of Services',
+      termsSection2Content: 'You agree to use XTermux only for lawful purposes and in accordance with our guidelines.',
+      termsSection3Title: '3. User Responsibility',
+      termsSection3Content: 'You are responsible for maintaining the confidentiality of your account and password.',
+      termsSection4Title: '4. Termination',
+      termsSection4Content: 'We reserve the right to terminate or suspend your account for violations of these terms.',
+      verifyingEmail: 'XTermux will need to verify your email address.',
+      verifyingReset: 'XTermux will send an email to verify your address.'
     },
     id: {
       welcome: 'Selamat datang di XTermux',
@@ -42,14 +72,44 @@ export const Auth: React.FC = () => {
       help: 'Bantuan',
       support: 'Hubungi dukungan',
       describe: 'Jelaskan masalah Anda',
-      screenshot: 'Tambah tangkapan layar (opsional)',
       next: 'LANJUT',
       cancel: 'Batal',
       enterEmail: 'Masukkan email',
       createAccount: 'Buat akun',
       resetPassword: 'Atur ulang sandi',
       yourEmail: 'Email Anda',
-      back: 'Kembali'
+      back: 'Kembali',
+      emailPlaceholder: 'email@contoh.com',
+      passwordLabel: 'Kata Sandi',
+      passwordPlaceholder: '••••••••',
+      signIn: 'MASUK',
+      sendReset: 'KIRIM LINK RESET',
+      whatsMyEmail: 'Apa email saya?',
+      forgotPassword: 'Lupa kata sandi?',
+      dontHaveAccount: 'Belum punya akun?',
+      alreadyHaveAccount: 'Sudah punya akun?',
+      supportDisclaimer: 'Dengan melanjutkan, Anda mengizinkan Tim Dukungan XTermux meninjau informasi teknis tentang akun Anda guna membantu menjawab pertanyaan Anda. Pesan dari Tim Dukungan XTermux mungkin dibuat oleh AI menggunakan teknologi yang aman dari Meta. Pesan dan panggilan pribadi Anda tetap terenkripsi secara end-to-end.',
+      learnMore: 'Pelajari selengkapnya',
+      visitHelpCenter: 'Kunjungi Pusat Bantuan kami',
+      lastUpdated: 'Terakhir diperbarui: 2 Januari 2026',
+      privacySection1Title: '1. Informasi yang Kami Kumpulkan',
+      privacySection1Content: 'Kami mengumpulkan informasi yang Anda berikan langsung kepada kami, seperti alamat email Anda saat membuat akun atau menghubungi dukungan.',
+      privacySection2Title: '2. Cara Kami Menggunakan Informasi',
+      privacySection2Content: 'Kami menggunakan informasi Anda untuk menyediakan, memelihara, dan meningkatkan layanan kami, termasuk untuk mempersonalisasi pengalaman Anda dan memberikan dukungan.',
+      privacySection3Title: '3. Keamanan Data',
+      privacySection3Content: 'Kami mengambil langkah-langkah wajar untuk membantu melindungi informasi tentang Anda dari kehilangan, pencurian, penyalahgunaan, dan akses tidak sah.',
+      privacySection4Title: '4. Hubungi Kami',
+      privacySection4Content: 'Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami di xyraofficialsup@gmail.com.',
+      termsSection1Title: '1. Persetujuan Ketentuan',
+      termsSection1Content: 'Dengan mengakses XTermux, Anda setuju untuk terikat oleh Ketentuan Layanan ini.',
+      termsSection2Title: '2. Penggunaan Layanan',
+      termsSection2Content: 'Anda setuju untuk menggunakan XTermux hanya untuk tujuan yang sah dan sesuai dengan pedoman kami.',
+      termsSection3Title: '3. Tanggung Jawab Pengguna',
+      termsSection3Content: 'Anda bertanggung jawab untuk menjaga kerahasiaan akun dan kata sandi Anda.',
+      termsSection4Title: '4. Pemutusan',
+      termsSection4Content: 'Kami berhak menghentikan atau menangguhkan akun Anda karena pelanggaran ketentuan ini.',
+      verifyingEmail: 'XTermux perlu memverifikasi alamat email Anda.',
+      verifyingReset: 'XTermux akan mengirim email untuk memverifikasi alamat Anda.'
     },
     hi: {
       welcome: 'XTermux में आपका स्वागत है',
@@ -59,14 +119,44 @@ export const Auth: React.FC = () => {
       help: 'सहायता',
       support: 'सहायता से संपर्क करें',
       describe: 'अपनी समस्या का वर्णन करें',
-      screenshot: 'स्क्रीनशॉट जोड़ें (वैकल्पिक)',
       next: 'अगला',
       cancel: 'रद्द करें',
       enterEmail: 'ईमेल दर्ज करें',
       createAccount: 'खाता बनाएं',
       resetPassword: 'पासवर्ड रीसेट करें',
       yourEmail: 'आपका ईमेल',
-      back: 'पीछे'
+      back: 'पीछे',
+      emailPlaceholder: 'email@example.com',
+      passwordLabel: 'पासवर्ड',
+      passwordPlaceholder: '••••••••',
+      signIn: 'साइन इन करें',
+      sendReset: 'रीसेट लिंक भेजें',
+      whatsMyEmail: 'मेरा ईमेल क्या है?',
+      forgotPassword: 'पासवर्ड भूल गए?',
+      dontHaveAccount: 'खाता नहीं है?',
+      alreadyHaveAccount: 'पहले से ही एक खाता है?',
+      supportDisclaimer: 'जारी रखते हुए, आप XTermux सहायता टीम को आपके प्रश्न का उत्तर देने में सहायता के लिए आपके खाते के बारे में तकनीकी जानकारी की समीक्षा करने के लिए अधिकृत करते हैं। XTermux सहायता टीम के संदेश मेटा की सुरक्षित तकनीक का उपयोग करके AI-जनरेटेड हो सकते हैं। आपके व्यक्तिगत संदेश और कॉल एंड-टू-एंड एन्क्रिप्टेड रहते हैं।',
+      learnMore: 'और जानें',
+      visitHelpCenter: 'हमारे सहायता केंद्र पर जाएँ',
+      lastUpdated: 'अंतिम अपडेट: 2 जनवरी, 2026',
+      privacySection1Title: '1. जानकारी जो हम एकत्र करते हैं',
+      privacySection1Content: 'हम आपके द्वारा सीधे हमें प्रदान की गई जानकारी एकत्र करते हैं, जैसे कि जब आप खाता बनाते हैं या सहायता से संपर्क करते हैं तो आपका ईमेल पता।',
+      privacySection2Title: '2. हम जानकारी का उपयोग कैसे करते हैं',
+      privacySection2Content: 'हम आपकी जानकारी का उपयोग अपनी सेवाओं को प्रदान करने, बनाए रखने और सुधारने के लिए करते हैं, जिसमें आपके अनुभव को वैयक्तिकृत करना और सहायता प्रदान करना शामिल है।',
+      privacySection3Title: '3. डेटा सुरक्षा',
+      privacySection3Content: 'हम आपकी जानकारी को हानि, चोरी, दुरुपयोग और अनधिकृत पहुंच से बचाने में मदद के लिए उचित उपाय करते हैं।',
+      privacySection4Title: '4. हमसे संपर्क करें',
+      privacySection4Content: 'यदि आपके पास इस गोपनीयता नीति के बारे में कोई प्रश्न हैं, तो कृपया हमसे xyraofficialsup@gmail.com पर संपर्क करें।',
+      termsSection1Title: '1. शर्तों से सहमति',
+      termsSection1Content: 'XTermux का उपयोग करके, आप इन सेवा शर्तों से बंधे होने के लिए सहमत हैं।',
+      termsSection2Title: '2. सेवाओं का उपयोग',
+      termsSection2Content: 'आप XTermux का उपयोग केवल वैध उद्देश्यों के लिए और हमारे दिशानिर्देशों के अनुसार करने के लिए सहमत हैं।',
+      termsSection3Title: '3. उपयोगकर्ता की जिम्मेदारी',
+      termsSection3Content: 'आप अपने खाते और पासवर्ड की गोपनीयता बनाए रखने के लिए जिम्मेदार हैं।',
+      termsSection4Title: '4. समाप्ति',
+      termsSection4Content: 'हम इन शर्तों के उल्लंघन के लिए आपके खाते को समाप्त या निलंबित करने का अधिकार सुरक्षित रखते हैं।',
+      verifyingEmail: 'XTermux को आपके ईमेल पते को सत्यापित करने की आवश्यकता होगी।',
+      verifyingReset: 'XTermux आपके पते को सत्यापित करने के लिए एक ईमेल भेजेगा।'
     }
   };
 
@@ -169,22 +259,22 @@ export const Auth: React.FC = () => {
           <h2 className="text-xl font-medium">{t.privacy}</h2>
         </div>
         <div className="p-6 space-y-6 flex-1 overflow-y-auto leading-relaxed">
-          <p className="text-sm text-[#8696a0]">Last updated: January 2, 2026</p>
+          <p className="text-sm text-[#8696a0]">{t.lastUpdated}</p>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">1. Information We Collect</h3>
-            <p className="text-sm">We collect information you provide directly to us, such as your email address when you create an account or contact support.</p>
+            <h3 className="text-[#00a884] font-medium">{t.privacySection1Title}</h3>
+            <p className="text-sm">{t.privacySection1Content}</p>
           </section>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">2. How We Use Information</h3>
-            <p className="text-sm">We use your information to provide, maintain, and improve our services, including to personalize your experience and provide support.</p>
+            <h3 className="text-[#00a884] font-medium">{t.privacySection2Title}</h3>
+            <p className="text-sm">{t.privacySection2Content}</p>
           </section>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">3. Data Security</h3>
-            <p className="text-sm">We take reasonable measures to help protect information about you from loss, theft, misuse and unauthorized access.</p>
+            <h3 className="text-[#00a884] font-medium">{t.privacySection3Title}</h3>
+            <p className="text-sm">{t.privacySection3Content}</p>
           </section>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">4. Contact Us</h3>
-            <p className="text-sm">If you have any questions about this Privacy Policy, please contact us at xyraofficialsup@gmail.com.</p>
+            <h3 className="text-[#00a884] font-medium">{t.privacySection4Title}</h3>
+            <p className="text-sm">{t.privacySection4Content}</p>
           </section>
         </div>
         <div className="p-6">
@@ -206,22 +296,22 @@ export const Auth: React.FC = () => {
           <h2 className="text-xl font-medium">{t.terms}</h2>
         </div>
         <div className="p-6 space-y-6 flex-1 overflow-y-auto leading-relaxed">
-          <p className="text-sm text-[#8696a0]">Last updated: January 2, 2026</p>
+          <p className="text-sm text-[#8696a0]">{t.lastUpdated}</p>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">1. Agreement to Terms</h3>
-            <p className="text-sm">By accessing XTermux, you agree to be bound by these Terms of Service.</p>
+            <h3 className="text-[#00a884] font-medium">{t.termsSection1Title}</h3>
+            <p className="text-sm">{t.termsSection1Content}</p>
           </section>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">2. Use of Services</h3>
-            <p className="text-sm">You agree to use XTermux only for lawful purposes and in accordance with our guidelines.</p>
+            <h3 className="text-[#00a884] font-medium">{t.termsSection2Title}</h3>
+            <p className="text-sm">{t.termsSection2Content}</p>
           </section>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">3. User Responsibility</h3>
-            <p className="text-sm">You are responsible for maintaining the confidentiality of your account and password.</p>
+            <h3 className="text-[#00a884] font-medium">{t.termsSection3Title}</h3>
+            <p className="text-sm">{t.termsSection3Content}</p>
           </section>
           <section className="space-y-2">
-            <h3 className="text-[#00a884] font-medium">4. Termination</h3>
-            <p className="text-sm">We reserve the right to terminate or suspend your account for violations of these terms.</p>
+            <h3 className="text-[#00a884] font-medium">{t.termsSection4Title}</h3>
+            <p className="text-sm">{t.termsSection4Content}</p>
           </section>
         </div>
         <div className="p-6">
@@ -254,13 +344,13 @@ export const Auth: React.FC = () => {
           </div>
 
           <p className="text-xs text-[#8696a0] leading-relaxed">
-            Dengan melanjutkan, Anda mengizinkan Tim Dukungan XTermux meninjau informasi teknis tentang akun Anda guna membantu menjawab pertanyaan Anda. Pesan dari Tim Dukungan XTermux mungkin dibuat oleh AI menggunakan teknologi yang aman dari Meta. Pesan dan panggilan pribadi Anda tetap terenkripsi secara end-to-end. <span onClick={(e) => handlePrivacyClick(e)} className="text-[#53bdeb] cursor-pointer">Pelajari selengkapnya</span>.
+            {t.supportDisclaimer} <span onClick={(e) => handlePrivacyClick(e)} className="text-[#53bdeb] cursor-pointer">{t.learnMore}</span>.
           </p>
         </div>
 
         <div className="p-6 flex flex-col gap-4 bg-[#0b141a] border-t border-[#202c33]">
           <button onClick={(e) => handleHelpCenterClick(e)} className="text-[#53bdeb] text-left text-sm font-medium">
-            Kunjungi Pusat Bantuan kami
+            {t.visitHelpCenter}
           </button>
           <div className="flex gap-3">
             <button
@@ -415,7 +505,7 @@ export const Auth: React.FC = () => {
         </div>
 
         <div className="py-6 text-center">
-          <p className="text-[#8696a0] text-[10px] uppercase tracking-widest font-bold">from REPLIT</p>
+          <p className="text-[#8696a0] text-[10px] uppercase tracking-widest font-bold">from XYRAOFFICIAL</p>
         </div>
       </div>
     );
