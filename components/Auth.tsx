@@ -13,17 +13,87 @@ export const Auth: React.FC = () => {
   const [step, setStep] = useState<'welcome' | 'form' | 'support'>('welcome');
   const [supportMessage, setSupportMessage] = useState('');
   const [showMenu, setShowMenu] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'id' | 'hi'>('en');
+  const [showLanguagePicker, setShowLanguagePicker] = useState(false);
+  const [screenshots, setScreenshots] = useState<(string | null)[]>([null, null, null]);
+
+  const translations = {
+    en: {
+      welcome: 'Welcome to XTermux',
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Service',
+      agree: 'Agree and continue',
+      help: 'Help',
+      support: 'Contact Support',
+      describe: 'Describe your problem',
+      screenshot: 'Add screenshots (optional)',
+      next: 'NEXT',
+      cancel: 'Cancel',
+      enterEmail: 'Enter email',
+      createAccount: 'Create account',
+      resetPassword: 'Reset password'
+    },
+    id: {
+      welcome: 'Selamat datang di XTermux',
+      privacy: 'Kebijakan Privasi',
+      terms: 'Ketentuan Layanan',
+      agree: 'Setuju dan lanjutkan',
+      help: 'Bantuan',
+      support: 'Hubungi dukungan',
+      describe: 'Jelaskan masalah Anda',
+      screenshot: 'Tambah tangkapan layar (opsional)',
+      next: 'LANJUT',
+      cancel: 'Batal',
+      enterEmail: 'Masukkan email',
+      createAccount: 'Buat akun',
+      resetPassword: 'Atur ulang sandi'
+    },
+    hi: {
+      welcome: 'XTermux में आपका स्वागत है',
+      privacy: 'गोपनीयता नीति',
+      terms: 'सेवा की शर्तें',
+      agree: 'सहमत हों और जारी रखें',
+      help: 'सहायता',
+      support: 'सहायता से संपर्क करें',
+      describe: 'अपनी समस्या का वर्णन करें',
+      screenshot: 'स्क्रीनशॉट जोड़ें (वैकल्पिक)',
+      next: 'अगला',
+      cancel: 'रद्द करें',
+      enterEmail: 'ईमेल दर्ज करें',
+      createAccount: 'खाता बनाएं',
+      resetPassword: 'पासवर्ड रीसेट करें'
+    }
+  };
+
+  const t = translations[language];
+
+  const handleScreenshotClick = (index: number) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          const newScreenshots = [...screenshots];
+          newScreenshots[index] = re.target?.result as string;
+          setScreenshots(newScreenshots);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  };
 
   const handleSupportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // In a real app, you would use a backend service or EmailJS
-      // Since we are in a frontend environment, we'll simulate it
-      // but for now, we'll just show a success toast and go back
       showToast('Support message sent successfully!', 'success');
       setStep('welcome');
       setSupportMessage('');
+      setScreenshots([null, null, null]);
     } catch (error: any) {
       showToast('Failed to send message', 'error');
     } finally {
@@ -32,11 +102,15 @@ export const Auth: React.FC = () => {
   };
 
   const handlePrivacyClick = () => {
-    window.location.href = '/privacy';
+    window.open('https://x-termux-tools.vercel.app/PrivacyPolicy', '_blank');
   };
 
   const handleTermsClick = () => {
-    window.location.href = '/terms';
+    window.open('https://x-termux-tools.vercel.app/TermsOfService', '_blank');
+  };
+
+  const handleHelpCenterClick = () => {
+    window.open('https://x-termux-tools.vercel.app/HelpCenter', '_blank');
   };
 
   const handleAuth = async (e: React.FormEvent) => {
