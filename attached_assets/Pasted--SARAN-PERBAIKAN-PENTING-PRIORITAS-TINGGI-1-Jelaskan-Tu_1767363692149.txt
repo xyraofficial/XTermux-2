@@ -1,0 +1,212 @@
+
+---
+
+🔧 SARAN PERBAIKAN PENTING (PRIORITAS TINGGI)
+
+1️⃣ Jelaskan Tujuan Website (WAJIB)
+
+Masalah:
+User buka halaman → belum langsung paham ini web apa.
+
+Perbaikan:
+
+Tambahkan 1 kalimat jelas di atas:
+
+> Tools & Commands Helper for Termux on Android
+
+
+
+Jangan hanya nama project saja.
+
+
+Alasan penting:
+User mobile menentukan lanjut / keluar dalam 3 detik.
+
+
+---
+
+2️⃣ Tambahkan CTA Utama (PENTING)
+
+Masalah:
+Tidak ada arah tindakan yang jelas.
+
+Perbaikan: Tambahkan tombol besar:
+
+📥 Install / Get Started
+
+📘 Documentation
+
+
+Alasan penting:
+Tanpa CTA → user bingung mau ngapain.
+
+
+---
+
+3️⃣ Perbaiki Layout Mobile (KRITIS)
+
+Masalah umum:
+
+Text terlalu rapat
+
+Margin kecil
+
+Sulit diklik
+
+
+Perbaikan cepat:
+
+Padding min 16px
+
+Button height 48px
+
+Jarak antar elemen 8–16px
+
+
+Alasan penting:
+UX buruk di Android = bounce tinggi.
+
+
+---
+
+4️⃣ Kelompokkan Konten Jadi Card / Section
+
+Masalah:
+Konten terlihat “mentah” seperti README.
+
+Perbaikan: Bagi jadi section jelas:
+
+🔧 Tools
+
+📦 Install
+
+🧪 Commands
+
+❓ FAQ
+
+
+Gunakan card UI (box).
+
+Alasan penting:
+Lebih mudah discan di layar kecil.
+
+
+---
+
+5️⃣ Tambahkan Disclaimer Keamanan (SANGAT PENTING)
+
+Masalah:
+Termux + tools = rawan dianggap berbahaya.
+
+Perbaikan: Tambahkan teks kecil:
+
+> This is a community tool. Not affiliated with official Termux.
+
+
+
+Alasan penting:
+
+Bangun trust
+
+Hindari laporan / block
+
+
+
+---
+
+6️⃣ Perjelas Cara Pakai (HOW TO)
+
+Masalah:
+User baru tidak tahu mulai dari mana.
+
+Perbaikan: Tambahkan 3–5 step singkat:
+
+1. Install Termux
+
+
+2. Buka Terminal
+
+
+3. Copy Command
+
+
+4. Paste & Run
+
+
+
+Alasan penting:
+Mengurangi kebingungan user baru.
+
+
+---
+
+7️⃣ Tambahkan Link Sumber (GitHub / Docs)
+
+Masalah:
+Kurang transparan.
+
+Perbaikan: Tambahkan:
+
+GitHub repo
+
+Source script
+
+Issue / feedback
+
+
+Alasan penting:
+Project open-source = trust naik drastis.
+
+
+---
+
+8️⃣ Optimasi Tampilan Android (WAJIB)
+
+Checklist cepat:
+
+✅ Dark mode
+
+✅ Font system (Inter / System UI)
+
+❌ Jangan teks kecil
+
+❌ Jangan horizontal scroll
+
+
+Alasan penting:
+90% user Termux = Android.
+
+
+---
+
+9️⃣ Footer Minimal Tapi Jelas
+
+Perbaikan: Isi footer:
+
+Nama project
+
+Disclaimer
+
+Docs
+
+GitHub
+
+
+Alasan penting:
+Website terlihat lebih “niat & serius”.
+
+
+---
+
+🔑 URUTAN PRIORITAS (LANGSUNG EKSEKUSI)
+
+1️⃣ Tujuan + Deskripsi
+2️⃣ CTA
+3️⃣ Mobile spacing
+4️⃣ Disclaimer
+5️⃣ How to use
+6️⃣ Card layout
+7️⃣ Link GitHub
+
+
+-
