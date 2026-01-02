@@ -1,7 +1,86 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { Mail, Lock, Loader2, UserPlus, LogIn, Eye, EyeOff, KeyRound, MessageSquare, Shield, Globe, ChevronDown, MoreVertical } from 'lucide-react';
 import { showToast } from './Toast';
+import Lottie from 'lottie-react';
+
+const splashAnimation = {
+  v: "5.7.1",
+  fr: 30,
+  ip: 0,
+  op: 60,
+  w: 200,
+  h: 200,
+  nm: "Splash",
+  ddd: 0,
+  assets: [],
+  layers: [
+    {
+      ddd: 0,
+      ind: 1,
+      ty: 4,
+      nm: "Shield",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 100, ix: 11 },
+        r: { a: 0, k: 0, ix: 10 },
+        p: { a: 0, k: [100, 100, 0], ix: 2 },
+        a: { a: 0, k: [0, 0, 0], ix: 1 },
+        s: {
+          a: 1,
+          k: [
+            { t: 0, s: [0, 0, 100], e: [100, 100, 100], i: { x: 0.667, y: 1 }, o: { x: 0.333, y: 0 } },
+            { t: 30, s: [100, 100, 100] }
+          ],
+          ix: 6
+        }
+      },
+      ao: 0,
+      shapes: [
+        {
+          ty: "gr",
+          it: [
+            {
+              ty: "rc",
+              d: 1,
+              s: { a: 0, k: [80, 100], ix: 2 },
+              p: { a: 0, k: [0, 0], ix: 3 },
+              r: { a: 0, k: 10, ix: 4 },
+              nm: "Rect",
+              mn: "ADBE Vector Shape - Rect",
+              hd: false
+            },
+            {
+              ty: "fl",
+              c: { a: 0, k: [0, 0.659, 0.518, 1], ix: 4 },
+              o: { a: 0, k: 100, ix: 5 },
+              r: 1,
+              bm: 0,
+              nm: "Fill",
+              mn: "ADBE Vector Graphic - Fill",
+              hd: false
+            },
+            {
+              ty: "tr",
+              p: { a: 0, k: [0, 0], ix: 2 },
+              a: { a: 0, k: [0, 0], ix: 1 },
+              s: { a: 0, k: [100, 100], ix: 3 },
+              r: { a: 0, k: 0, ix: 6 },
+              o: { a: 0, k: 100, ix: 7 },
+              sk: { a: 0, k: 0, ix: 4 },
+              sa: { a: 0, k: 0, ix: 5 },
+              nm: "Transform"
+            }
+          ]
+        }
+      ],
+      ip: 0,
+      op: 60,
+      st: 0,
+      bm: 0
+    }
+  ]
+};
 
 export const Auth: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -309,25 +388,120 @@ export const Auth: React.FC = () => {
 
         <div className="flex flex-col items-center gap-12 flex-1 justify-center max-w-sm w-full">
           <div className="relative">
-            <div className="w-64 h-64 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-4 p-4">
-                {[...Array(20)].map((_, i) => (
-                  <MessageSquare key={i} size={16} />
-                ))}
-              </div>
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="flex gap-4 mb-4">
-                  <div className="w-12 h-12 bg-[#25d366] rounded-2xl flex items-center justify-center transform -rotate-12">
-                    <MessageSquare size={24} className="text-[#0b141a]" />
-                  </div>
-                  <div className="w-12 h-12 bg-[#34b7f1] rounded-2xl flex items-center justify-center transform rotate-12">
-                    <Globe size={24} className="text-[#0b141a]" />
-                  </div>
-                </div>
-                <div className="w-16 h-16 bg-[#00a884] rounded-full flex items-center justify-center">
-                  <Shield size={32} className="text-[#0b141a]" />
-                </div>
-              </div>
+            <div className="w-64 h-64 flex items-center justify-center">
+              <Lottie 
+                animationData={{
+                  v: "5.7.1",
+                  fr: 30,
+                  ip: 0,
+                  op: 60,
+                  w: 400,
+                  h: 400,
+                  nm: "XTermux Logo",
+                  ddd: 0,
+                  assets: [],
+                  layers: [
+                    {
+                      ddd: 0,
+                      ind: 1,
+                      ty: 4,
+                      nm: "Circle",
+                      sr: 1,
+                      ks: {
+                        o: { a: 0, k: 20 },
+                        r: { a: 0, k: 0 },
+                        p: { a: 0, k: [200, 200] },
+                        a: { a: 0, k: [0, 0] },
+                        s: { a: 0, k: [100, 100] }
+                      },
+                      shapes: [
+                        {
+                          ty: "gr",
+                          it: [
+                            { ty: "el", s: { a: 0, k: [300, 300] }, p: { a: 0, k: [0, 0] } },
+                            { ty: "fl", c: { a: 0, k: [0.1, 0.15, 0.18, 1] } }
+                          ]
+                        }
+                      ],
+                      ip: 0, op: 60, st: 0
+                    },
+                    {
+                      ddd: 0, ind: 2, ty: 4, nm: "Shield", sr: 1,
+                      ks: {
+                        o: { a: 0, k: 100 },
+                        r: { a: 0, k: 0 },
+                        p: { a: 0, k: [200, 220] },
+                        a: { a: 0, k: [0, 0] },
+                        s: {
+                          a: 1,
+                          k: [
+                            { t: 0, s: [0, 0], e: [100, 100], i: { x: 0.6, y: 1 }, o: { x: 0.4, y: 0 } },
+                            { t: 20, s: [100, 100] }
+                          ]
+                        }
+                      },
+                      shapes: [
+                        {
+                          ty: "gr",
+                          it: [
+                            { ty: "rc", s: { a: 0, k: [80, 100] }, r: 20 },
+                            { ty: "fl", c: { a: 0, k: [0, 0.66, 0.52, 1] } }
+                          ]
+                        }
+                      ],
+                      ip: 0, op: 60, st: 0
+                    },
+                    {
+                      ddd: 0, ind: 3, ty: 4, nm: "LeftIcon", sr: 1,
+                      ks: {
+                        o: { a: 0, k: 100 },
+                        r: { a: 0, k: -12 },
+                        p: { a: 1, k: [
+                          { t: 5, s: [200, 200], e: [150, 160] },
+                          { t: 25, s: [150, 160] }
+                        ]},
+                        a: { a: 0, k: [0, 0] },
+                        s: { a: 0, k: [100, 100] }
+                      },
+                      shapes: [
+                        {
+                          ty: "gr",
+                          it: [
+                            { ty: "rc", s: { a: 0, k: [60, 60] }, r: 15 },
+                            { ty: "fl", c: { a: 0, k: [0.15, 0.83, 0.4, 1] } }
+                          ]
+                        }
+                      ],
+                      ip: 5, op: 60, st: 5
+                    },
+                    {
+                      ddd: 0, ind: 4, ty: 4, nm: "RightIcon", sr: 1,
+                      ks: {
+                        o: { a: 0, k: 100 },
+                        r: { a: 0, k: 12 },
+                        p: { a: 1, k: [
+                          { t: 10, s: [200, 200], e: [250, 160] },
+                          { t: 30, s: [250, 160] }
+                        ]},
+                        a: { a: 0, k: [0, 0] },
+                        s: { a: 0, k: [100, 100] }
+                      },
+                      shapes: [
+                        {
+                          ty: "gr",
+                          it: [
+                            { ty: "rc", s: { a: 0, k: [60, 60] }, r: 15 },
+                            { ty: "fl", c: { a: 0, k: [0.2, 0.72, 0.95, 1] } }
+                          ]
+                        }
+                      ],
+                      ip: 10, op: 60, st: 10
+                    }
+                  ]
+                }}
+                loop={true}
+                className="w-full h-full"
+              />
             </div>
           </div>
 
