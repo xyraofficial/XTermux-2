@@ -6,9 +6,10 @@ import { showToast } from './Toast';
 interface CodeBlockProps {
   code: string;
   label?: string;
+  showCopy?: boolean;
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash' }) => {
+const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash', showCopy = true }) => {
   const [copied, setCopied] = React.useState(false);
   
   const normalizedLabel = label?.toLowerCase() || 'bash';
@@ -52,14 +53,16 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash' }) => {
           </div>
         </div>
         
-        <div className="mt-4 flex justify-end">
-          <button
-            onClick={handleCopy}
-            className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-700 transition-all active:scale-90"
-          >
-            {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-          </button>
-        </div>
+        {showCopy && (
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={handleCopy}
+              className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-700 transition-all active:scale-90"
+            >
+              {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

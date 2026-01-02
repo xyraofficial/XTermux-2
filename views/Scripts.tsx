@@ -97,7 +97,12 @@ const Scripts: React.FC = () => {
                     
                     <div className="space-y-3 pt-4 border-t border-white/5">
                       <div className="space-y-1">
-                        <p className="text-[9px] text-zinc-600 font-bold uppercase">1. Persiapan Environment:</p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[9px] text-zinc-600 font-bold uppercase">1. Persiapan Environment:</p>
+                          <button onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90">
+                            <Copy size={12} />
+                          </button>
+                        </div>
                         <code className="text-[10px] text-green-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
                           termux-setup-storage && pkg update && pkg upgrade -y
                         </code>
@@ -105,7 +110,12 @@ const Scripts: React.FC = () => {
                       
                       {selectedScript.requiredPackages && selectedScript.requiredPackages.length > 0 && (
                         <div className="space-y-1">
-                          <p className="text-[9px] text-zinc-600 font-bold uppercase">2. Install Dependencies:</p>
+                          <div className="flex items-center justify-between">
+                            <p className="text-[9px] text-zinc-600 font-bold uppercase">2. Install Dependencies:</p>
+                            <button onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90">
+                              <Copy size={12} />
+                            </button>
+                          </div>
                           <code className="text-[10px] text-blue-400/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
                             pkg install {selectedScript.requiredPackages.join(' ')} -y
                           </code>
@@ -113,7 +123,12 @@ const Scripts: React.FC = () => {
                       )}
                       
                       <div className="space-y-1">
-                        <p className="text-[9px] text-zinc-600 font-bold uppercase">3. Execute Script:</p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[9px] text-zinc-600 font-bold uppercase">3. Execute Script:</p>
+                          <button onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90">
+                            <Copy size={12} />
+                          </button>
+                        </div>
                         <code className="text-[10px] text-yellow-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
                           {selectedScript.installCommand}
                         </code>
@@ -133,7 +148,7 @@ const Scripts: React.FC = () => {
               <div className="space-y-2">
                 <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Preview / Example</span>
                 <div className="w-full">
-                  <CodeBlock code={selectedScript.previewOutput} label="Preview Output" />
+                  <CodeBlock code={selectedScript.previewOutput} label="Preview Output" showCopy={false} />
                 </div>
               </div>
               <button onClick={() => window.open(selectedScript.githubUrl, '_blank')} className="w-full py-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-colors">
