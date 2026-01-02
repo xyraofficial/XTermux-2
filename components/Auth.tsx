@@ -10,7 +10,7 @@ export const Auth: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [step, setStep] = useState<'welcome' | 'form' | 'support'>('welcome');
+  const [step, setStep] = useState<'welcome' | 'form' | 'support' | 'privacy' | 'terms'>('welcome');
   const [supportMessage, setSupportMessage] = useState('');
   const [showMenu, setShowMenu] = useState(false);
   const [language, setLanguage] = useState<'en' | 'id' | 'hi'>('en');
@@ -32,7 +32,8 @@ export const Auth: React.FC = () => {
       enterEmail: 'Enter email',
       createAccount: 'Create account',
       resetPassword: 'Reset password',
-      yourEmail: 'Your email'
+      yourEmail: 'Your email',
+      back: 'Back'
     },
     id: {
       welcome: 'Selamat datang di XTermux',
@@ -48,7 +49,8 @@ export const Auth: React.FC = () => {
       enterEmail: 'Masukkan email',
       createAccount: 'Buat akun',
       resetPassword: 'Atur ulang sandi',
-      yourEmail: 'Email Anda'
+      yourEmail: 'Email Anda',
+      back: 'Kembali'
     },
     hi: {
       welcome: 'XTermux में आपका स्वागत है',
@@ -64,7 +66,8 @@ export const Auth: React.FC = () => {
       enterEmail: 'ईमेल दर्ज करें',
       createAccount: 'खाता बनाएं',
       resetPassword: 'पासवर्ड रीसेट करें',
-      yourEmail: 'आपका ईमेल'
+      yourEmail: 'आपका ईमेल',
+      back: 'पीछे'
     }
   };
 
@@ -103,7 +106,7 @@ export const Auth: React.FC = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-    window.open('https://x-termux-tools.vercel.app/PrivacyPolicy', '_blank', 'noopener,noreferrer');
+    setStep('privacy');
   };
 
   const handleTermsClick = (e?: React.MouseEvent) => {
@@ -111,7 +114,7 @@ export const Auth: React.FC = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-    window.open('https://x-termux-tools.vercel.app/TermsOfService', '_blank', 'noopener,noreferrer');
+    setStep('terms');
   };
 
   const handleHelpCenterClick = (e?: React.MouseEvent) => {
@@ -119,7 +122,7 @@ export const Auth: React.FC = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-    window.open('https://x-termux-tools.vercel.app/HelpCenter', '_blank', 'noopener,noreferrer');
+    setStep('support');
   };
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -164,6 +167,80 @@ export const Auth: React.FC = () => {
       setLoading(false);
     }
   };
+
+  if (step === 'privacy') {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#0b141a] text-[#e9edef]">
+        <div className="flex items-center gap-4 p-4 border-b border-[#202c33]">
+          <button onClick={() => setStep('welcome')} className="p-1">
+            <LogIn className="rotate-180" size={24} />
+          </button>
+          <h2 className="text-xl font-medium">{t.privacy}</h2>
+        </div>
+        <div className="p-6 space-y-6 flex-1 overflow-y-auto leading-relaxed">
+          <p className="text-sm text-[#8696a0]">Last updated: January 2, 2026</p>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">1. Information We Collect</h3>
+            <p className="text-sm">We collect information you provide directly to us, such as your email address when you create an account or contact support.</p>
+          </section>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">2. How We Use Information</h3>
+            <p className="text-sm">We use your information to provide, maintain, and improve our services, including to personalize your experience and provide support.</p>
+          </section>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">3. Data Security</h3>
+            <p className="text-sm">We take reasonable measures to help protect information about you from loss, theft, misuse and unauthorized access.</p>
+          </section>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">4. Contact Us</h3>
+            <p className="text-sm">If you have any questions about this Privacy Policy, please contact us at xyraofficialsup@gmail.com.</p>
+          </section>
+        </div>
+        <div className="p-6">
+          <button onClick={() => setStep('welcome')} className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c]">
+            {t.back}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'terms') {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#0b141a] text-[#e9edef]">
+        <div className="flex items-center gap-4 p-4 border-b border-[#202c33]">
+          <button onClick={() => setStep('welcome')} className="p-1">
+            <LogIn className="rotate-180" size={24} />
+          </button>
+          <h2 className="text-xl font-medium">{t.terms}</h2>
+        </div>
+        <div className="p-6 space-y-6 flex-1 overflow-y-auto leading-relaxed">
+          <p className="text-sm text-[#8696a0]">Last updated: January 2, 2026</p>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">1. Agreement to Terms</h3>
+            <p className="text-sm">By accessing XTermux, you agree to be bound by these Terms of Service.</p>
+          </section>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">2. Use of Services</h3>
+            <p className="text-sm">You agree to use XTermux only for lawful purposes and in accordance with our guidelines.</p>
+          </section>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">3. User Responsibility</h3>
+            <p className="text-sm">You are responsible for maintaining the confidentiality of your account and password.</p>
+          </section>
+          <section className="space-y-2">
+            <h3 className="text-[#00a884] font-medium">4. Termination</h3>
+            <p className="text-sm">We reserve the right to terminate or suspend your account for violations of these terms.</p>
+          </section>
+        </div>
+        <div className="p-6">
+          <button onClick={() => setStep('welcome')} className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c]">
+            {t.back}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (step === 'support') {
     return (
