@@ -152,17 +152,18 @@ const AppContent: React.FC = () => {
         .border-accent { border-color: var(--accent-color); }
         .bg-accent-10 { background-color: color-mix(in srgb, var(--accent-color), transparent 90%); }
         .bg-accent-20 { background-color: color-mix(in srgb, var(--accent-color), transparent 80%); }
-        body { background-color: #000000; overflow: hidden; }
+        body { background-color: #000000; overflow: hidden; margin: 0; padding: 0; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        main { position: relative; z-index: 1; }
       `}</style>
 
       <ToastContainer />
       
       <main 
         tabIndex={-1}
-        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden h-full' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar'}`}
+        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden h-full bg-black' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar'}`}
       >
         {!session ? <Auth /> : renderContent()}
       </main>

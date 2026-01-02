@@ -162,7 +162,7 @@ const AIChat: React.FC = () => {
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   return (
-    <div className="flex flex-col h-full bg-black overflow-hidden relative">
+    <div className="flex flex-col h-full w-full bg-black overflow-hidden relative">
       <header className="px-4 py-3 border-b border-white/5 bg-black/80 backdrop-blur-xl flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={() => setIsSidebarOpen(true)} className="p-2 bg-zinc-900 border border-white/5 rounded-xl text-zinc-400"><Menu size={18} /></button>
