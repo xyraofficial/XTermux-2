@@ -70,7 +70,8 @@ const About: React.FC = () => {
           .upsert({ id: user.id, username: trimmed, updated_at: new Date().toISOString() });
           
         if (error) {
-          showToast('Gagal menyimpan username', 'error');
+          console.error('Supabase Profile Update Error:', error);
+          showToast(`Gagal: ${error.message}. Pastikan tabel 'profiles' ada.`, 'error');
         } else {
           setUsername(trimmed);
           setIsEditing(false);

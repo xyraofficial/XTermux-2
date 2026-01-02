@@ -149,9 +149,15 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await supabase.from('chat_messages').insert([
+      const { data: insertData, error: insertError } = await supabase.from('chat_messages').insert([
         { session_id: currentSessionId, role: 'user', content: userMessage }
       ]);
+      if (insertError) {
+        console.error('Supabase Insert Error (User):', insertError);
+        showToast(`Database Error: ${insertError.message}`, "error");
+        setIsLoading(false);
+        return;
+      }
 
       const stream = await groq.chat.completions.create({
         messages: [
