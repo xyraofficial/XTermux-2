@@ -55,3 +55,5 @@ run = ["npm", "run", "dev"]
 [userenv]
 
 [userenv.shared]
+VITE_SUPABASE_URL = "https://hfyiesaqqjtgncoczute.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmeWllc2FxcWp0Z25jb2N6dXRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczMDQyMDYsImV4cCI6MjA4Mjg4MDIwNn0.gRkbtK0NSUMw53nbJW6kTZTTOV8Bhwlo4nOBlURcHfA"

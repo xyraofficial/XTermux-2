@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Package, BookOpen, Bot, User, Palette, PenTool, Terminal, Cpu } from 'lucide-react';
+import { Home, Package, BookOpen, Bot, User, Palette } from 'lucide-react';
 import { ViewState } from './types';
+import { supabase } from './supabase';
+import { Auth } from './components/Auth';
+import { Session } from '@supabase/supabase-js';
 
 // Components
 import HomeView from './views/Home';
@@ -18,22 +21,23 @@ import TermsView from './views/legal/Terms';
 
 import { ToastContainer } from './components/Toast';
 
-const ACCENT_COLORS = [
-  { name: 'Classic Green', hex: '#22c55e' },
-  { name: 'Cyber Purple', hex: '#a855f7' },
-  { name: 'Sky Blue', hex: '#0ea5e9' },
-  { name: 'Hacker Red', hex: '#ef4444' },
-];
-
-const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
-  <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
-    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
-    <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
-    {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
-  </button>
-);
-
 const AppContent: React.FC = () => {
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const getInitialView = (): ViewState => {
     const path = window.location.pathname.toLowerCase();
     if (path === '/help') return ViewState.HELP;
@@ -138,6 +142,14 @@ const AppContent: React.FC = () => {
 
   const isLegalView = [ViewState.HELP, ViewState.PRIVACY, ViewState.TERMS].includes(currentView);
 
+  const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
+    <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
+      <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
+      <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
+      {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
+    </button>
+  );
+
   return (
     <div className="h-[100dvh] bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden">
       <style>{`
@@ -170,7 +182,7 @@ const AppContent: React.FC = () => {
       )}
 
       <main className={`flex-1 max-w-5xl mx-auto w-full relative ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}>
-        {renderContent()}
+        {!session ? <Auth /> : renderContent()}
       </main>
 
       {!isLegalView && (
