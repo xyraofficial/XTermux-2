@@ -12,17 +12,41 @@ const About: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // Try to load cached profile first for instant UI
+    const cached = localStorage.getItem('user_profile_cache');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        setUser(parsed.user);
+        setUsername(parsed.username);
+        setLoading(false);
+      } catch (e) {}
+    }
     fetchUser();
   }, []);
 
   const fetchUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-      setUser({ ...user, profile });
-      setUsername(profile?.username || 'X-User');
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        const userData = { ...user, profile };
+        const name = profile?.username || 'X-User';
+        
+        setUser(userData);
+        setUsername(name);
+        
+        // Cache for next time
+        localStorage.setItem('user_profile_cache', JSON.stringify({
+          user: userData,
+          username: name
+        }));
+      }
+    } catch (err) {
+      console.error('Error fetching user:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleSignOut = async () => {
