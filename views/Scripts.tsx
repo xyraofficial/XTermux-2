@@ -91,9 +91,15 @@ const Scripts: React.FC = () => {
 
               {selectedScript.setupInfo && (
                 <div className="space-y-2">
-                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Setup Info</span>
-                  <div className="p-4 bg-zinc-900 border border-white/5 rounded-2xl">
-                    <p className="text-xs text-zinc-500 leading-relaxed">{selectedScript.setupInfo}</p>
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Setup Info (Termux)</span>
+                  <div className="p-4 bg-zinc-900 border border-white/5 rounded-2xl space-y-3">
+                    <p className="text-xs text-zinc-400 leading-relaxed">{selectedScript.setupInfo}</p>
+                    <div className="pt-2 border-t border-white/5">
+                      <p className="text-[9px] text-zinc-600 font-bold uppercase mb-2">Langkah Dasar:</p>
+                      <code className="text-[10px] text-green-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
+                        pkg update && pkg upgrade
+                      </code>
+                    </div>
                   </div>
                 </div>
               )}
