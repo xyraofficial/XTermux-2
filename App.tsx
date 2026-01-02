@@ -144,7 +144,7 @@ const AppContent: React.FC = () => {
   );
 
   return (
-    <div className="h-[100dvh] bg-black text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden relative">
+    <div className="fixed inset-0 bg-black text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden">
       <style>{`
         :root { --accent-color: ${accentColor}; }
         .text-accent { color: var(--accent-color); }
@@ -152,11 +152,19 @@ const AppContent: React.FC = () => {
         .border-accent { border-color: var(--accent-color); }
         .bg-accent-10 { background-color: color-mix(in srgb, var(--accent-color), transparent 90%); }
         .bg-accent-20 { background-color: color-mix(in srgb, var(--accent-color), transparent 80%); }
-        body { background-color: #000000; overflow: hidden; margin: 0; padding: 0; }
+        html, body, #root { 
+          margin: 0; 
+          padding: 0; 
+          width: 100%; 
+          height: 100%; 
+          background-color: #000000; 
+          overflow: hidden;
+          position: fixed;
+        }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        main { position: relative; z-index: 1; }
+        main { position: relative; z-index: 1; height: 100%; width: 100%; }
       `}</style>
 
       <ToastContainer />
