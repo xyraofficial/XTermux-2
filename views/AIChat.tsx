@@ -138,9 +138,15 @@ const AIChat: React.FC = () => {
       if (msgError) throw msgError;
 
       const groqInstance = new Groq({
-        apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || 'dummy_key',
+        apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || '',
         dangerouslyAllowBrowser: true
       });
+
+      if (!groqInstance.apiKey || groqInstance.apiKey === 'dummy_key') {
+        showToast("AI Key not configured", "error");
+        setIsLoading(false);
+        return;
+      }
 
       const stream = await groqInstance.chat.completions.create({
         messages: [
@@ -279,9 +285,9 @@ const AIChat: React.FC = () => {
                   </div>
                   <button 
                     onClick={(e) => { e.stopPropagation(); deleteSession(s.id); }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-zinc-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-zinc-500 active:text-red-500 transition-all"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               ))}
