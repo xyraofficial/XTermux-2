@@ -40,28 +40,68 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
         <div className="absolute -top-24 -left-24 w-64 h-64 bg-accent/20 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
         
-        <div className="flex items-center justify-between relative z-10">
-          <div>
-            <h2 className="text-4xl font-black text-white tracking-tighter uppercase md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-zinc-500">
-              XTermux
-            </h2>
-            <div className="flex items-center gap-2 mt-2">
-                <div className="flex gap-1">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-1 h-3 bg-accent/40 rounded-full overflow-hidden">
-                      <div className="w-full h-full bg-accent animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
-                    </div>
-                  ))}
-                </div>
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Operational Nexus</span>
+        <div className="flex flex-col md:flex-row md:items-center justify-between relative z-10 gap-6">
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-4xl font-black text-white tracking-tighter uppercase md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-zinc-500">
+                XTermux
+              </h2>
+              <p className="text-zinc-400 font-medium mt-1">Tools & Commands Helper for Termux on Android</p>
+              <div className="flex items-center gap-2 mt-2">
+                  <div className="flex gap-1">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="w-1 h-3 bg-accent/40 rounded-full overflow-hidden">
+                        <div className="w-full h-full bg-accent animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
+                      </div>
+                    ))}
+                  </div>
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Operational Nexus</span>
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap gap-4">
+              <button onClick={() => onNavigate('PACKAGES')} className="px-6 py-3 bg-accent text-black font-black rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                <Terminal size={18} />
+                INSTALL NOW
+              </button>
+              <button onClick={() => onNavigate('GUIDES')} className="px-6 py-3 bg-zinc-900 border border-white/10 text-white font-black rounded-xl hover:bg-zinc-800 transition-all flex items-center gap-2">
+                <BookOpen size={18} />
+                DOCUMENTATION
+              </button>
             </div>
           </div>
-          <div onClick={() => onNavigate('ABOUT')} className="group relative">
+          
+          <div onClick={() => onNavigate('ABOUT')} className="group relative self-start md:self-center">
             <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-lg group-hover:bg-accent/40 transition-all duration-500" />
             <div className="relative w-14 h-14 rounded-2xl bg-zinc-900/50 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl cursor-pointer active:scale-90 transition-all duration-300 md:w-16 md:h-16 overflow-hidden">
                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
                <Hexagon size={28} className="text-accent md:w-8 md:h-8 group-hover:rotate-12 transition-transform duration-500" />
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* How to Use Section */}
+      <div className="relative group">
+        <div className="absolute inset-0 bg-accent/5 rounded-[2.5rem] blur-xl opacity-50" />
+        <div className="relative bg-zinc-900/30 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8">
+          <h3 className="text-xl font-black text-white mb-6 uppercase tracking-tight flex items-center gap-2">
+            <PenTool size={20} className="text-accent" />
+            Getting Started
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              { step: "01", title: "Install Termux", desc: "Download from F-Droid or GitHub" },
+              { step: "02", title: "Open Terminal", desc: "Launch the Termux application" },
+              { step: "03", title: "Copy Command", desc: "Select a tool from our Vault" },
+              { step: "04", title: "Paste & Run", desc: "Execute in your terminal" }
+            ].map((item, i) => (
+              <div key={i} className="space-y-2">
+                <div className="text-accent font-black text-2xl opacity-50">{item.step}</div>
+                <h4 className="text-white font-bold">{item.title}</h4>
+                <p className="text-xs text-zinc-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -174,6 +214,37 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
             </div>
         </div>
       </div>
+
+      <footer className="pt-12 border-t border-white/5 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="space-y-4">
+            <h4 className="text-white font-black uppercase tracking-widest text-sm">XTermux Project</h4>
+            <p className="text-xs text-zinc-500 leading-relaxed">
+              Empowering Android users with professional-grade terminal tools and automated scripts.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h4 className="text-white font-black uppercase tracking-widest text-sm">Resources</h4>
+            <div className="flex flex-col gap-2">
+              <a href="https://github.com/xtermux" target="_blank" rel="noopener noreferrer" className="text-xs text-zinc-400 hover:text-accent flex items-center gap-2">
+                <Terminal size={12} /> GitHub Repository
+              </a>
+              <a onClick={() => onNavigate('GUIDES')} className="text-xs text-zinc-400 hover:text-accent cursor-pointer flex items-center gap-2">
+                <BookOpen size={12} /> Documentation
+              </a>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h4 className="text-white font-black uppercase tracking-widest text-sm">Legal</h4>
+            <p className="text-[10px] text-zinc-600 leading-relaxed italic">
+              Disclaimer: This is a community tool. Not affiliated with official Termux. Use at your own risk.
+            </p>
+          </div>
+        </div>
+        <div className="text-center pb-8">
+          <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.3em]">© 2026 XTermux Nexus • Built for Android</span>
+        </div>
+      </footer>
     </div>
   );
 };
