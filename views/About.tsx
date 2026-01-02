@@ -6,6 +6,7 @@ import { showToast } from '../components/Toast';
 
 const About: React.FC = () => {
   const [username, setUsername] = useState('X-User');
+  const [role, setRole] = useState<'USER' | 'ADMIN'>('USER');
   const [isEditing, setIsEditing] = useState(false);
   const [tempUsername, setTempUsername] = useState('');
   const [avatar, setAvatar] = useState('');
@@ -20,7 +21,7 @@ const About: React.FC = () => {
         
         const { data: profile } = await supabase
           .from('profiles')
-          .select('username, avatar_url')
+          .select('username, avatar_url, role')
           .eq('id', user.id)
           .single();
           
@@ -32,6 +33,7 @@ const About: React.FC = () => {
             setTempUsername('X-User');
           }
           if (profile.avatar_url) setAvatar(profile.avatar_url);
+          if (profile.role) setRole(profile.role);
         } else {
           setTempUsername('X-User');
         }
@@ -170,6 +172,15 @@ const About: React.FC = () => {
                   </div>
                 )}
                 <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">{userEmail || 'guest@xtermux.local'}</p>
+                <div className="mt-2">
+                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-md border tracking-widest ${
+                    role === 'ADMIN' 
+                      ? 'bg-red-500/10 text-red-500 border-red-500/20' 
+                      : 'bg-accent/10 text-accent border-accent/20'
+                  }`}>
+                    {role}
+                  </span>
+                </div>
               </div>
               <button 
                 onClick={handleSignOut}
