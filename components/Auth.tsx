@@ -39,6 +39,49 @@ export const Auth: React.FC = () => {
     window.location.href = '/terms';
   };
 
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (isResetting) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        showToast('Password reset link has been sent to your email!', 'success');
+        setIsResetting(false);
+        setStep('welcome');
+      } else if (isSignUp) {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        
+        if (error) {
+          if (error.message.includes('User already registered')) {
+            throw new Error('This email is already registered. Please sign in.');
+          }
+          throw error;
+        }
+
+        if (data.user && !data.session && data.user.identities && data.user.identities.length === 0) {
+          throw new Error('This email is already registered. Please sign in.');
+        }
+
+        showToast('Account created! Please check your email.', 'success');
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            throw new Error('Incorrect email or password.');
+          }
+          throw error;
+        }
+      }
+    } catch (error: any) {
+      showToast(error.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (step === 'support') {
     return (
       <div className="flex flex-col min-h-screen bg-[#0b141a] text-[#e9edef]">
