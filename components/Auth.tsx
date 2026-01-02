@@ -23,13 +23,24 @@ export const Auth: React.FC = () => {
         showToast('Password reset link has been sent to your email!', 'success');
         setIsResetting(false);
       } else if (isSignUp) {
-        const { error } = await supabase.auth.signUp({ email, password });
+        // Supabase signUp returns success even if user exists for security (to prevent email enumeration)
+        // unless you're using a specific configuration.
+        // We'll try to detect if it's a silent "already exists" by checking the data.
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        
         if (error) {
           if (error.message.includes('User already registered')) {
             throw new Error('This email is already registered. Please sign in or reset your password.');
           }
           throw error;
         }
+
+        // If data.user exists but data.session is null and identity is empty, 
+        // it often means the user already exists (Supabase security feature)
+        if (data.user && !data.session && data.user.identities && data.user.identities.length === 0) {
+          throw new Error('This email is already registered. Please sign in or reset your password.');
+        }
+
         showToast('Account created! Please check your email for confirmation.', 'success');
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
