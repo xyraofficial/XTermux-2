@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { Bot, Terminal, PenTool, Package, BookOpen, User } from 'lucide-react';
 

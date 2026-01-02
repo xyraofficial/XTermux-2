@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { supabase } from '../supabase';
 import { Mail, Lock, Loader2, UserPlus, LogIn, Eye, EyeOff, KeyRound } from 'lucide-react';

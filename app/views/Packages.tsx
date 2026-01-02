@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Package, Heart, ArrowDownAZ, ArrowUpAZ, Plus, Check, ShoppingCart, Copy, X } from 'lucide-react';
 import { PACKAGES } from '../constants';

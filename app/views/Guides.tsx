@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, CheckCircle2, Circle, RotateCcw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';

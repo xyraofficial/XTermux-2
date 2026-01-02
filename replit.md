@@ -1,15 +1,21 @@
 # XTermux Toolbox
 
 ## Overview
-XTermux Toolbox is a React + TypeScript web application built with Vite. It provides a toolbox interface for Termux users with features including AI chat, tools library, user guides, GitHub scripts, and architecture tools.
+XTermux Toolbox is a professional-grade terminal orchestration application built with Next.js PRO. It features a mobile-first design with AI assistance, script repositories, and advanced terminal tools.
+
+## Technical Stack
+- Framework: Next.js PRO (App Router)
+- Language: TypeScript PRO
+- Styling: Tailwind CSS PRO
+- Database: Supabase
+- Deployment: Vercel
+- PWA: next-pwa enabled
 
 ## Project Structure
-- `/components/` - Reusable React components (Card, Header, Toast, etc.)
-- `/views/` - Page components (Home, AIChat, Packages, Guides, etc.)
-- `/contexts/` - React context providers (AuthContext)
-- `App.tsx` - Main application component with routing
-- `vite.config.ts` - Vite configuration
-- `firebase.ts` - Firebase configuration
+- `/app/` - Next.js App Router (Layouts, Pages, Views)
+- `/app/components/` - React components
+- `/app/views/` - Page-level components
+- `/public/` - Static assets and PWA manifest
 
 ## Development
 
