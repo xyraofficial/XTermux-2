@@ -37,7 +37,7 @@ const ResetPassword = () => {
             <CheckCircle2 className="text-green-500" size={40} />
           </div>
           <h2 className="text-2xl font-black text-white uppercase tracking-tighter">Success!</h2>
-          <p className="text-zinc-500 text-sm">Your password has been updated. Redirecting to home...</p>
+          <p className="text-zinc-500 text-sm">Your password has been updated.</p>
         </div>
       </div>
     );
