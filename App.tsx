@@ -205,6 +205,31 @@ const AppContent: React.FC = () => {
         className={`flex-1 max-w-5xl mx-auto w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}
       >
         {!session ? <Auth /> : renderContent()}
+        {showThemePicker && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 w-full max-w-xs shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-white tracking-tight">Select Accent</h3>
+                <button onClick={() => setShowThemePicker(false)} className="p-2 text-zinc-500 hover:text-white transition-colors">
+                  <Palette size={18} />
+                </button>
+              </div>
+              <div className="grid grid-cols-4 gap-3">
+                {['#22c55e', '#3b82f6', '#a855f7', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#f97316'].map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => {
+                      setAccentColor(color);
+                      setShowThemePicker(false);
+                    }}
+                    className={`w-full aspect-square rounded-xl transition-all duration-300 ${accentColor === color ? 'ring-2 ring-white ring-offset-4 ring-offset-zinc-900 scale-90' : 'hover:scale-110 active:scale-95'}`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       {!isLegalView && (
