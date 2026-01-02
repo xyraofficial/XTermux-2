@@ -100,17 +100,20 @@ const Guides: React.FC = () => {
   };
 
   return (
-    <div className="p-4 space-y-4 pb-24 relative">
-      <div className="px-1 py-2 flex items-center justify-between">
-        <p className="text-zinc-400 text-sm">
-          Tap circle to complete steps.
-        </p>
+    <div className="p-6 space-y-6 pb-32 relative">
+      <div className="px-2 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">
+            Operational Protocols
+          </p>
+        </div>
         <button 
             onClick={openResetModal}
-            className="text-[10px] font-bold text-zinc-500 hover:text-red-400 flex items-center gap-1 transition-colors px-2 py-1.5 bg-zinc-900 rounded-lg border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800"
+            className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-red-400 flex items-center gap-2 transition-all px-4 py-2 bg-zinc-900/50 backdrop-blur-md rounded-xl border border-white/5 hover:border-red-500/30 hover:bg-red-500/5"
         >
             <RotateCcw size={12} />
-            Reset Progress
+            Reset
         </button>
       </div>
 
@@ -122,81 +125,93 @@ const Guides: React.FC = () => {
         return (
           <div 
             key={guide.id} 
-            className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+            className={`group relative rounded-[2.5rem] transition-all duration-500 overflow-hidden ${
               isExpanded 
-                ? 'bg-zinc-900 border-zinc-700 shadow-xl' 
-                : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-900'
+                ? 'shadow-[0_20px_50px_rgba(0,0,0,0.5)]' 
+                : ''
             }`}
           >
+            <div className={`absolute inset-0 transition-all duration-500 ${isExpanded ? 'bg-zinc-900/60' : 'bg-zinc-900/30'} backdrop-blur-xl border border-white/5 ${isExpanded ? 'border-accent/30' : 'group-hover:border-white/10'}`} />
+            
             <button
               onClick={() => toggleExpand(guide.id)}
-              className="w-full flex items-center justify-between p-5 text-left group"
+              className="relative w-full flex items-center justify-between p-6 md:p-8 text-left"
             >
-              <div className="flex-1 pr-4">
-                <div className="flex items-center gap-2 mb-1">
-                    <h3 className={`font-bold text-lg transition-colors ${isExpanded ? 'text-green-400' : 'text-zinc-200'}`}>
+              <div className="flex-1 pr-6">
+                <div className="flex items-center gap-3 mb-2">
+                    <h3 className={`font-black text-xl tracking-tight transition-colors ${isExpanded ? 'text-white' : 'text-zinc-300'}`}>
                     {guide.title}
                     </h3>
-                    {isComplete && <CheckCircle2 size={16} className="text-green-500" />}
+                    {isComplete && (
+                      <div className="p-1 bg-accent rounded-full shadow-[0_0_10px_var(--accent-color)]">
+                        <CheckCircle2 size={12} className="text-black" />
+                      </div>
+                    )}
                 </div>
-                <p className="text-xs text-zinc-500 mb-3">{guide.description}</p>
+                <p className="text-xs text-zinc-500 mb-5 font-medium leading-relaxed max-w-md">{guide.description}</p>
                 
-                {/* Progress Bar */}
-                <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden max-w-[150px]">
-                    <div 
-                        className={`h-full transition-all duration-500 ${isComplete ? 'bg-green-500' : 'bg-green-500/60'}`} 
-                        style={{ width: `${progress}%` }}
-                    />
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 h-1.5 bg-black/40 rounded-full overflow-hidden max-w-[120px]">
+                      <div 
+                          className={`h-full transition-all duration-1000 ease-out shadow-[0_0_8px_var(--accent-color)] ${isComplete ? 'bg-accent' : 'bg-accent/60'}`} 
+                          style={{ width: `${progress}%` }}
+                      />
+                  </div>
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">{progress}%</span>
                 </div>
-                <p className="text-[10px] text-zinc-600 mt-1 font-mono">{progress}% Complete</p>
               </div>
-              <div className={`p-2 rounded-full transition-colors ${isExpanded ? 'bg-zinc-800' : 'bg-transparent group-hover:bg-zinc-800'}`}>
-                {isExpanded ? <ChevronUp size={20} className="text-zinc-400" /> : <ChevronDown size={20} className="text-zinc-500" />}
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-500 ${isExpanded ? 'bg-accent text-black rotate-180 shadow-[0_0_20px_var(--accent-color)]' : 'bg-zinc-800/50 text-zinc-500 border border-white/5'}`}>
+                <ChevronDown size={20} />
               </div>
             </button>
 
             {isExpanded && (
-              <div className="px-5 pb-5 border-t border-zinc-800 bg-zinc-950/30">
-                <div className="space-y-8 pt-6">
+              <div className="relative px-6 md:px-8 pb-8 animate-in slide-in-from-top-4 duration-500">
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent mb-8" />
+                <div className="space-y-10 pt-2">
                   {guide.steps.map((step, index) => {
                     const stepKey = `${guide.id}-${index}`;
                     const isStepDone = !!completedSteps[stepKey];
 
                     return (
-                        <div key={index} className={`relative pl-8 transition-opacity duration-300 ${isStepDone ? 'opacity-60' : 'opacity-100'}`}>
+                        <div key={index} className={`relative pl-12 transition-all duration-500 ${isStepDone ? 'opacity-40 grayscale-[0.5]' : 'opacity-100'}`}>
                         {/* Interactive Checkbox Line */}
                         <button 
                             onClick={() => toggleStep(guide.id, index)}
-                            className="absolute -left-1.5 top-0 w-6 h-6 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 z-10 bg-zinc-950"
+                            className={`absolute left-0 top-0 w-8 h-8 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 z-10 border ${isStepDone ? 'bg-accent border-accent text-black shadow-[0_0_15px_var(--accent-color)]' : 'bg-zinc-900 border-white/5 text-zinc-600 hover:text-zinc-400'}`}
                         >
                             {isStepDone ? (
-                                <CheckCircle2 size={20} className="text-green-500 fill-green-500/10" />
+                                <CheckCircle2 size={18} />
                             ) : (
-                                <Circle size={20} className="text-zinc-600 hover:text-zinc-400" />
+                                <Circle size={18} />
                             )}
                         </button>
                         
                         {/* Connecting Line */}
                         {index !== guide.steps.length - 1 && (
-                            <div className={`absolute left-[3px] top-6 bottom-[-32px] w-[2px] ${isStepDone ? 'bg-green-500/20' : 'bg-zinc-800'}`} />
+                            <div className={`absolute left-4 top-10 bottom-[-40px] w-0.5 ${isStepDone ? 'bg-accent/20' : 'bg-white/5'}`} />
                         )}
 
                         <div 
                             onClick={() => !isStepDone && toggleStep(guide.id, index)}
-                            className={`cursor-pointer ${isStepDone ? '' : 'hover:bg-zinc-900/50 -m-2 p-2 rounded-xl transition-colors'}`}
+                            className={`cursor-pointer group/step ${isStepDone ? '' : 'hover:bg-white/5 -m-3 p-3 rounded-2.5xl transition-all duration-300'}`}
                         >
-                            <h4 className={`text-sm font-bold mb-1 ${isStepDone ? 'text-zinc-500 line-through decoration-zinc-700' : 'text-zinc-200'}`}>
-                                Step {index + 1}: {step.title}
+                            <h4 className={`text-[15px] font-black mb-2 tracking-tight flex items-center gap-2 ${isStepDone ? 'text-zinc-500 line-through' : 'text-white'}`}>
+                                <span className="text-[10px] text-zinc-600 font-mono tracking-normal">0{index + 1}</span>
+                                {step.title}
                             </h4>
-                            <div className={`text-sm mb-3 prose prose-invert prose-sm max-w-none ${isStepDone ? 'text-zinc-600' : 'text-zinc-400'}`}>
+                            <div className={`text-sm mb-4 prose prose-invert prose-sm max-w-none leading-relaxed ${isStepDone ? 'text-zinc-600' : 'text-zinc-400 font-medium'}`}>
                                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {step.content}
                                 </ReactMarkdown>
                             </div>
                         </div>
                         {step.command && (
-                            <div className={isStepDone ? 'opacity-50 pointer-events-none grayscale' : ''}>
-                                <CodeBlock code={step.command} />
+                            <div className={`transition-all duration-500 ${isStepDone ? 'pointer-events-none' : ''}`}>
+                                <div className="relative group/code">
+                                  <div className="absolute -inset-1 bg-gradient-to-r from-accent/10 to-transparent rounded-2xl blur opacity-0 group-hover/code:opacity-100 transition duration-500" />
+                                  <CodeBlock code={step.command} />
+                                </div>
                             </div>
                         )}
                         </div>

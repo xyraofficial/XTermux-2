@@ -284,37 +284,52 @@ const AIChat: React.FC = () => {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 lg:px-12 space-y-6 no-scrollbar">
+        <div className="flex-1 overflow-y-auto p-6 lg:px-16 space-y-10 no-scrollbar">
           {messages.length === 0 && !isLoading && (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 animate-in fade-in duration-700">
-                  <div className="w-20 h-20 bg-accent/5 rounded-[2.5rem] border border-accent/20 flex items-center justify-center mb-6 shadow-2xl">
-                      <Bot size={40} className="text-accent" />
+              <div className="h-full flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-1000">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-accent/20 rounded-[3rem] blur-2xl group-hover:bg-accent/40 transition-all duration-700" />
+                    <div className="relative w-24 h-24 bg-zinc-900/50 backdrop-blur-xl rounded-[2.5rem] border border-white/10 flex items-center justify-center mb-8 shadow-2xl">
+                        <Bot size={48} className="text-accent group-hover:scale-110 transition-transform duration-500" />
+                    </div>
                   </div>
-                  <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">INTERFACE READY</h1>
-                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest max-w-[220px]">Menunggu inisiasi input dari pengguna.</p>
+                  <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500">
+                    Neural Link Ready
+                  </h1>
+                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.4em] max-w-[280px] leading-relaxed">
+                    Awaiting synaptic input for system diagnostics and creative generation.
+                  </p>
               </div>
           )}
 
-          <div className="max-w-4xl mx-auto space-y-8 pb-4">
+          <div className="max-w-4xl mx-auto space-y-10 pb-8">
               {messages.map((msg, idx) => (
-                  <div className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-                      <div className={`w-10 h-10 rounded-xl shrink-0 flex items-center justify-center border shadow-sm ${msg.role === 'user' ? 'bg-zinc-800 border-zinc-700' : 'bg-zinc-900 border-zinc-800'}`}>
-                          {msg.role === 'user' ? <User size={20} className="text-zinc-500" /> : <Bot size={20} className="text-accent" />}
+                  <div key={idx} className={`flex gap-5 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+                      <div className={`relative group shrink-0`}>
+                        {msg.role === 'model' && <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />}
+                        <div className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border shadow-2xl transition-all duration-500 ${msg.role === 'user' ? 'bg-zinc-800 border-white/10 group-hover:border-white/20' : 'bg-zinc-900 border-accent/20 group-hover:border-accent/40'}`}>
+                            {msg.role === 'user' ? <User size={22} className="text-zinc-400" /> : <Bot size={22} className="text-accent" />}
+                        </div>
                       </div>
-                      <div className={`max-w-[85%] space-y-2 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                      <div className={`max-w-[85%] space-y-3 ${msg.role === 'user' ? 'items-end text-right' : 'items-start'}`}>
                           {(msg.content || (msg.isStreaming && isLoading)) && (
-                              <div className={`p-5 rounded-[2rem] text-[15px] leading-relaxed shadow-lg ${
+                              <div className={`relative group/msg transition-all duration-300 ${
                                   msg.role === 'user' 
-                                  ? 'bg-accent text-black font-bold rounded-tr-none' 
-                                  : 'bg-zinc-900/60 border border-zinc-800 text-zinc-100 rounded-tl-none'
+                                  ? 'bg-accent text-black font-bold rounded-[2.5rem] rounded-tr-lg p-6 shadow-[0_10px_30px_rgba(var(--accent-color-rgb),0.2)]' 
+                                  : 'bg-zinc-900/40 backdrop-blur-xl border border-white/5 text-zinc-100 rounded-[2.5rem] rounded-tl-lg p-6 md:p-8 shadow-2xl'
                               }`}>
-                                  <div className="prose prose-invert prose-sm max-w-none prose-p:my-1.5 prose-code:text-accent prose-headings:text-white">
+                                  <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-headings:font-black prose-code:text-accent">
                                       <ReactMarkdown 
                                           remarkPlugins={[remarkGfm]} 
                                           components={{
                                               p: ({children}) => <div className="mb-4 last:mb-0">{children}</div>,
                                               code({inline, children}: any) {
-                                                  return !inline ? <CodeBlock code={String(children).replace(/\n$/, '')} /> : <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-accent font-mono text-[12px]">{children}</code>
+                                                  return !inline ? (
+                                                    <div className="my-6 relative group/codebox">
+                                                      <div className="absolute -inset-2 bg-gradient-to-r from-accent/10 to-transparent rounded-3xl blur opacity-0 group-hover/codebox:opacity-100 transition duration-500" />
+                                                      <CodeBlock code={String(children).replace(/\n$/, '')} />
+                                                    </div>
+                                                  ) : <code className="bg-white/10 px-2 py-0.5 rounded-lg text-accent font-bold font-mono text-[13px]">{children}</code>
                                               }
                                           }}
                                       >
