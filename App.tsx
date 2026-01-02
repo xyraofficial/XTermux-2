@@ -154,17 +154,15 @@ const AppContent: React.FC = () => {
   const isLegalView = [ViewState.HELP, ViewState.PRIVACY, ViewState.TERMS, ViewState.CONFIRM_EMAIL, ViewState.RESET_PASSWORD].includes(currentView);
 
   const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
-    <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-1">
-      <div className={`z-10 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${active ? 'text-accent -translate-y-1 scale-110' : 'text-zinc-500 group-hover:text-zinc-300 group-hover:-translate-y-0.5'}`}>{icon}</div>
-      <span className={`text-[10px] font-bold tracking-widest uppercase transition-all duration-500 ${active ? 'text-accent opacity-100' : 'text-zinc-500 opacity-60 group-hover:opacity-100'}`}>{label}</span>
-      {active && (
-        <div className="absolute -bottom-1 w-12 h-1 bg-accent rounded-full blur-[2px] shadow-[0_0_15px_var(--accent-color)] animate-pulse" />
-      )}
+    <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
+      <div className={`z-10 transition-all duration-300 ease-in-out ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
+      <span className={`text-[10px] font-bold tracking-tight transition-all duration-300 ease-in-out ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
+      {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)] transition-all duration-300" />}
     </button>
   );
 
   return (
-    <div className="h-[100dvh] bg-black text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden relative">
+    <div className="h-[100dvh] bg-zinc-950 text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden relative">
       <style>{`
         :root { --accent-color: ${accentColor}; }
         .text-accent { color: var(--accent-color); }
@@ -172,30 +170,21 @@ const AppContent: React.FC = () => {
         .border-accent { border-color: var(--accent-color); }
         .bg-accent-10 { background-color: color-mix(in srgb, var(--accent-color), transparent 90%); }
         .bg-accent-20 { background-color: color-mix(in srgb, var(--accent-color), transparent 80%); }
-        body { background-color: #000; overflow: hidden; }
-        * { -webkit-tap-highlight-color: transparent; }
+        body { background-color: #09090b; }
       `}</style>
 
       <ToastContainer />
       {!isLegalView && (
-          <header className="sticky top-0 z-[60] bg-black/40 backdrop-blur-3xl border-b border-white/[0.03]">
-            <div className="max-w-5xl mx-auto px-8 h-24 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="relative group cursor-pointer" onClick={() => navigate(ViewState.HOME)}>
-                  <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-xl group-hover:bg-accent/40 transition-all duration-700" />
-                  <div className="relative w-12 h-12 bg-zinc-900/80 rounded-2xl flex items-center justify-center border border-white/10 shadow-2xl overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
-                    <div className="w-3 h-3 rounded-full bg-accent animate-ping opacity-50 absolute" />
-                    <div className="w-3 h-3 rounded-full bg-accent shadow-[0_0_15px_var(--accent-color)] relative" />
+          <header className="sticky top-0 z-[60] bg-zinc-950/50 backdrop-blur-2xl border-b border-white/5">
+            <div className="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-accent/20 rounded-xl blur-md group-hover:bg-accent/40 transition-all" />
+                  <div className="relative w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center border border-white/10 shadow-lg">
+                    <div className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse shadow-[0_0_10px_var(--accent-color)]" />
                   </div>
                 </div>
-                <div>
-                  <h1 className="text-2xl font-black text-white tracking-tighter uppercase leading-none">{getTitle()}</h1>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <div className="w-1 h-1 rounded-full bg-zinc-700" />
-                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.3em]">System v2.0.4</span>
-                  </div>
-                </div>
+                <h1 className="text-xl font-black text-white tracking-tighter uppercase">{getTitle()}</h1>
               </div>
               <div className="flex items-center gap-4">
                 {session && (
@@ -203,9 +192,9 @@ const AppContent: React.FC = () => {
                     <SystemMonitor />
                     <button 
                       onClick={() => setShowThemePicker(!showThemePicker)}
-                      className="w-12 h-12 flex items-center justify-center text-zinc-400 hover:text-white transition-all bg-zinc-900/50 hover:bg-zinc-800 rounded-2xl border border-white/5 backdrop-blur-md group"
+                      className="p-2.5 text-zinc-400 hover:text-white transition-all bg-zinc-900/50 hover:bg-zinc-800 rounded-xl border border-white/5 backdrop-blur-md"
                     >
-                      <Palette size={22} className="group-hover:rotate-12 transition-transform duration-500" />
+                      <Palette size={20} />
                     </button>
                   </>
                 )}
@@ -216,7 +205,7 @@ const AppContent: React.FC = () => {
 
       <main 
         tabIndex={-1}
-        className={`flex-1 max-w-5xl mx-auto w-full relative outline-none focus:outline-none focus-visible:outline-none pb-safe ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden px-4 md:px-8 lg:px-12 scroll-smooth pb-44 no-scrollbar'}`}
+        className={`flex-1 max-w-5xl mx-auto w-full relative outline-none focus:outline-none focus-visible:outline-none pb-safe ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32 no-scrollbar'}`}
       >
         {!session ? <Auth /> : renderContent()}
         {showThemePicker && (
@@ -247,19 +236,17 @@ const AppContent: React.FC = () => {
       </main>
 
       {!isLegalView && (
-        <div className="fixed bottom-10 left-0 right-0 z-50 px-8 pointer-events-none">
-          <nav className="max-w-lg mx-auto pointer-events-auto">
-            <div className="bg-zinc-900/60 backdrop-blur-3xl border border-white/[0.05] rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.8)] flex items-center justify-around h-[84px] px-6 relative overflow-hidden group/nav">
-                <div className="absolute inset-0 bg-gradient-to-t from-white/[0.02] to-transparent pointer-events-none" />
-                <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={24} />} label="Home" />
+        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-lg">
+            <div className="bg-zinc-900/40 backdrop-blur-2xl border border-white/10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-around h-[76px] px-4">
+                <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={22} />} label="Home" />
                 <NavButton 
                   active={currentView === ViewState.PACKAGES} 
                   onClick={() => navigate(ViewState.PACKAGES)} 
                   icon={
                     <div className="relative">
-                      <Package size={24} />
+                      <Package size={22} />
                       {savedCount > 0 && (
-                        <span className="absolute -top-2.5 -right-3.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-accent px-1.5 text-[10px] font-black text-black ring-4 ring-zinc-950/50 shadow-[0_0_15px_var(--accent-color)]">
+                        <span className="absolute -top-2 -right-3 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-accent px-1.5 text-[10px] font-black text-black ring-2 ring-zinc-950 shadow-[0_0_10px_var(--accent-color)]">
                           {savedCount}
                         </span>
                       )}
@@ -267,12 +254,11 @@ const AppContent: React.FC = () => {
                   } 
                   label="Tools" 
                 />
-                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={26} />} label="Nexus" />
-                <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={24} />} label="Codex" />
-                <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={24} />} label="User" />
+                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={24} />} label="Assistant" />
+                <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={22} />} label="Codex" />
+                <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={22} />} label="Profile" />
             </div>
-          </nav>
-        </div>
+        </nav>
       )}
     </div>
   );

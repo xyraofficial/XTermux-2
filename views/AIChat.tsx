@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Eraser, Plus, MessageSquare, Trash2, Menu, X, Copy } from 'lucide-react';
+import { Send, Bot, User, Loader2, Eraser, Plus, MessageSquare, Trash2, Menu, X } from 'lucide-react';
 import Groq from 'groq-sdk';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -284,74 +284,59 @@ const AIChat: React.FC = () => {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-12 lg:p-20 space-y-12 no-scrollbar scroll-smooth">
+        <div className="flex-1 overflow-y-auto p-6 lg:px-16 space-y-10 no-scrollbar">
           {messages.length === 0 && !isLoading && (
-              <div className="h-full flex flex-col items-center justify-center text-center p-4 md:p-8 animate-in fade-in zoom-in duration-1000">
-                  <div className="relative group mb-8 md:mb-16">
-                    <div className="absolute inset-0 bg-accent/30 rounded-[3rem] md:rounded-[4rem] blur-[60px] md:blur-[80px] group-hover:bg-accent/50 transition-all duration-1000 animate-pulse" />
-                    <div className="relative w-32 h-32 md:w-44 md:h-44 bg-zinc-900/60 backdrop-blur-3xl rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 flex items-center justify-center shadow-2xl overflow-hidden group-hover:scale-110 transition-transform duration-700">
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                        <Bot size={56} className="text-accent group-hover:rotate-6 transition-transform duration-700 md:size-20" />
+              <div className="h-full flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-1000">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-accent/20 rounded-[3rem] blur-2xl group-hover:bg-accent/40 transition-all duration-700" />
+                    <div className="relative w-24 h-24 bg-zinc-900/50 backdrop-blur-xl rounded-[2.5rem] border border-white/10 flex items-center justify-center mb-8 shadow-2xl overflow-hidden">
+                        <Bot size={48} className="text-accent group-hover:scale-110 transition-transform duration-500" />
                     </div>
                   </div>
-                  <div className="max-w-xl space-y-4 md:space-y-6">
-                    <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-zinc-600 leading-none">
-                      Nexus Link
+                  <div className="min-h-[60px] flex flex-col items-center justify-center">
+                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500">
+                      Neural Link Ready
                     </h1>
-                    <p className="text-[10px] md:text-[12px] text-zinc-500 font-black uppercase tracking-[0.4em] md:tracking-[0.6em] leading-relaxed opacity-60">
-                      Neural Interface Operational
+                    <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.4em] max-w-[280px] leading-relaxed">
+                      Awaiting synaptic input for system diagnostics and creative generation.
                     </p>
-                    <div className="flex flex-wrap justify-center gap-2 md:gap-3 mt-8 md:mt-12 pt-6 md:pt-8 border-t border-white/[0.03]">
-                        {['Analyze Trace Log', 'Deploy Terminal Script', 'Master Exploitation'].map((hint) => (
-                            <button key={hint} onClick={() => setInput(hint)} className="px-4 py-2 md:px-6 md:py-3 bg-zinc-900/40 hover:bg-zinc-800 border border-white/5 rounded-[1.5rem] md:rounded-[2rem] text-[9px] md:text-[11px] font-black text-zinc-500 uppercase tracking-widest transition-all hover:border-accent/40 hover:text-accent active:scale-95">
-                                {hint}
-                            </button>
-                        ))}
-                    </div>
                   </div>
               </div>
           )}
 
-          <div className="max-w-4xl mx-auto space-y-10 md:space-y-16 pb-32">
+          <div className="max-w-4xl mx-auto space-y-10 pb-8">
               {messages.map((msg, idx) => (
-                  <div key={idx} className={`flex gap-4 md:gap-8 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-8 duration-700`}>
-                      <div className={`shrink-0 flex flex-col items-center gap-2 md:gap-3`}>
-                        <div className={`relative group`}>
-                            {msg.role === 'model' && <div className="absolute inset-0 bg-accent/30 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />}
-                            <div className={`relative w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-[1.5rem] flex items-center justify-center border shadow-2xl transition-all duration-700 ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
-                                {msg.role === 'user' ? <User size={20} className="text-zinc-400 md:size-[26px]" /> : <Bot size={20} className="text-accent md:size-[26px]" />}
-                            </div>
+                  <div key={idx} className={`flex gap-5 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+                      <div className={`relative group shrink-0`}>
+                        {msg.role === 'model' && <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />}
+                        <div className={`relative w-12 h-12 rounded-2xl flex items-center justify-center border shadow-2xl transition-all duration-500 ${msg.role === 'user' ? 'bg-zinc-800 border-white/10 group-hover:border-white/20' : 'bg-zinc-900 border-accent/20 group-hover:border-accent/40'}`}>
+                            {msg.role === 'user' ? <User size={22} className="text-zinc-400" /> : <Bot size={22} className="text-accent" />}
                         </div>
-                        <span className="text-[8px] md:text-[9px] font-black text-zinc-600 uppercase tracking-widest">{msg.role === 'user' ? 'Client' : 'Nexus'}</span>
                       </div>
-                      <div className={`max-w-[85%] ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                      <div className={`max-w-[85%] space-y-3 ${msg.role === 'user' ? 'items-end text-right' : 'items-start'}`}>
                           {(msg.content || (msg.isStreaming && isLoading)) && (
-                              <div className={`relative group/msg transition-all duration-700 ${
+                              <div className={`relative group/msg transition-all duration-300 ${
                                   msg.role === 'user' 
-                                  ? 'bg-white text-black font-bold rounded-[1.8rem] md:rounded-[2.5rem] rounded-tr-none px-5 py-4 md:px-8 md:py-6 shadow-2xl' 
-                                  : 'bg-zinc-900/40 backdrop-blur-3xl border border-white/[0.03] text-zinc-100 rounded-[1.8rem] md:rounded-[2.5rem] rounded-tl-none px-5 py-5 md:px-10 md:py-10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]'
+                                  ? 'bg-accent text-black font-bold rounded-[2.5rem] rounded-tr-lg p-6 shadow-[0_10px_30px_rgba(var(--accent-color-rgb),0.2)]' 
+                                  : 'bg-zinc-900/40 backdrop-blur-xl border border-white/5 text-zinc-100 rounded-[2.5rem] rounded-tl-lg p-6 md:p-8 shadow-2xl'
                               }`}>
-                                  <div className={`prose prose-invert prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-headings:font-black prose-headings:tracking-tighter prose-headings:uppercase ${msg.role === 'user' ? 'prose-p:text-black prose-p:font-bold' : 'prose-p:text-zinc-300'}`}>
+                                  <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-headings:font-black prose-code:text-accent">
                                       <ReactMarkdown 
                                           remarkPlugins={[remarkGfm]} 
                                           components={{
-                                              p: ({children}) => <div className="mb-4 md:mb-6 last:mb-0">{children}</div>,
+                                              p: ({children}) => <div className="mb-4 last:mb-0">{children}</div>,
                                               code({inline, children}: any) {
                                                   return !inline ? (
-                                                    <div className="my-6 md:my-10 relative group/codebox rounded-2xl md:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-3xl bg-black/80 backdrop-blur-xl">
+                                                    <div className="my-6 relative group/codebox">
+                                                      <div className="absolute -inset-2 bg-gradient-to-r from-accent/10 to-transparent rounded-3xl blur opacity-0 group-hover/codebox:opacity-100 transition duration-500" />
                                                       <CodeBlock code={String(children).replace(/\n$/, '')} />
                                                     </div>
-                                                  ) : <code className={`px-2 py-0.5 rounded font-bold font-mono text-[13px] md:text-[14px] ${msg.role === 'user' ? 'bg-black/10 text-black' : 'bg-accent/10 text-accent'}`}>{children}</code>
+                                                  ) : <code className="bg-white/10 px-2 py-0.5 rounded-lg text-accent font-bold font-mono text-[13px]">{children}</code>
                                               }
                                           }}
                                       >
                                           {msg.content + (msg.isStreaming && msg.content ? "▍" : "")}
                                       </ReactMarkdown>
-                                  </div>
-                                  <div className={`absolute bottom-3 md:bottom-4 ${msg.role === 'user' ? 'left-4 md:left-6' : 'right-4 md:right-6'} opacity-0 group-hover/msg:opacity-100 transition-opacity`}>
-                                      <button onClick={() => { navigator.clipboard.writeText(msg.content); showToast('Buffer Updated', 'success'); }} className={`p-1.5 md:p-2.5 rounded-xl ${msg.role === 'user' ? 'hover:bg-black/10 text-black/40' : 'hover:bg-white/5 text-zinc-600'}`}>
-                                          <Copy size={14} className="md:size-[16px]" />
-                                      </button>
                                   </div>
                               </div>
                           )}
@@ -373,9 +358,9 @@ const AIChat: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 md:p-8 bg-black/40 backdrop-blur-3xl border-t border-white/[0.03] shrink-0 z-40 pb-36 md:pb-40">
+        <div className="p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-900 shrink-0 z-40 pb-[100px] mb-safe">
           <div className="max-w-4xl mx-auto">
-              <div className="flex items-center gap-2 md:gap-4 bg-zinc-900/80 p-2 md:p-3 rounded-[2rem] md:rounded-[3rem] border border-white/[0.05] focus-within:border-accent/40 transition-all shadow-3xl relative group">
+              <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-[2.2rem] border border-zinc-800 focus-within:border-accent/40 transition-all shadow-2xl relative group">
                   <textarea
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
@@ -385,22 +370,22 @@ const AIChat: React.FC = () => {
                           handleSend();
                         }
                       }}
-                      placeholder="Enter command..."
-                      className="flex-1 bg-transparent text-white py-2 px-4 md:py-4 md:px-8 resize-none focus:outline-none text-[14px] md:text-[16px] font-bold leading-tight max-h-32 md:max-h-40 no-scrollbar placeholder:text-zinc-700 self-center"
+                      placeholder="Tanyakan log error atau perintah..."
+                      className="flex-1 bg-transparent text-white py-3 px-6 resize-none focus:outline-none text-[15px] font-medium leading-tight max-h-32 no-scrollbar placeholder:text-zinc-700 self-center"
                       rows={1}
                   />
 
-                  <div className="flex items-center pr-1 md:pr-2 shrink-0">
+                  <div className="flex items-center gap-1.5 pr-1.5 shrink-0">
                       <button 
                           onClick={() => handleSend()} 
                           disabled={!input.trim() || isLoading} 
-                          className={`w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-500 active:scale-90 ${
+                          className={`p-3 rounded-full transition-all active:scale-95 ${
                               input.trim() && !isLoading 
-                              ? 'bg-accent text-black shadow-[0_0_30px_rgba(var(--accent-rgb),0.4)] hover:scale-105' 
-                              : 'bg-zinc-800 text-zinc-600 opacity-40'
+                              ? 'bg-accent text-black shadow-[0_0_20px_rgba(var(--accent-color-rgb),0.3)]' 
+                              : 'bg-zinc-800 text-zinc-600 opacity-50'
                           }`}
                       >
-                          {isLoading ? <Loader2 size={18} className="animate-spin md:size-[24px]" /> : <Send size={18} strokeWidth={3} className="md:size-[24px]" />}
+                          {isLoading ? <Loader2 size={22} className="animate-spin" /> : <Send size={22} strokeWidth={2.5} />}
                       </button>
                   </div>
               </div>
