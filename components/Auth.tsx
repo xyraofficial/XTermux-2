@@ -307,53 +307,52 @@ export const Auth: React.FC = () => {
           )}
         </div>
 
-        <div className="flex flex-col items-center gap-12 flex-1 justify-center max-w-sm w-full">
+        <div className="flex flex-col items-center gap-8 flex-1 justify-center max-w-sm w-full">
           <div className="relative">
-            <div className="w-64 h-64 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden animate-pulse-slow">
-              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-4 p-4 animate-float-icons">
+            <div className="w-48 h-48 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden animate-soft-pulse">
+              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-3 p-4 animate-float-slow">
                 {[...Array(20)].map((_, i) => (
-                  <MessageSquare key={i} size={16} />
+                  <MessageSquare key={i} size={14} />
                 ))}
               </div>
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="flex gap-4 mb-4">
-                  <div className="w-12 h-12 bg-[#25d366] rounded-2xl flex items-center justify-center transform -rotate-12 animate-bounce-gentle">
-                    <MessageSquare size={24} className="text-[#0b141a]" />
+              <div className="relative z-10 flex flex-col items-center scale-90">
+                <div className="flex gap-3 mb-3">
+                  <div className="w-10 h-10 bg-[#25d366] rounded-xl flex items-center justify-center transform -rotate-6 animate-gentle-bob">
+                    <MessageSquare size={20} className="text-[#0b141a]" />
                   </div>
-                  <div className="w-12 h-12 bg-[#34b7f1] rounded-2xl flex items-center justify-center transform rotate-12 animate-bounce-gentle delay-100">
-                    <Globe size={24} className="text-[#0b141a]" />
+                  <div className="w-10 h-10 bg-[#34b7f1] rounded-xl flex items-center justify-center transform rotate-6 animate-gentle-bob delay-300">
+                    <Globe size={20} className="text-[#0b141a]" />
                   </div>
                 </div>
-                <div className="w-16 h-16 bg-[#00a884] rounded-full flex items-center justify-center animate-spin-slow">
-                  <Shield size={32} className="text-[#0b141a]" />
+                <div className="w-14 h-14 bg-[#00a884] rounded-full flex items-center justify-center animate-soft-rotate">
+                  <Shield size={28} className="text-[#0b141a]" />
                 </div>
               </div>
             </div>
           </div>
 
           <style dangerouslySetInnerHTML={{ __html: `
-            @keyframes pulse-slow {
-              0%, 100% { transform: scale(1); opacity: 0.8; }
-              50% { transform: scale(1.05); opacity: 1; }
+            @keyframes soft-pulse {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.03); }
             }
-            @keyframes float-icons {
-              0% { transform: translateY(0) rotate(0deg); }
-              50% { transform: translateY(-10px) rotate(5deg); }
-              100% { transform: translateY(0) rotate(0deg); }
+            @keyframes float-slow {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-6px); }
             }
-            @keyframes bounce-gentle {
-              0%, 100% { transform: translateY(0) rotate(-12deg); }
-              50% { transform: translateY(-8px) rotate(-8deg); }
+            @keyframes gentle-bob {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-4px); }
             }
-            @keyframes spin-slow {
+            @keyframes soft-rotate {
               from { transform: rotate(0deg); }
               to { transform: rotate(360deg); }
             }
-            .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
-            .animate-float-icons { animation: float-icons 6s ease-in-out infinite; }
-            .animate-bounce-gentle { animation: bounce-gentle 3s ease-in-out infinite; }
-            .animate-spin-slow { animation: spin-slow 8s linear infinite; }
-            .delay-100 { animation-delay: 100ms; }
+            .animate-soft-pulse { animation: soft-pulse 6s ease-in-out infinite; }
+            .animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
+            .animate-gentle-bob { animation: gentle-bob 4s ease-in-out infinite; }
+            .animate-soft-rotate { animation: soft-rotate 12s linear infinite; }
+            .delay-300 { animation-delay: 300ms; }
           `}} />
 
           <div className="text-center space-y-4">
