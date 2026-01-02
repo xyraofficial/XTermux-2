@@ -341,7 +341,7 @@ const AIChat: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-900 shrink-0 z-40 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+        <div className="p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-900 shrink-0 z-40 pb-[80px]">
           <div className="max-w-4xl mx-auto">
               <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-[2.2rem] border border-zinc-800 focus-within:border-accent/40 transition-all shadow-2xl relative group">
                   <textarea
