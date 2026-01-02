@@ -1,0 +1,30 @@
+Berikut adalah analisis dan langkah perbaikannya:
+1. Masalah pada Navigasi (Bottom Navigation)
+Bug/Isu: Terlihat ada sedikit delay atau transisi yang kurang mulus saat berpindah dari tab "Tools" ke "Assistant". Pada detik ke-0:07, ikon navigasi bawah terkadang tidak langsung memberikan feedback visual yang jelas bahwa tab telah aktif.
+Cara Fix:
+ * State Management: Pastikan Anda menggunakan state management yang efisien (seperti useState atau Context API di React) untuk menangani perpindahan rute tanpa memuat ulang seluruh komponen.
+ * Active Style: Tambahkan efek transition pada CSS untuk properti warna ikon dan teks agar perpindahan terasa lebih organik.
+   .nav-item { transition: all 0.3s ease-in-out; }
+
+2. Inkonsistensi Visual (Layout Shift)
+Bug/Isu: Saat berpindah ke menu "AI Assistant", elemen "Neural Link Ready" muncul dengan sedikit sentakan (layout shift). Ini biasanya terjadi karena gambar atau ikon robot di tengah belum dimuat sepenuhnya atau ukurannya tidak dipesan (reserved) di awal.
+Cara Fix:
+ * Fixed Aspect Ratio: Berikan tinggi dan lebar tetap pada kontainer ikon robot tersebut agar teks di bawahnya tidak "melompat" saat gambar muncul.
+ * Skeleton Loading: Gunakan skeleton screen sederhana saat data "AI Assistant" sedang dimuat agar tata letak tetap stabil.
+3. Responsivitas Input Chat
+Bug/Isu: Kotak input di bagian bawah (tempat tertulis "Tanyakan log error...") terlihat sangat dekat dengan navigasi bawah. Pada beberapa perangkat Android dengan gesture navigation, ini bisa menyebabkan pengguna salah tekan antara "Input" dan "Tombol Home" perangkat.
+Cara Fix:
+ * Padding/Margin: Tambahkan padding-bottom atau margin-bottom pada area input chat untuk memberikan ruang aman (safe area) dari navigasi bawah.
+ * Z-index: Pastikan z-index untuk Bottom Navigation lebih tinggi daripada elemen konten agar tidak tertutup saat keyboard muncul.
+4. Sinkronisasi CPU/RAM Usage
+Bug/Isu: Angka indikator CPU dan RAM di bagian atas terlihat berfluktuasi cukup tajam dalam waktu singkat (contoh: dari 7% ke 18%). Jika ini hanya angka acak (mock data), pergerakannya terlihat kurang natural. Jika ini data asli, pastikan polling rate tidak terlalu sering untuk menghemat baterai.
+Cara Fix:
+ * Smoothing: Gunakan fungsi lerp (Linear Interpolation) atau pembulatan rata-rata dari 3 detik terakhir agar angka tidak melompat-lompat terlalu cepat.
+ * Optimization: Jika menggunakan setInterval, pastikan intervalnya di atas 2000ms untuk menyeimbangkan akurasi dan performa.
+Ringkasan Teknis untuk Developer:
+| Komponen | Masalah | Saran Perbaikan |
+|---|---|---|
+| Header Stats | Fluktuasi angka terlalu cepat | Implementasikan smoothing algorithm |
+| AI Assistant | Layout Shift | Set min-height pada kontainer ikon |
+| Input Bar | Terlalu mepet navigasi | Tambahkan safe-area padding |
+| Routing | Transisi terasa kaku | Tambahkan framer-motion (jika pakai React) |

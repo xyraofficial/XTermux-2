@@ -18,12 +18,19 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
   });
   
   useEffect(() => {
+    let lastStats = { cpu: 12, ram: 42 };
     const interval = setInterval(() => {
-        setSysStats({
-            cpu: Math.floor(Math.random() * 25) + 5,
-            ram: Math.floor(Math.random() * 5) + 38,
-        });
-    }, 3000);
+        const targetCpu = Math.floor(Math.random() * 25) + 5;
+        const targetRam = Math.floor(Math.random() * 5) + 38;
+        
+        // Smoothing with lerp-like effect
+        lastStats = {
+          cpu: Math.floor(lastStats.cpu * 0.7 + targetCpu * 0.3),
+          ram: Math.floor(lastStats.ram * 0.7 + targetRam * 0.3)
+        };
+        
+        setSysStats(lastStats);
+    }, 2500);
     return () => clearInterval(interval);
   }, []);
 

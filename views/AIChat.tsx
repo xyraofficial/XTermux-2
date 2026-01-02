@@ -289,16 +289,18 @@ const AIChat: React.FC = () => {
               <div className="h-full flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-1000">
                   <div className="relative group">
                     <div className="absolute inset-0 bg-accent/20 rounded-[3rem] blur-2xl group-hover:bg-accent/40 transition-all duration-700" />
-                    <div className="relative w-24 h-24 bg-zinc-900/50 backdrop-blur-xl rounded-[2.5rem] border border-white/10 flex items-center justify-center mb-8 shadow-2xl">
+                    <div className="relative w-24 h-24 bg-zinc-900/50 backdrop-blur-xl rounded-[2.5rem] border border-white/10 flex items-center justify-center mb-8 shadow-2xl overflow-hidden">
                         <Bot size={48} className="text-accent group-hover:scale-110 transition-transform duration-500" />
                     </div>
                   </div>
-                  <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500">
-                    Neural Link Ready
-                  </h1>
-                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.4em] max-w-[280px] leading-relaxed">
-                    Awaiting synaptic input for system diagnostics and creative generation.
-                  </p>
+                  <div className="min-h-[60px] flex flex-col items-center justify-center">
+                    <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500">
+                      Neural Link Ready
+                    </h1>
+                    <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.4em] max-w-[280px] leading-relaxed">
+                      Awaiting synaptic input for system diagnostics and creative generation.
+                    </p>
+                  </div>
               </div>
           )}
 
@@ -356,7 +358,7 @@ const AIChat: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-900 shrink-0 z-40 pb-[80px]">
+        <div className="p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-900 shrink-0 z-40 pb-[100px] mb-safe">
           <div className="max-w-4xl mx-auto">
               <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-[2.2rem] border border-zinc-800 focus-within:border-accent/40 transition-all shadow-2xl relative group">
                   <textarea
