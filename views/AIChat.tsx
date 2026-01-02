@@ -9,7 +9,7 @@ import IOSModal from '../components/IOSModal';
 import { supabase } from '../supabase';
 
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || 'dummy_key',
+  apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || 'dummy_key',
   dangerouslyAllowBrowser: true
 });
 
