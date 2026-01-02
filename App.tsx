@@ -184,13 +184,17 @@ const AppContent: React.FC = () => {
                 <h1 className="text-lg font-bold text-white tracking-tight">{getTitle()}</h1>
               </div>
               <div className="flex items-center gap-3">
-                {session && <SystemMonitor />}
-                <button 
-                  onClick={() => setShowThemePicker(!showThemePicker)}
-                  className="p-2 text-zinc-400 hover:text-white transition-colors bg-zinc-900 rounded-xl border border-zinc-800"
-                >
-                  <Palette size={18} />
-                </button>
+                {session && (
+                  <>
+                    <SystemMonitor />
+                    <button 
+                      onClick={() => setShowThemePicker(!showThemePicker)}
+                      className="p-2 text-zinc-400 hover:text-white transition-colors bg-zinc-900 rounded-xl border border-zinc-800"
+                    >
+                      <Palette size={18} />
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </header>
