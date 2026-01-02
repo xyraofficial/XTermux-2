@@ -57,7 +57,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash', showCopy = 
           {showCopy && (
             <button
               onClick={handleCopy}
-              className="absolute top-4 right-4 p-2 rounded-xl bg-zinc-900/80 backdrop-blur-sm border border-white/5 text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/code:opacity-100"
+              className="absolute top-4 right-4 p-2 rounded-xl bg-zinc-900/80 backdrop-blur-sm border border-white/5 text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-100"
             >
               {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
             </button>

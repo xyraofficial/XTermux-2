@@ -111,7 +111,7 @@ const Scripts: React.FC = () => {
                           </div>
                           <button 
                             onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast('Copied!', 'success'); }} 
-                            className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/cmd:opacity-100"
+                            className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-100"
                           >
                             <Copy size={12} />
                           </button>
@@ -132,7 +132,7 @@ const Scripts: React.FC = () => {
                             </div>
                             <button 
                               onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast('Copied!', 'success'); }} 
-                              className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/cmd:opacity-100"
+                              className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-100"
                             >
                               <Copy size={12} />
                             </button>
@@ -153,7 +153,7 @@ const Scripts: React.FC = () => {
                           </div>
                           <button 
                             onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast('Copied!', 'success'); }} 
-                            className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/cmd:opacity-100"
+                            className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-100"
                           >
                             <Copy size={12} />
                           </button>
