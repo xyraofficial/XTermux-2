@@ -20,12 +20,12 @@ export const Auth: React.FC = () => {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
-        showToast('Tautan reset kata sandi telah dikirim ke email Anda!', 'success');
+        showToast('Password reset link has been sent to your email!', 'success');
         setIsResetting(false);
       } else if (isSignUp) {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        showToast('Silakan cek email Anda untuk konfirmasi!', 'success');
+        showToast('Please check your email for confirmation!', 'success');
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -75,28 +75,42 @@ export const Auth: React.FC = () => {
               </button>
             </div>
           )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-accent text-black font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
-          >
-            {loading ? <Loader2 className="animate-spin" size={20} /> : (
-              isResetting ? <KeyRound size={20} /> : (isSignUp ? <UserPlus size={20} /> : <LogIn size={20} />)
-            )}
-            {isResetting ? 'SEND RESET LINK' : (isSignUp ? 'SIGN UP' : 'SIGN IN')}
-          </button>
+
+          {isResetting ? (
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-accent text-black font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              {loading ? <Loader2 className="animate-spin" size={20} /> : <KeyRound size={20} />}
+              SEND RESET LINK
+            </button>
+          ) : (
+            <>
+              {!isSignUp && (
+                <div className="flex justify-end pr-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsResetting(true)}
+                    className="text-accent hover:text-accent/80 transition-colors text-[10px] font-bold uppercase tracking-widest"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-accent text-black font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                {loading ? <Loader2 className="animate-spin" size={20} /> : (isSignUp ? <UserPlus size={20} /> : <LogIn size={20} />)}
+                {isSignUp ? 'SIGN UP' : 'SIGN IN'}
+              </button>
+            </>
+          )}
         </form>
         
         <div className="mt-6 flex flex-col gap-3 text-center">
-          {!isResetting && !isSignUp && (
-            <button
-              onClick={() => setIsResetting(true)}
-              className="text-accent hover:text-accent/80 transition-colors text-xs font-bold uppercase tracking-widest"
-            >
-              Lupa kata sandi? Reset di sini
-            </button>
-          )}
-          
           <button
             onClick={() => {
               if (isResetting) {
@@ -107,11 +121,11 @@ export const Auth: React.FC = () => {
             }}
             className="text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest"
           >
-            {isResetting ? 'Kembali ke Login' : (
+            {isResetting ? 'Back to Login' : (
               isSignUp ? (
-                <>Sudah punya akun? <span className="text-accent">Masuk di sini</span></>
+                <>Already have an account? <span className="text-accent">Sign In</span></>
               ) : (
-                <>Belum punya akun? <span className="text-accent">Daftar sekarang</span></>
+                <>Don't have an account? <span className="text-accent">Sign Up</span></>
               )
             )}
           </button>
