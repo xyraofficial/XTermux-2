@@ -13,6 +13,7 @@ import AboutView from './views/About';
 import AIChatView from './views/AIChat';
 import ScriptsView from './views/Scripts';
 import ArchitectView from './views/Architect';
+import ConfirmEmailView from './views/ConfirmEmail';
 
 // Legal Views
 import HelpView from './views/legal/Help';
@@ -48,6 +49,7 @@ const AppContent: React.FC = () => {
     if (path === '/guides') return ViewState.GUIDES;
     if (path === '/scripts') return ViewState.SCRIPTS;
     if (path === '/ai') return ViewState.AI_CHAT;
+    if (path === '/confirm-email') return ViewState.CONFIRM_EMAIL;
     return ViewState.HOME;
   };
 
@@ -102,6 +104,7 @@ const AppContent: React.FC = () => {
       case ViewState.HELP: path = '/help'; break;
       case ViewState.PRIVACY: path = '/privacy'; break;
       case ViewState.TERMS: path = '/terms'; break;
+      case ViewState.CONFIRM_EMAIL: path = '/confirm-email'; break;
       default: path = '/';
     }
     window.history.pushState({}, '', path);
@@ -119,6 +122,7 @@ const AppContent: React.FC = () => {
       case ViewState.HELP: return 'Help Center';
       case ViewState.PRIVACY: return 'Privacy Policy';
       case ViewState.TERMS: return 'Terms of Service';
+      case ViewState.CONFIRM_EMAIL: return 'Confirm Email';
       default: return 'XTermux';
     }
   };
@@ -136,11 +140,12 @@ const AppContent: React.FC = () => {
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.TERMS: return <div {...viewProps}><TermsView onBack={() => navigate(ViewState.HOME)} /></div>;
+      case ViewState.CONFIRM_EMAIL: return <div {...viewProps}><ConfirmEmailView onNavigate={(v) => navigate(ViewState[v as keyof typeof ViewState])} /></div>;
       default: return <div {...viewProps}><HomeView onNavigate={(v) => navigate(ViewState[v as keyof typeof ViewState])} /></div>;
     }
   };
 
-  const isLegalView = [ViewState.HELP, ViewState.PRIVACY, ViewState.TERMS].includes(currentView);
+  const isLegalView = [ViewState.HELP, ViewState.PRIVACY, ViewState.TERMS, ViewState.CONFIRM_EMAIL].includes(currentView);
 
   const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
     <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
