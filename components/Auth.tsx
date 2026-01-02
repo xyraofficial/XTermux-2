@@ -59,7 +59,7 @@ export const Auth: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] p-4">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-4">
       <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 shadow-2xl">
         <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-6 text-center">
           {isResetting ? 'Reset Password' : (isSignUp ? 'Create Account' : 'Welcome Back')}
