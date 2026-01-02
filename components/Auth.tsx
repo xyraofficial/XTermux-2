@@ -435,41 +435,45 @@ export const Auth: React.FC = () => {
         </div>
 
         <form onSubmit={handleAuth} className="space-y-6">
-          <div className="border-b border-[#00a884] py-2">
-            <div className="flex items-center justify-between text-[#e9edef] text-lg mb-1">
+          <div className="group space-y-2">
+            <div className="flex items-center justify-between text-[#8696a0] text-sm font-medium transition-colors group-focus-within:text-[#00a884]">
               <span>Your Email</span>
-              <ChevronDown size={20} className="text-[#00a884]" />
+              <ChevronDown size={16} className="transition-transform group-focus-within:rotate-180" />
             </div>
-            <input
-              type="email"
-              placeholder="email@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border-none outline-none text-[#e9edef] text-xl placeholder:text-[#8696a0]/30"
-              required
-            />
+            <div className="relative border-b-2 border-[#202c33] pb-1 transition-colors group-focus-within:border-[#00a884]">
+              <input
+                type="email"
+                placeholder="email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-transparent border-none outline-none text-[#e9edef] text-xl placeholder:text-[#8696a0]/20 py-1"
+                required
+              />
+            </div>
           </div>
 
           {!isResetting && (
-            <div className="border-b border-[#00a884] py-2 relative">
-              <div className="flex items-center justify-between text-[#e9edef] text-lg mb-1">
+            <div className="group space-y-2">
+              <div className="flex items-center justify-between text-[#8696a0] text-sm font-medium transition-colors group-focus-within:text-[#00a884]">
                 <span>Password</span>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-[#00a884]"
+                  className="hover:text-[#00a884] transition-colors"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent border-none outline-none text-[#e9edef] text-xl placeholder:text-[#8696a0]/30"
-                required
-              />
+              <div className="relative border-b-2 border-[#202c33] pb-1 transition-colors group-focus-within:border-[#00a884]">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-transparent border-none outline-none text-[#e9edef] text-xl placeholder:text-[#8696a0]/20 py-1 tracking-wider"
+                  required
+                />
+              </div>
             </div>
           )}
 
