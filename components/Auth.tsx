@@ -103,7 +103,7 @@ export const Auth: React.FC = () => {
     const hasScreenshots = screenshots.some(s => s !== null);
     
     if (platform === 'whatsapp') {
-      const whatsappUrl = `https://wa.me/62895325844479?text=${encodeURIComponent(fullMessage)}${hasScreenshots ? encodeURIComponent('\n\n(Note: Please attach your screenshots manually in WhatsApp)') : ''}`;
+      const whatsappUrl = `https://wa.me/62895325844493?text=${encodeURIComponent(fullMessage)}${hasScreenshots ? encodeURIComponent('\n\n(Note: Please attach your screenshots manually in WhatsApp)') : ''}`;
       window.open(whatsappUrl, '_blank');
       setStep('welcome');
       setSupportMessage('');
@@ -111,36 +111,7 @@ export const Auth: React.FC = () => {
       return;
     }
 
-    // Email platform logic
-    if (hasScreenshots && navigator.share) {
-      try {
-        const files: File[] = [];
-        for (let i = 0; i < screenshots.length; i++) {
-          const src = screenshots[i];
-          if (src) {
-            const response = await fetch(src);
-            const blob = await response.blob();
-            files.push(new File([blob], `screenshot_${i + 1}.jpg`, { type: 'image/jpeg' }));
-          }
-        }
-
-        if (navigator.canShare && navigator.canShare({ files })) {
-          await navigator.share({
-            files,
-            title: title,
-            text: fullMessage
-          });
-          setStep('welcome');
-          setSupportMessage('');
-          setScreenshots([null, null, null]);
-          return;
-        }
-      } catch (error) {
-        console.error('Error sharing files:', error);
-      }
-    }
-
-    // Fallback to mailto
+    // Email platform logic - use direct mailto for consistent behavior
     const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullMessage)}${hasScreenshots ? encodeURIComponent('\n\n--Screenshots Captured--\nPlease attach the screenshots manually for better quality.') : ''}`;
     window.location.href = mailto;
     setStep('welcome');
