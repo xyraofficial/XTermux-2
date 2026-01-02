@@ -6,23 +6,30 @@ import { showToast } from '../components/Toast';
 
 const About: React.FC = () => {
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // Try to load cached profile first for instant UI
+    // Show loading for at least 3 seconds as requested for "sync" feel
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    // Try to load cached profile first for instant UI after loading
     const cached = localStorage.getItem('user_profile_cache');
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
         setUser(parsed.user);
         setUsername(parsed.username);
-        setLoading(false);
       } catch (e) {}
     }
     fetchUser();
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchUser = async () => {
@@ -54,7 +61,20 @@ const About: React.FC = () => {
     window.location.reload();
   };
 
-  if (loading) return <div className="h-full flex items-center justify-center bg-black"><Loader2 className="animate-spin text-accent" size={24} /></div>;
+  if (loading) return (
+    <div className="h-full flex flex-col items-center justify-center bg-black gap-4">
+      <div className="relative">
+        <div className="w-12 h-12 border-4 border-accent/20 border-t-accent rounded-full animate-spin" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+        </div>
+      </div>
+      <div className="space-y-1 text-center">
+        <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] animate-pulse">Syncing Protocol</p>
+        <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Neural Link Establishment...</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="p-4 space-y-8 pb-32 bg-black min-h-full">
