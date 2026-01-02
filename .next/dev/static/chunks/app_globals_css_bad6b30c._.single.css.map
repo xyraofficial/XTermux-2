@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/app/globals.css"],"sourcesContent":["@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\n:root {\n  --accent: #00ff00;\n}\n\nbody {\n  background: black;\n  color: white;\n}\n\n.no-scrollbar::-webkit-scrollbar {\n  display: none;\n}\n.no-scrollbar {\n  -ms-overflow-style: none;\n  scrollbar-width: none;\n}\n"],"names":[],"mappings":"AAAA;;AACA;;AACA;;AAEA;;;;AAIA;;;;;AAKA;;;;AAGA"}}]
-}
