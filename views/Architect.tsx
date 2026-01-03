@@ -119,6 +119,7 @@ const Architect: React.FC = () => {
             role: "system", 
             content: `You are a professional Termux script architect. 
             You MUST return ONLY a valid JSON object.
+            Do NOT use double asterisks (**) for bolding in the "code" field.
             
             JSON Structure:
             {
@@ -126,7 +127,7 @@ const Architect: React.FC = () => {
               "description": "Short explanation",
               "language": "bash/python",
               "dependencies": ["pkg1", "pkg2"],
-              "code": "The full code here",
+              "code": "The full code here. Pure code only, no markdown bolding inside code.",
               "instructions": "Step-by-step markdown list on how to install and run this specific script."
             }`
           },
@@ -161,7 +162,7 @@ const Architect: React.FC = () => {
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[100px] rounded-full" />
 
-      <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-6 relative z-10 no-scrollbar">
+      <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-6 relative z-10 no-scrollbar pb-32">
         {!result && !isGenerating && (
             <div className="mt-12 flex flex-col items-center text-center space-y-6 animate-in fade-in slide-in-from-bottom-10 duration-1000">
                 <div className="relative">
