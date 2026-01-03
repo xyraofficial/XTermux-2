@@ -137,8 +137,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             { id: 'AI_BUILDER', icon: PenTool, title: 'AI BUILDER', color: 'blue-500' },
             { id: 'PACKAGES', icon: Package, title: t.vault, color: 'purple-500' },
             { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500' },
-            { id: 'GUIDES', icon: BookOpen, title: t.codex, color: 'orange-500' },
-            { id: 'ARCHITECT', icon: Shield, title: 'ADMIN PANEL', color: 'red-500' }
+            { id: 'GUIDES', icon: BookOpen, title: t.codex, color: 'orange-500' }
           ].map((item) => (
             <button key={item.id} onClick={() => onNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">
               <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-2xl group-hover:bg-zinc-900/60 transition-all" />
