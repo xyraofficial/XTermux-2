@@ -6,6 +6,7 @@ import { supabase } from './supabase';
 import { Auth } from './components/Auth';
 import { Session } from '@supabase/supabase-js';
 
+import AdminView from './views/Admin';
 import HomeView from './views/Home';
 import PackagesView from './views/Packages';
 import GuidesView from './views/Guides';
@@ -59,6 +60,7 @@ const AppContent: React.FC = () => {
     if (path === '/help') return ViewState.HELP;
     if (path === '/privacy') return ViewState.PRIVACY;
     if (path === '/terms') return ViewState.TERMS;
+    if (path === '/architect') return ViewState.ARCHITECT;
     if (path === '/packages') return ViewState.PACKAGES;
     if (path === '/guides') return ViewState.GUIDES;
     if (path === '/scripts') return ViewState.SCRIPTS;
@@ -120,6 +122,7 @@ const AppContent: React.FC = () => {
     let path = '/';
     switch (view) {
       case ViewState.HOME: path = '/'; break;
+      case ViewState.ARCHITECT: path = '/architect'; break;
       case ViewState.PACKAGES: path = '/packages'; break;
       case ViewState.AI_CHAT: path = '/ai-chat'; break;
       case ViewState.AI_BUILDER: path = '/ai-builder'; break;
@@ -146,6 +149,7 @@ const AppContent: React.FC = () => {
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
       case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
       case ViewState.AI_BUILDER: return <div {...viewProps}><ArchitectView /></div>;
+      case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>;
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.TERMS: return <div {...viewProps}><TermsView onBack={() => navigate(ViewState.HOME)} /></div>;
@@ -156,6 +160,8 @@ const AppContent: React.FC = () => {
   };
 
   const isLegalView = [ViewState.HELP, ViewState.PRIVACY, ViewState.TERMS, ViewState.CONFIRM_EMAIL, ViewState.RESET_PASSWORD].includes(currentView);
+
+  const isAdmin = session?.user?.email === 'xyraofficialsup@gmail.com' || (session?.user as any)?.role === 'admin';
 
   const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
     <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-1 transition-all duration-300">
@@ -227,6 +233,9 @@ const AppContent: React.FC = () => {
                 <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label={t.chat} />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={18} />} label={t.codex} />
                 <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={18} />} label={t.user} />
+                {isAdmin && (
+                  <NavButton active={currentView === ViewState.ARCHITECT} onClick={() => navigate(ViewState.ARCHITECT)} icon={<Shield size={18} className="text-red-500" />} label="Admin" />
+                )}
             </div>
         </nav>
       )}
