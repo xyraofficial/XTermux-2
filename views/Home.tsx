@@ -118,45 +118,17 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
   if (isSyncing) {
     return (
-      <div className="fixed inset-0 z-[500] flex flex-col items-center justify-center bg-black gap-6 animate-in fade-in duration-500">
+      <div className="h-full flex flex-col items-center justify-center bg-black gap-4">
         <div className="relative">
-          {/* Outer Ring */}
-          <div className="w-24 h-24 border-4 border-accent/10 border-t-accent rounded-full animate-spin shadow-[0_0_30px_rgba(var(--accent-rgb),0.2)]" />
-          {/* Inner Ring Reverse */}
-          <div className="absolute inset-2 w-20 h-20 border-4 border-white/5 border-b-white/20 rounded-full animate-[spin_1.5s_linear_infinite_reverse]" />
-          {/* Core Glow */}
+          <div className="w-12 h-12 border-4 border-accent/20 border-t-accent rounded-full animate-spin" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-4 h-4 bg-accent rounded-full animate-pulse shadow-[0_0_20px_rgba(var(--accent-rgb),0.8)]" />
+            <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
           </div>
         </div>
-
-        <div className="space-y-3 text-center">
-          <div className="flex flex-col items-center gap-1">
-            <h3 className="text-sm font-black text-white uppercase tracking-[0.4em] italic animate-pulse">
-              Syncing Protocol
-            </h3>
-            <div className="flex items-center gap-1">
-              <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-accent/50" />
-              <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">
-                Establishing Neural Link
-              </span>
-              <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-accent/50" />
-            </div>
-          </div>
-          
-          {/* Progress Bar Mock */}
-          <div className="w-48 h-1 bg-zinc-900 rounded-full overflow-hidden mx-auto border border-white/5">
-            <div className="h-full bg-accent animate-[progress_1.5s_ease-in-out_infinite]" style={{ width: '60%' }} />
-          </div>
+        <div className="space-y-1 text-center">
+          <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] animate-pulse">Protokol Sinkronisasi</p>
+          <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Pembangunan Tautan Syaraf...</p>
         </div>
-
-        <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes progress {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(0%); }
-            100% { transform: translateX(100%); }
-          }
-        `}} />
       </div>
     );
   }
