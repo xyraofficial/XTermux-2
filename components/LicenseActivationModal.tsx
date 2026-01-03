@@ -44,6 +44,7 @@ const LicenseActivationModal: React.FC<LicenseActivationModalProps> = ({ isOpen,
         .update({ 
           is_used: true, 
           used_by: user.id,
+          used_by_email: user.email,
           used_at: new Date().toISOString()
         })
         .eq('id', license.id);

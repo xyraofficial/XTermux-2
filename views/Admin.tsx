@@ -175,7 +175,9 @@ const Admin: React.FC = () => {
               <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl flex items-center justify-between">
                 <div>
                   <p className="text-xs font-mono text-white">{lic.key}</p>
-                  <p className="text-[9px] text-zinc-500 uppercase">{lic.is_used ? 'USED' : 'ACTIVE'} • {lic.duration_days} DAYS</p>
+                  <p className="text-[9px] text-zinc-500 uppercase">
+                    {lic.is_used ? `USED BY: ${lic.used_by_email || 'Unknown'}` : 'ACTIVE'} • {lic.duration_days} DAYS
+                  </p>
                 </div>
                 <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white"><Copy size={16} /></button>
               </div>
