@@ -11,6 +11,8 @@ interface HomeProps {
 import { LanguageProvider, useLanguage } from '../LanguageContext';
 import { supabase } from '../supabase';
 
+import { SCRIPTS, PACKAGES } from '../constants';
+
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   const { language } = useLanguage();
   const [isPremium, setIsPremium] = useState(false);
@@ -210,11 +212,11 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       <div className="grid grid-cols-2 gap-3">
         <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
           <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.toolsCount}</div>
-          <div className="text-2xl font-black text-white text-center">2.4k+</div>
+          <div className="text-2xl font-black text-white text-center">{PACKAGES.length}+</div>
         </div>
         <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
           <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.usersCount}</div>
-          <div className="text-2xl font-black text-white text-center">10k+</div>
+          <div className="text-2xl font-black text-white text-center">{SCRIPTS.length}+</div>
         </div>
       </div>
 
