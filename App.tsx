@@ -161,7 +161,7 @@ const AppContent: React.FC = () => {
 
   const isLegalView = [ViewState.HELP, ViewState.PRIVACY, ViewState.TERMS, ViewState.CONFIRM_EMAIL, ViewState.RESET_PASSWORD].includes(currentView);
 
-  const isAdmin = session?.user?.email === 'xyraofficialsup@gmail.com' || (session?.user as any)?.role === 'admin' || (session?.user as any)?.app_metadata?.role === 'admin' || (session?.user as any)?.user_metadata?.role === 'admin';
+  const isAdmin = session?.user?.email === 'xyraofficialsup@gmail.com' || (session?.user as any)?.role === 'admin';
 
   const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
     <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-1 transition-all duration-300">

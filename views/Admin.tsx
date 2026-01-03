@@ -50,16 +50,8 @@ const Admin: React.FC = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        // First check metadata/email as fail-safe
-        const isEmailAdmin = user.email === 'xyraofficialsup@gmail.com';
-        const isMetadataAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.role === 'admin';
-        
-        if (isEmailAdmin || isMetadataAdmin) {
-          setIsAdmin(true);
-        } else {
-          const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-          setIsAdmin(profile?.role === 'admin');
-        }
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+        setIsAdmin(profile?.role === 'admin');
       }
     } finally {
       setCheckingAuth(false);
