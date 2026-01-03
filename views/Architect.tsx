@@ -305,7 +305,7 @@ const Architect: React.FC = () => {
       </div>
 
       {/* iOS Centered Input Bar - Positioned at Bottom like AI Chat */}
-      <div className="fixed bottom-24 left-0 right-0 px-4 bg-transparent z-50">
+      <div className="fixed bottom-0 left-0 right-0 px-4 pb-12 pt-4 bg-gradient-to-t from-[#050505] via-[#050505]/95 to-transparent z-50">
         <div className="max-w-4xl mx-auto">
             <div className="bg-zinc-900/70 backdrop-blur-2xl p-2 rounded-[2.5rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                 <textarea
