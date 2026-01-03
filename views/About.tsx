@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Youtube, Mail, Facebook, User, Camera, Calendar, Shield, Edit2, Check, X, LogOut, Loader2, Smartphone, Code, Star, Heart, Crown } from 'lucide-react';
-import { APP_VERSION } from '../constants';
+import { Youtube, Mail, Facebook, User, Camera, Calendar, Shield, Edit2, Check, X, LogOut, Loader2, Smartphone, Code, Star, Heart, Crown, Package, Terminal } from 'lucide-react';
+import { APP_VERSION, PACKAGES, SCRIPTS } from '../constants';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
@@ -325,8 +325,8 @@ const About: React.FC = () => {
         {[
           { icon: <Calendar size={20} />, label: t.joinDate, val: new Date(user?.created_at).toLocaleDateString() },
           { icon: <Shield size={20} />, label: t.security, val: t.verified },
-          { icon: <Package size={20} />, label: "Tools Vault", val: "3.5k+" },
-          { icon: <Terminal size={20} />, label: "Pro Scripts", val: "1.2k+" }
+          { icon: <Package size={20} />, label: "Tools Vault", val: `${PACKAGES.length}+` },
+          { icon: <Terminal size={20} />, label: "Pro Scripts", val: `${SCRIPTS.length}+` }
         ].map((s, i) => (
           <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl text-center space-y-2">
             <div className="text-accent mx-auto w-fit">{s.icon}</div>
