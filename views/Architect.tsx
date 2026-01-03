@@ -279,16 +279,30 @@ const Architect: React.FC = () => {
                                 <Info size={12} className="text-blue-500" /> Deployment Instructions
                             </h4>
                             <div className="bg-black/30 border border-zinc-800/50 rounded-[2rem] p-6 md:p-10 shadow-inner">
-                                <div className="prose prose-invert prose-xs max-w-none prose-p:my-1 prose-li:my-1 prose-strong:text-blue-400 prose-strong:font-bold marker:text-blue-500 text-[13px]">
+                                <div className="prose prose-invert prose-xs max-w-none prose-p:my-2 prose-li:my-2 prose-strong:text-blue-400 prose-strong:font-bold marker:text-blue-500 text-[13px] leading-relaxed">
                                     <ReactMarkdown 
                                         remarkPlugins={[remarkGfm]}
                                         components={{
-                                            strong: ({node, ...props}) => <span className="text-blue-400 font-bold" {...props} />
+                                            strong: ({node, ...props}) => <span className="text-blue-400 font-bold" {...props} />,
+                                            p: ({node, ...props}) => <p className="mb-4 last:mb-0" {...props} />,
+                                            ul: ({node, ...props}) => <ul className="space-y-2 list-disc pl-4" {...props} />,
+                                            li: ({node, ...props}) => <li className="pl-1" {...props} />
                                         }}
                                     >
                                         {result.instructions.replace(/\*\*/g, '')}
                                     </ReactMarkdown>
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Source Info Site */}
+                        <div className="pt-4 border-t border-zinc-800/50">
+                            <div className="flex items-center justify-between px-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Source Info Site</span>
+                                </div>
+                                <span className="text-[10px] font-bold text-blue-400/60 uppercase tracking-widest">XTermux Toolbox Architecture</span>
                             </div>
                         </div>
                     </div>
