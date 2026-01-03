@@ -27,11 +27,6 @@ const BUILD_PHASES = [
     { threshold: 100, label: 'Finalizing Build', icon: <ShieldCheck size={24} /> },
 ];
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || '',
-  dangerouslyAllowBrowser: true
-});
-
 const Architect: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -106,14 +101,19 @@ const Architect: React.FC = () => {
     setPendingResult(null);
 
     try {
-      const apiKey = process.env.GROQ_API_KEY || process.env.API_KEY;
+      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
       if (!apiKey) {
-        showToast('API Key missing', 'error');
+        showToast('Groq API Key (VITE_GROQ_API_KEY) is missing in Secrets', 'error');
         setIsGenerating(false);
         return;
       }
       
-      const response = await groq.chat.completions.create({
+      const groqInstance = new Groq({
+        apiKey: apiKey,
+        dangerouslyAllowBrowser: true
+      });
+
+      const response = await groqInstance.chat.completions.create({
         messages: [
           { 
             role: "system", 
@@ -297,7 +297,7 @@ const Architect: React.FC = () => {
       </div>
 
       {/* iOS Centered Input Bar - Positioned at Bottom like AI Chat */}
-      <div className="p-4 bg-transparent shrink-0 relative z-20 mb-4">
+      <div className="p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 pb-24 shrink-0 relative z-20">
         <div className="max-w-4xl mx-auto">
             <div className="bg-zinc-900/70 backdrop-blur-2xl p-2 rounded-[2.5rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                 <textarea
@@ -307,6 +307,12 @@ const Architect: React.FC = () => {
                     className="flex-1 bg-transparent text-white py-3 px-5 resize-none focus:outline-none text-[14px] font-medium leading-tight max-h-24 no-scrollbar placeholder:text-zinc-700 text-center"
                     rows={1}
                     disabled={isGenerating}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleGenerate();
+                      }
+                    }}
                 />
                 <button 
                     onClick={handleGenerate} 
