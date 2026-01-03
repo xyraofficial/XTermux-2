@@ -14,7 +14,7 @@ import { supabase } from '../supabase';
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   const { language } = useLanguage();
   const [isPremium, setIsPremium] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(true);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showRestrictedDialog, setShowRestrictedDialog] = useState<{show: boolean, title: string}>({ show: false, title: '' });
   
