@@ -67,6 +67,10 @@ const LicenseActivationModal: React.FC<LicenseActivationModalProps> = ({ isOpen,
       if (profileError) throw profileError;
 
       showToast('License activated successfully!', 'success');
+      
+      // Notify other tabs/views to refresh
+      window.dispatchEvent(new Event('license-activated'));
+      
       onActivated();
       onClose();
     } catch (err: any) {

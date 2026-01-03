@@ -133,11 +133,42 @@ const Admin: React.FC = () => {
   };
 
   const handleRemoveLicense = async (lic: any) => {
-    if (!window.confirm(`Are you sure you want to delete license ${lic.key}?`)) return;
+    // Custom beautiful confirmation dialog instead of window.confirm
+    const confirmed = await new Promise((resolve) => {
+      showToast(
+        <div className="flex flex-col gap-3 p-1">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-red-500/10 rounded-lg flex items-center justify-center">
+              <Trash2 size={16} className="text-red-500" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-white uppercase tracking-tight">Confirm Deletion</p>
+              <p className="text-[8px] text-zinc-500 uppercase font-bold">This will revoke user premium</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => { resolve(true); }}
+              className="flex-1 py-2.5 bg-red-500 text-white text-[9px] font-black rounded-xl uppercase shadow-lg shadow-red-500/20 active:scale-95 transition-all"
+            >
+              Confirm Delete
+            </button>
+            <button 
+              onClick={() => { resolve(false); }}
+              className="flex-1 py-2.5 bg-zinc-800 text-zinc-400 text-[9px] font-black rounded-xl uppercase border border-white/5 active:scale-95 transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>,
+        'info'
+      );
+    });
+
+    if (!confirmed) return;
     
     setLoading(true);
     try {
-      // 1. If used, revoke premium from user
       if (lic.is_used && lic.used_by) {
         await supabase
           .from('profiles')
@@ -149,7 +180,6 @@ const Admin: React.FC = () => {
           .eq('id', lic.used_by);
       }
 
-      // 2. Delete from licenses table
       const { error } = await supabase
         .from('licenses')
         .delete()
@@ -157,7 +187,7 @@ const Admin: React.FC = () => {
 
       if (error) throw error;
 
-      showToast('License and associated premium status removed', 'success');
+      showToast('System Reset Complete', 'success');
       fetchRecentLicenses();
       if (activeTab === 'analytics') fetchAnalytics();
     } catch (err: any) {
@@ -269,8 +299,16 @@ const Admin: React.FC = () => {
                     <UserIcon size={18} className={user.is_premium ? 'text-yellow-500' : 'text-zinc-500'} />
                   </div>
                   <div>
-                    <p className="text-xs font-black text-white">{user.username || 'Anonymous'}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-black text-white">{user.username || 'Anonymous'}</p>
+                      {user.is_premium && (
+                        <span className="bg-yellow-500 text-black text-[7px] font-black px-1 rounded uppercase">Premium</span>
+                      )}
+                    </div>
                     <p className="text-[9px] text-zinc-500 font-mono">{user.email || 'No Email'}</p>
+                    {user.license_key && (
+                      <p className="text-[8px] text-blue-400 font-mono uppercase mt-0.5">Key: {user.license_key}</p>
+                    )}
                   </div>
                 </div>
                 <button 

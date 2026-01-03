@@ -86,7 +86,17 @@ const About: React.FC = () => {
 
     fetchUser();
     
-    return () => clearTimeout(timer);
+    // Listen for license activation to auto-refresh
+    const handleRefresh = () => {
+      showToast('Neural Identity Syncing...', 'success');
+      fetchUser();
+    };
+    window.addEventListener('license-activated', handleRefresh);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('license-activated', handleRefresh);
+    };
   }, []);
 
   const fetchUser = async () => {
