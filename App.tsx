@@ -111,6 +111,12 @@ const AppContent: React.FC = () => {
     localStorage.setItem('xtermux_accent', accentColor);
   }, [accentColor]);
 
+  useEffect(() => {
+    const handleAdminNav = () => navigate(ViewState.ARCHITECT);
+    window.addEventListener('navigate-to-admin', handleAdminNav);
+    return () => window.removeEventListener('navigate-to-admin', handleAdminNav);
+  }, []);
+
   const navigate = (view: ViewState) => {
     setCurrentView(view);
     let path = '/';

@@ -37,7 +37,7 @@ const AdminView: React.FC = () => {
   }, []);
 
   const fetchUsers = async () => {
-    const { data } = await supabase.from('profiles').select('*').limit(10);
+    const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(20);
     if (data) setUsers(data);
   };
 

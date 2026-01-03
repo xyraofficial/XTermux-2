@@ -224,6 +224,17 @@ const About: React.FC = () => {
 
         <div className="flex justify-center gap-3">
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{user?.profile?.role || 'USER'}</span>
+          {user?.profile?.role === 'admin' && (
+            <button 
+              onClick={() => {
+                // We'll use a custom event to tell App to navigate to Admin
+                window.dispatchEvent(new CustomEvent('navigate-to-admin'));
+              }}
+              className="px-4 py-1.5 bg-red-500/10 border border-red-500/20 rounded-xl text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center gap-1 active:scale-95 transition-all"
+            >
+              <Shield size={10} /> Panel
+            </button>
+          )}
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
           <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-zinc-500 uppercase tracking-widest">v{APP_VERSION}</span>
         </div>
