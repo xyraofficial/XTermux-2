@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Package, BookOpen, Bot, User, Palette, X, Terminal, PenTool } from 'lucide-react';
+import { Home, Package, BookOpen, Bot, User, Palette, X, Terminal, PenTool, Shield } from 'lucide-react';
 import SystemMonitor from './components/SystemMonitor';
 import { ViewState } from './types';
 import { supabase } from './supabase';
