@@ -9,6 +9,7 @@ interface PremiumModalProps {
 }
 
 const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, onUpgrade }) => {
+  const [showSubOptions, setShowSubOptions] = useState(false);
   const [showActivation, setShowActivation] = useState(false);
 
   if (!isOpen) return null;
@@ -19,6 +20,59 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, onUpgrade 
     { icon: <Crown className="text-purple-400" />, title: "Nexus Priority", desc: "Higher priority for AI processing and support" },
     { icon: <Check className="text-green-400" />, title: "Ad-Free Interface", desc: "Clean, professional terminal environment" }
   ];
+
+  if (showSubOptions) {
+    return (
+      <>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden text-center space-y-6">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent" />
+            
+            <div className="space-y-2">
+              <h3 className="text-xl font-black text-white uppercase tracking-tight italic">Premium Access</h3>
+              <p className="text-zinc-500 text-xs">Choose your activation method</p>
+            </div>
+
+            <div className="space-y-3">
+              <button 
+                onClick={() => {
+                  window.open('https://sociabuzz.com/xyraofficial/shop', '_blank');
+                }}
+                className="w-full py-5 bg-accent text-black font-black rounded-3xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 text-xs uppercase tracking-widest"
+              >
+                <Star size={18} />
+                Buy License
+              </button>
+              
+              <button 
+                onClick={() => setShowActivation(true)}
+                className="w-full py-5 bg-zinc-800 border border-white/5 text-white font-black rounded-3xl hover:bg-zinc-700 active:scale-95 transition-all flex items-center justify-center gap-3 text-xs uppercase tracking-widest"
+              >
+                <Key size={18} className="text-blue-400" />
+                Input License
+              </button>
+            </div>
+
+            <button 
+              onClick={() => setShowSubOptions(false)}
+              className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] hover:text-zinc-400 transition-colors"
+            >
+              Go Back
+            </button>
+          </div>
+        </div>
+
+        <LicenseActivationModal 
+          isOpen={showActivation} 
+          onClose={() => setShowActivation(false)}
+          onActivated={() => {
+            onUpgrade();
+            onClose();
+          }}
+        />
+      </>
+    );
+  }
 
   return (
     <>
@@ -59,21 +113,11 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, onUpgrade 
 
             <div className="space-y-3 pt-2">
               <button 
-                onClick={() => {
-                  window.open('https://sociabuzz.com/xyraofficial/shop', '_blank');
-                }}
+                onClick={() => setShowSubOptions(true)}
                 className="w-full py-5 bg-accent text-black font-black rounded-3xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-accent/20 uppercase tracking-widest text-xs flex items-center justify-center gap-3"
               >
                 <Star size={18} />
-                Buy License — Sociabuzz
-              </button>
-              
-              <button 
-                onClick={() => setShowActivation(true)}
-                className="w-full py-4 bg-zinc-800/50 border border-white/5 text-white font-black rounded-3xl hover:bg-zinc-800 active:scale-95 transition-all uppercase tracking-widest text-[10px] flex items-center justify-center gap-3"
-              >
-                <Key size={16} className="text-blue-400" />
-                I have a License Key
+                Upgrade Premium
               </button>
             </div>
           </div>
