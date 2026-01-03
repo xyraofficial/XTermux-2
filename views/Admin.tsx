@@ -217,7 +217,7 @@ const AdminView: React.FC = () => {
                       {user.username || 'Anonymous'}
                       {user.role === 'admin' && <Shield size={10} className="text-blue-500" />}
                     </div>
-                    <div className="text-[9px] font-bold text-zinc-500 uppercase">{user.email || 'System Identity'}</div>
+                    <div className="text-[9px] font-bold text-zinc-500 uppercase">{user.email || 'Identity Masked'}</div>
                   </div>
                 </div>
                 <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${
