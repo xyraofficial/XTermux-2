@@ -8,6 +8,8 @@ const Admin: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [activeTab, setActiveTab] = useState<'licenses' | 'users' | 'analytics'>('licenses');
+  const [expiryType, setExpiryType] = useState<'duration' | 'custom'>('duration');
+  const [customExpiry, setCustomExpiry] = useState('');
   
   // License State
   const [licenseKey, setLicenseKey] = useState('');
@@ -28,7 +30,13 @@ const Admin: React.FC = () => {
 
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [revokeConfirm, setRevokeConfirm] = useState<{show: boolean, lic: any}>({ show: false, lic: null });
-  const [editDuration, setEditDuration] = useState<{show: boolean, lic: any, days: string}>({ show: false, lic: null, days: '' });
+  const [editDuration, setEditDuration] = useState<{show: boolean, lic: any, days: string, type: 'duration' | 'custom', customDate: string}>({ 
+    show: false, 
+    lic: null, 
+    days: '',
+    type: 'duration',
+    customDate: ''
+  });
 
   useEffect(() => {
     checkAdmin();
@@ -113,14 +121,39 @@ const Admin: React.FC = () => {
       showToast('Generate a key first', 'error');
       return;
     }
+    
+    let duration_days = parseInt(days);
+    let expires_at = null;
+
+    if (expiryType === 'custom') {
+      if (!customExpiry) {
+        showToast('Set custom expiry date/time', 'error');
+        return;
+      }
+      const expiryDate = new Date(customExpiry);
+      if (expiryDate <= new Date()) {
+        showToast('Expiry must be in the future', 'error');
+        return;
+      }
+      expires_at = expiryDate.toISOString();
+      // Calculate duration_days as a fallback or for display
+      const diff = expiryDate.getTime() - new Date().getTime();
+      duration_days = Math.max(1, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
         .from('licenses')
-        .insert([{ key: licenseKey, duration_days: parseInt(days) }]);
+        .insert([{ 
+          key: licenseKey, 
+          duration_days,
+          expires_at // We'll need to make sure this column exists or handle it
+        }]);
       if (error) throw error;
       showToast('License key saved', 'success');
       setLicenseKey('');
+      setCustomExpiry('');
       fetchRecentLicenses();
     } catch (err: any) {
       showToast(err.message, 'error');
@@ -173,18 +206,40 @@ const Admin: React.FC = () => {
   };
 
   const handleUpdateDuration = async () => {
-    if (!editDuration.lic || !editDuration.days) return;
+    if (!editDuration.lic) return;
+    
+    let duration_days = parseInt(editDuration.days);
+    let expires_at = null;
+
+    if (editDuration.type === 'custom') {
+      if (!editDuration.customDate) {
+        showToast('Set custom expiry date/time', 'error');
+        return;
+      }
+      const expiryDate = new Date(editDuration.customDate);
+      if (expiryDate <= new Date()) {
+        showToast('Expiry must be in the future', 'error');
+        return;
+      }
+      expires_at = expiryDate.toISOString();
+      const diff = expiryDate.getTime() - new Date().getTime();
+      duration_days = Math.max(1, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
         .from('licenses')
-        .update({ duration_days: parseInt(editDuration.days) })
+        .update({ 
+          duration_days,
+          expires_at 
+        })
         .eq('id', editDuration.lic.id);
 
       if (error) throw error;
       
-      showToast('Duration updated', 'success');
-      setEditDuration({ show: false, lic: null, days: '' });
+      showToast('Protocol updated', 'success');
+      setEditDuration({ show: false, lic: null, days: '', type: 'duration', customDate: '' });
       fetchRecentLicenses();
     } catch (err: any) {
       showToast(err.message, 'error');
@@ -241,11 +296,37 @@ const Admin: React.FC = () => {
                   <button onClick={generateKey} className="p-4 bg-zinc-800 text-white rounded-2xl border border-white/5"><Plus size={20} /></button>
                 </div>
               </div>
-              <select value={days} onChange={(e) => setDays(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none">
-                <option value="7">7 Days</option>
-                <option value="30">30 Days</option>
-                <option value="365">365 Days</option>
-              </select>
+              <div className="flex gap-2 p-1 bg-black/40 border border-white/5 rounded-2xl">
+                <button 
+                  onClick={() => setExpiryType('duration')}
+                  className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase transition-all ${expiryType === 'duration' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}
+                >
+                  Duration
+                </button>
+                <button 
+                  onClick={() => setExpiryType('custom')}
+                  className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase transition-all ${expiryType === 'custom' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}
+                >
+                  Custom Date
+                </button>
+              </div>
+
+              {expiryType === 'duration' ? (
+                <select value={days} onChange={(e) => setDays(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none appearance-none">
+                  <option value="7">7 Days</option>
+                  <option value="30">30 Days</option>
+                  <option value="365">365 Days</option>
+                </select>
+              ) : (
+                <div className="space-y-2">
+                  <input 
+                    type="datetime-local" 
+                    value={customExpiry}
+                    onChange={(e) => setCustomExpiry(e.target.value)}
+                    className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none [color-scheme:dark]"
+                  />
+                </div>
+              )}
               <button onClick={handleCreateLicense} disabled={loading || !licenseKey} className="w-full py-5 bg-red-500 text-white font-black rounded-3xl flex items-center justify-center gap-3">
                 {loading ? <Loader2 className="animate-spin" size={20} /> : <Key size={20} />} CREATE LICENSE
               </button>
@@ -268,7 +349,16 @@ const Admin: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex gap-1">
-                  <button onClick={() => setEditDuration({ show: true, lic: lic, days: lic.duration_days.toString() })} className="p-2 text-zinc-500 hover:text-blue-500 transition-colors">
+                  <button 
+                    onClick={() => setEditDuration({ 
+                      show: true, 
+                      lic: lic, 
+                      days: lic.duration_days.toString(),
+                      type: lic.expires_at ? 'custom' : 'duration',
+                      customDate: lic.expires_at ? new Date(lic.expires_at).toISOString().slice(0, 16) : ''
+                    })} 
+                    className="p-2 text-zinc-500 hover:text-blue-500 transition-colors"
+                  >
                     <Calendar size={16} />
                   </button>
                   <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white transition-colors"><Copy size={16} /></button>
@@ -490,19 +580,45 @@ const Admin: React.FC = () => {
                   <p className="text-xs font-mono text-white truncate">{editDuration.lic.key}</p>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase px-1">Duration Adjust</label>
-                  <select 
-                    value={editDuration.days} 
-                    onChange={(e) => setEditDuration(prev => ({ ...prev, days: e.target.value }))}
-                    className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none appearance-none"
-                  >
-                    <option value="1">1 Day</option>
-                    <option value="7">7 Days</option>
-                    <option value="30">30 Days</option>
-                    <option value="90">90 Days</option>
-                    <option value="365">365 Days</option>
-                  </select>
+                <div className="space-y-4">
+                  <div className="flex gap-2 p-1 bg-black/40 border border-white/5 rounded-2xl">
+                    <button 
+                      onClick={() => setEditDuration(prev => ({ ...prev, type: 'duration' }))}
+                      className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase transition-all ${editDuration.type === 'duration' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}
+                    >
+                      Duration
+                    </button>
+                    <button 
+                      onClick={() => setEditDuration(prev => ({ ...prev, type: 'custom' }))}
+                      className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase transition-all ${editDuration.type === 'custom' ? 'bg-zinc-800 text-white' : 'text-zinc-500'}`}
+                    >
+                      Custom Date
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-zinc-600 uppercase px-1">Adjustment</label>
+                    {editDuration.type === 'duration' ? (
+                      <select 
+                        value={editDuration.days} 
+                        onChange={(e) => setEditDuration(prev => ({ ...prev, days: e.target.value }))}
+                        className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none appearance-none"
+                      >
+                        <option value="1">1 Day</option>
+                        <option value="7">7 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="90">90 Days</option>
+                        <option value="365">365 Days</option>
+                      </select>
+                    ) : (
+                      <input 
+                        type="datetime-local" 
+                        value={editDuration.customDate}
+                        onChange={(e) => setEditDuration(prev => ({ ...prev, customDate: e.target.value }))}
+                        className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none [color-scheme:dark]"
+                      />
+                    )}
+                  </div>
                 </div>
 
                 <button 
