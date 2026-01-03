@@ -32,8 +32,8 @@ const AppContent: React.FC = () => {
 
   const translations = {
     en: { home: "Home", tools: "Tools", script: "Script", ai: "AI Builder", chat: "AI Chat", codex: "Codex", user: "User" },
-    id: { home: "Beranda", tools: "Alat", script: "Skrip", ai: "AI Builder", chat: "AI Chat", codex: "Kodeks", user: "Profil" },
-    hi: { home: "होम", tools: "टूल्स", script: "स्क्रिप्ट", ai: "AI Builder", chat: "AI Chat", codex: "कोडेक्स", user: "उपयोगकर्ता" }
+    id: { home: "Beranda", tools: "Alat", ai: "AI Builder", chat: "AI Chat", codex: "Kodeks", user: "Profil" },
+    hi: { home: "होम", tools: "टूल्स", ai: "AI Builder", chat: "AI Chat", codex: "कोडेक्स", user: "उपयोगकर्ता" }
   };
 
   const t = translations[language];
@@ -229,7 +229,6 @@ const AppContent: React.FC = () => {
             <div className="max-w-lg mx-auto flex items-center justify-around h-[70px] px-1">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={18} />} label={t.home} />
                 <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={18} />} label={t.tools} />
-                <NavButton active={currentView === ViewState.SCRIPTS} onClick={() => navigate(ViewState.SCRIPTS)} icon={<Terminal size={18} />} label={t.script} />
                 <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label={t.chat} />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={18} />} label={t.codex} />
                 <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={18} />} label={t.user} />
