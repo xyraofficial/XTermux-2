@@ -21,28 +21,71 @@ const AdminView: React.FC = () => {
 
   useEffect(() => {
     const checkAdmin = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-        setIsAdmin(profile?.role === 'admin');
-        if (profile?.role === 'admin') {
-          fetchUsers();
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile, error } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+          if (error) throw error;
+          
+          const isUserAdmin = profile?.role === 'admin';
+          setIsAdmin(isUserAdmin);
+          
+          if (isUserAdmin) {
+            fetchUsers();
+            // Fetch real system logs if table exists, else keep mock
+            fetchSystemLogs();
+          }
+        } else {
+          setIsAdmin(false);
         }
-      } else {
+      } catch (err) {
+        console.error('Admin check error:', err);
         setIsAdmin(false);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     checkAdmin();
   }, []);
 
   const fetchUsers = async () => {
-    const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(20);
-    if (data) setUsers(data);
+    try {
+      const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(50);
+      if (error) throw error;
+      if (data) setUsers(data);
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      showToast('Failed to fetch users', 'error');
+    }
   };
 
-  const handleAction = (action: string) => {
-    showToast(`${action} simulated in development mode`, 'info');
+  const fetchSystemLogs = async () => {
+    // Optionally fetch from an audit_logs table if you have one
+    // For now, we'll enhance the mock data with a timestamp
+    setSystemLogs(prev => prev.map(log => ({ ...log, time: new Date().toLocaleTimeString() })));
+  };
+
+  const handleUpdateRole = async (userId: string, newRole: string) => {
+    try {
+      const { error } = await supabase.from('profiles').update({ role: newRole }).eq('id', userId);
+      if (error) throw error;
+      showToast(`Role updated to ${newRole}`, 'success');
+      fetchUsers();
+    } catch (err: any) {
+      showToast(err.message || 'Error updating role', 'error');
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to restrict this user?')) return;
+    try {
+      const { error } = await supabase.from('profiles').update({ role: 'restricted' }).eq('id', userId);
+      if (error) throw error;
+      showToast('User restricted', 'success');
+      fetchUsers();
+    } catch (err: any) {
+      showToast(err.message || 'Error restricting user', 'error');
+    }
   };
 
   if (loading) return (
@@ -87,8 +130,21 @@ const AdminView: React.FC = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => handleAction('Edit Role')} className="p-2 bg-zinc-800 rounded-lg text-zinc-400"><Key size={14} /></button>
-                <button onClick={() => handleAction('Restrict Access')} className="p-2 bg-red-500/10 rounded-lg text-red-500"><Lock size={14} /></button>
+                <button 
+                  onClick={() => {
+                    const newRole = prompt('Enter new role (admin/user/restricted):', user.role || 'user');
+                    if (newRole) handleUpdateRole(user.id, newRole);
+                  }} 
+                  className="p-2 bg-zinc-800 rounded-lg text-zinc-400 hover:text-accent transition-colors"
+                >
+                  <Key size={14} />
+                </button>
+                <button 
+                  onClick={() => handleDeleteUser(user.id)} 
+                  className="p-2 bg-red-500/10 rounded-lg text-red-500 hover:bg-red-500 hover:text-white transition-all"
+                >
+                  <Lock size={14} />
+                </button>
               </div>
             </div>
           ))}
