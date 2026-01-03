@@ -179,7 +179,7 @@ const AIChat: React.FC = () => {
       if (msgError) throw msgError;
 
       const groqInstance = new Groq({
-        apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || '',
+        apiKey: import.meta.env.VITE_GROQ_API_KEY || '',
         dangerouslyAllowBrowser: true
       });
 
