@@ -267,7 +267,7 @@ const About: React.FC = () => {
 
         <div className="flex flex-wrap justify-center items-center gap-3">
           <span className={`px-4 py-1.5 border rounded-xl text-[10px] font-black uppercase tracking-widest ${isPremium ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-accent/10 border-accent/20 text-accent'}`}>
-            {isPremium ? t.pro : t.free}
+            {user?.profile?.role === 'admin' ? 'ADMIN' : (isPremium ? t.pro : t.free)}
           </span>
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
           <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-zinc-500 uppercase tracking-widest">v{APP_VERSION}</span>
