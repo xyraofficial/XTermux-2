@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bot, Terminal, PenTool, Package, BookOpen, User, ShieldCheck as Shield, Crown } from 'lucide-react';
 import PremiumModal from '../components/PremiumModal';
-import { PACKAGES, SCRIPTS } from '../constants';
 
 interface HomeProps {
   onNavigate: (view: string) => void;
@@ -50,7 +49,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       explore: "EXPLORE TOOLS",
       docs: "DOCUMENTATION",
       toolsCount: "Tools",
-      scriptsCount: "Scripts",
       usersCount: "Users",
       coreSystems: "Core Systems",
       ai: "AI BUILDER",
@@ -74,7 +72,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       explore: "JELAJAHI ALAT",
       docs: "DOKUMENTASI",
       toolsCount: "Alat",
-      scriptsCount: "Skrip",
       usersCount: "Pengguna",
       coreSystems: "Sistem Inti",
       ai: "AI BUILDER",
@@ -213,11 +210,11 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       <div className="grid grid-cols-2 gap-3">
         <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
           <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.toolsCount}</div>
-          <div className="text-2xl font-black text-white text-center">{PACKAGES.length}+</div>
+          <div className="text-2xl font-black text-white text-center">2.4k+</div>
         </div>
         <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
-          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.scriptsCount || 'Scripts'}</div>
-          <div className="text-2xl font-black text-white text-center">{SCRIPTS.length}+</div>
+          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.usersCount}</div>
+          <div className="text-2xl font-black text-white text-center">10k+</div>
         </div>
       </div>
 

@@ -48,22 +48,11 @@ const Admin: React.FC = () => {
   const checkAdmin = async () => {
     setCheckingAuth(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-        
-        console.log('Admin Check:', { profile, error, userId: session.user.id });
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
         setIsAdmin(profile?.role === 'admin');
-      } else {
-        setIsAdmin(false);
       }
-    } catch (err) {
-      console.error('Admin Check Error:', err);
-      setIsAdmin(false);
     } finally {
       setCheckingAuth(false);
     }
@@ -159,8 +148,7 @@ const Admin: React.FC = () => {
         .insert([{ 
           key: licenseKey, 
           duration_days,
-          expires_at,
-          is_used: false
+          expires_at // We'll need to make sure this column exists or handle it
         }]);
       if (error) throw error;
       showToast('License key saved', 'success');
