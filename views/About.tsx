@@ -4,6 +4,7 @@ import { APP_VERSION } from '../constants';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
+import { LanguageProvider, useLanguage } from '../LanguageContext';
 import IOSModal from '../components/IOSModal';
 
 const About: React.FC = () => {
