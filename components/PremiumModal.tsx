@@ -55,10 +55,12 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, onUpgrade 
 
           <div className="space-y-4 pt-4">
             <button 
-              onClick={onUpgrade}
+              onClick={() => {
+                window.open('https://sociabuzz.com/xyraofficial/shop', '_blank');
+              }}
               className="w-full py-5 bg-accent text-black font-black rounded-3xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-accent/20 uppercase tracking-widest text-xs"
             >
-              Initialize Upgrade — $9.99/mo
+              Initialize Upgrade — Sociabuzz
             </button>
             <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-[0.2em]">Secure Checkout via Nexus Protocol</p>
           </div>

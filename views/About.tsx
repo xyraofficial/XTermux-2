@@ -14,6 +14,8 @@ const About: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [isPremium, setIsPremium] = useState(false);
+  const [licenseKey, setLicenseKey] = useState<string | null>(null);
+  const [licenseExpiry, setLicenseExpiry] = useState<string | null>(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -31,7 +33,10 @@ const About: React.FC = () => {
       premium: "Premium Status",
       free: "Free Member",
       pro: "Nexus Premium",
-      upgrade: "Initialize Upgrade"
+      upgrade: "Initialize Upgrade",
+      license: "License Key",
+      expiry: "Valid Until",
+      notSet: "Not Assigned"
     },
     id: {
       syncing: "Protokol Sinkronisasi",
@@ -46,7 +51,10 @@ const About: React.FC = () => {
       premium: "Status Premium",
       free: "Anggota Gratis",
       pro: "Nexus Premium",
-      upgrade: "Mulai Upgrade"
+      upgrade: "Mulai Upgrade",
+      license: "Kunci Lisensi",
+      expiry: "Masa Aktif",
+      notSet: "Belum Diatur"
     },
     hi: {
       syncing: "सिंकिंग प्रोटोकॉल",
@@ -84,6 +92,8 @@ const About: React.FC = () => {
       if (user) {
         const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
         setIsPremium(!!profile?.is_premium);
+        setLicenseKey(profile?.license_key || null);
+        setLicenseExpiry(profile?.license_expiry || null);
         
         // If profile doesn't exist, create it
         if (!profile) {
@@ -303,6 +313,29 @@ const About: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {isPremium && (
+        <div className="bg-zinc-900/30 border border-white/5 p-6 rounded-3xl space-y-4">
+          <div className="flex items-center gap-3">
+            <Crown size={18} className="text-amber-500" />
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">Neural License Info</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-1">
+              <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest">{t.license}</p>
+              <p className="text-[10px] font-mono font-black text-white bg-black/40 p-2 rounded-xl border border-white/5 truncate">
+                {licenseKey || t.notSet}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest">{t.expiry}</p>
+              <p className="text-xs font-black text-amber-500">
+                {licenseExpiry ? new Date(licenseExpiry).toLocaleDateString() : t.notSet}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-3">
         <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-2">{t.social}</h3>
