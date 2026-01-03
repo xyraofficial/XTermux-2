@@ -266,7 +266,7 @@ const About: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap justify-center items-center gap-3">
-          <span className={`px-4 py-1.5 border rounded-xl text-[10px] font-black uppercase tracking-widest ${isPremium ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-accent/10 border-accent/20 text-accent'}`}>
+          <span className={`px-4 py-1.5 border rounded-xl text-[10px] font-black uppercase tracking-widest ${user?.profile?.role === 'admin' ? 'bg-red-500/10 border-red-500/20 text-red-500' : (isPremium ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-accent/10 border-accent/20 text-accent')}`}>
             {user?.profile?.role === 'admin' ? 'ADMIN' : (isPremium ? t.pro : t.free)}
           </span>
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
