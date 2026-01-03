@@ -12,6 +12,9 @@ const AdminView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'users' | 'system' | 'audit' | null>(null);
   const [users, setUsers] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [newUser, setNewUser] = useState({ email: '', password: '', username: '', role: 'user' });
   const [systemLogs, setSystemLogs] = useState<any[]>([
     { id: 1, type: 'AUTH', message: 'Login Attempt: admin_root', time: '2 mins ago', color: 'text-yellow-500' },
     { id: 2, type: 'SYS', message: 'DB Connection Refreshed', time: '5 mins ago', color: 'text-blue-500' },
@@ -84,15 +87,60 @@ const AdminView: React.FC = () => {
     }
   };
 
-  const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Are you sure you want to restrict this user?')) return;
+  const handleAddUser = async () => {
     try {
-      const { error } = await supabase.from('profiles').update({ role: 'restricted' }).eq('id', userId);
+      if (!newUser.email || !newUser.password) {
+        showToast('Email and password are required', 'error');
+        return;
+      }
+      setLoading(true);
+      const { data, error } = await supabase.auth.signUp({
+        email: newUser.email,
+        password: newUser.password,
+        options: { data: { username: newUser.username } }
+      });
       if (error) throw error;
-      showToast('User restricted', 'success');
+      
+      // Manually insert into profiles if needed (Supabase usually has a trigger, but let's be safe)
+      if (data.user) {
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          username: newUser.username || newUser.email.split('@')[0],
+          role: newUser.role
+        });
+      }
+      
+      showToast('User created successfully', 'success');
+      setShowAddUser(false);
+      setNewUser({ email: '', password: '', username: '', role: 'user' });
       fetchUsers();
     } catch (err: any) {
-      showToast(err.message || 'Error restricting user', 'error');
+      showToast(err.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBlockUser = async (userId: string, isBlocked: boolean) => {
+    try {
+      const { error } = await supabase.from('profiles').update({ role: isBlocked ? 'blocked' : 'user' }).eq('id', userId);
+      if (error) throw error;
+      showToast(isBlocked ? 'User blocked' : 'User unblocked', 'success');
+      fetchUsers();
+    } catch (err: any) {
+      showToast(err.message, 'error');
+    }
+  };
+
+  const handlePermanentDelete = async (userId: string) => {
+    if (!confirm('PERMANENT DELETE? This cannot be undone from the profiles table.')) return;
+    try {
+      const { error } = await supabase.from('profiles').delete().eq('id', userId);
+      if (error) throw error;
+      showToast('Profile deleted permanently', 'success');
+      fetchUsers();
+    } catch (err: any) {
+      showToast(err.message, 'error');
     }
   };
 
@@ -115,48 +163,145 @@ const AdminView: React.FC = () => {
   );
 
   if (activeTab === 'users') {
+    const filteredUsers = users.filter(u => 
+      u.email?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      u.username?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
       <div className="p-6 space-y-6 pb-32 bg-black min-h-full overflow-y-auto no-scrollbar animate-in slide-in-from-right duration-300">
-        <button onClick={() => setActiveTab(null)} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors">
-          <ArrowLeft size={18} />
-          <span className="text-[10px] font-black uppercase tracking-widest">Back to Control</span>
-        </button>
-        <div className="space-y-1">
-          <h2 className="text-2xl font-black text-white uppercase">User Registry</h2>
-          <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Direct Access Control</p>
+        <div className="flex items-center justify-between">
+          <button onClick={() => setActiveTab(null)} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors">
+            <ArrowLeft size={18} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Back</span>
+          </button>
+          <button 
+            onClick={() => setShowAddUser(true)}
+            className="px-4 py-2 bg-accent text-black text-[10px] font-black uppercase tracking-widest rounded-xl active:scale-95 transition-all flex items-center gap-2"
+          >
+            <UserPlus size={14} /> Add User
+          </button>
         </div>
+
+        <div className="space-y-1">
+          <h2 className="text-2xl font-black text-white uppercase">Neural Registry</h2>
+          <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">System User Management</p>
+        </div>
+
+        <div className="relative">
+          <SearchIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <input 
+            type="text" 
+            placeholder="SEARCH IDENTITY..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-zinc-900/50 border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-xs text-white placeholder:text-zinc-700 focus:border-accent/30 outline-none transition-all"
+          />
+        </div>
+
         <div className="space-y-3">
-          {users.map((user) => (
-            <div key={user.id} className="p-4 bg-zinc-900/40 border border-white/5 rounded-2xl flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center">
-                  <Users size={18} className="text-zinc-500" />
+          {filteredUsers.map((user) => (
+            <div key={user.id} className="p-4 bg-zinc-900/40 border border-white/5 rounded-2xl space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-zinc-800 rounded-2xl flex items-center justify-center relative overflow-hidden">
+                    {user.avatar_url ? (
+                      <img src={user.avatar_url} className="w-full h-full object-cover" />
+                    ) : (
+                      <Users size={20} className="text-zinc-600" />
+                    )}
+                    {user.role === 'admin' && <div className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full border-2 border-zinc-900 shadow-blue-500 shadow-sm" />}
+                  </div>
+                  <div>
+                    <div className="text-xs font-black text-white flex items-center gap-1 uppercase italic">
+                      {user.username || 'Anonymous'}
+                      {user.role === 'admin' && <Shield size={10} className="text-blue-500" />}
+                    </div>
+                    <div className="text-[9px] font-bold text-zinc-500 uppercase">{user.email || 'No Linked Email'}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-xs font-bold text-white truncate max-w-[120px]">{user.email || 'Anonymous'}</div>
-                  <div className="text-[9px] font-black text-accent uppercase tracking-tighter">{user.role || 'user'}</div>
+                <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${
+                  user.role === 'admin' ? 'bg-blue-500/10 text-blue-500' : 
+                  user.role === 'blocked' ? 'bg-red-500/10 text-red-500' : 'bg-zinc-800 text-zinc-500'
+                }`}>
+                  {user.role || 'USER'}
                 </div>
               </div>
-              <div className="flex gap-2">
+
+              <div className="flex gap-2 pt-2 border-t border-white/5">
                 <button 
                   onClick={() => {
-                    const newRole = prompt('Enter new role (admin/user/restricted):', user.role || 'user');
+                    const newRole = prompt('Role (admin/user/blocked):', user.role || 'user');
                     if (newRole) handleUpdateRole(user.id, newRole);
-                  }} 
-                  className="p-2 bg-zinc-800 rounded-lg text-zinc-400 hover:text-accent transition-colors"
+                  }}
+                  className="flex-1 py-2 bg-zinc-800/50 hover:bg-zinc-800 rounded-xl text-[9px] font-black uppercase tracking-widest text-zinc-400 flex items-center justify-center gap-2 transition-all"
                 >
-                  <Key size={14} />
+                  <Key size={12} /> Role
                 </button>
                 <button 
-                  onClick={() => handleDeleteUser(user.id)} 
-                  className="p-2 bg-red-500/10 rounded-lg text-red-500 hover:bg-red-500 hover:text-white transition-all"
+                  onClick={() => handleBlockUser(user.id, user.role !== 'blocked')}
+                  className={`flex-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
+                    user.role === 'blocked' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
+                  }`}
                 >
-                  <Lock size={14} />
+                  <Lock size={12} /> {user.role === 'blocked' ? 'Unblock' : 'Block'}
+                </button>
+                <button 
+                  onClick={() => handlePermanentDelete(user.id)}
+                  className="p-2 bg-red-500/5 hover:bg-red-500/20 rounded-xl text-red-500/50 hover:text-red-500 transition-all"
+                >
+                  <Trash2 size={12} />
                 </button>
               </div>
             </div>
           ))}
         </div>
+
+        {showAddUser && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-200">
+            <div className="bg-zinc-900 border border-white/10 rounded-[2.5rem] p-8 w-full max-w-sm shadow-2xl space-y-6">
+              <div className="space-y-1">
+                <h3 className="text-xl font-black text-white uppercase italic">Add Neural User</h3>
+                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Register New Identity</p>
+              </div>
+              
+              <div className="space-y-4">
+                <input 
+                  type="email" 
+                  placeholder="EMAIL ADDRESS" 
+                  value={newUser.email}
+                  onChange={e => setNewUser({...newUser, email: e.target.value})}
+                  className="w-full bg-black/50 border border-white/5 rounded-2xl py-3 px-4 text-xs text-white outline-none focus:border-accent/30"
+                />
+                <input 
+                  type="password" 
+                  placeholder="SECURE PASSWORD" 
+                  value={newUser.password}
+                  onChange={e => setNewUser({...newUser, password: e.target.value})}
+                  className="w-full bg-black/50 border border-white/5 rounded-2xl py-3 px-4 text-xs text-white outline-none focus:border-accent/30"
+                />
+                <input 
+                  type="text" 
+                  placeholder="USERNAME" 
+                  value={newUser.username}
+                  onChange={e => setNewUser({...newUser, username: e.target.value})}
+                  className="w-full bg-black/50 border border-white/5 rounded-2xl py-3 px-4 text-xs text-white outline-none focus:border-accent/30"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={() => setShowAddUser(false)} className="flex-1 py-4 text-zinc-500 text-[10px] font-black uppercase tracking-widest">Cancel</button>
+                <button 
+                  onClick={handleAddUser} 
+                  disabled={loading}
+                  className="flex-1 py-4 bg-accent text-black text-[10px] font-black uppercase tracking-widest rounded-2xl flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 size={14} className="animate-spin" /> : 'Create'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
