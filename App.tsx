@@ -143,7 +143,7 @@ const AppContent: React.FC = () => {
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
       case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
       case ViewState.AI_BUILDER: return <div {...viewProps}><ArchitectView /></div>;
-      case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>;
+      case ViewState.ARCHITECT: return <div {...viewProps}><ArchitectView /></div>;
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.TERMS: return <div {...viewProps}><TermsView onBack={() => navigate(ViewState.HOME)} /></div>;
