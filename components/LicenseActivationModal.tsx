@@ -26,18 +26,44 @@ const LicenseActivationModal: React.FC<LicenseActivationModalProps> = ({ isOpen,
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      // Check if license exists and is not expired/already used
-      // For now, we simulate activation. In production, you'd have a 'licenses' table.
-      const { error } = await supabase
+      // Check if license exists and is not used
+      const { data: license, error: licenseError } = await supabase
+        .from('licenses')
+        .select('*')
+        .eq('key', licenseKey.trim())
+        .eq('is_used', false)
+        .single();
+
+      if (licenseError || !license) {
+        throw new Error('Invalid or already used license key');
+      }
+
+      // 1. Mark license as used
+      const { error: updateLicenseError } = await supabase
+        .from('licenses')
+        .update({ 
+          is_used: true, 
+          used_by: user.id,
+          used_at: new Date().toISOString()
+        })
+        .eq('id', license.id);
+
+      if (updateLicenseError) throw updateLicenseError;
+
+      // 2. Update user profile to premium
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + license.duration_days);
+
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({ 
           is_premium: true, 
-          license_key: licenseKey,
-          license_expiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+          license_key: licenseKey.trim(),
+          license_expiry: expiryDate.toISOString()
         })
         .eq('id', user.id);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
 
       showToast('License activated successfully!', 'success');
       onActivated();

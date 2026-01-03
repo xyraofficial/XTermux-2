@@ -51,8 +51,23 @@ const Admin: React.FC = () => {
       return;
     }
     setLoading(true);
-    showToast('Key generated: ' + licenseKey, 'success');
-    setLoading(false);
+    try {
+      const { error } = await supabase
+        .from('licenses')
+        .insert([{ 
+          key: licenseKey, 
+          duration_days: parseInt(days)
+        }]);
+
+      if (error) throw error;
+
+      showToast('License key saved to database', 'success');
+      setLicenseKey('');
+    } catch (err: any) {
+      showToast(err.message || 'Failed to save license', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const copyToClipboard = (text: string) => {
