@@ -243,8 +243,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-2 gap-3">
           {[
             { id: 'AI_BUILDER', icon: PenTool, title: 'AI BUILDER', color: 'blue-500', premium: true },
-    { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500', premium: true },
-    { id: 'profile', icon: User, title: 'Profile', color: 'accent', premium: false },
+            { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500', premium: true },
           ].map((item) => (
             <button 
               key={item.id} 
