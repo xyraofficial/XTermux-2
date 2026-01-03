@@ -53,11 +53,11 @@ const AdminView: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase.from('profiles').select('*').limit(50);
-      if (error) throw error;
-      if (data) {
-        // Sort in memory if created_at is missing or just to be safe
-        const sortedData = [...data].sort((a: any, b: any) => {
+      const { data: profiles, error: profilesError } = await supabase.from('profiles').select('*');
+      if (profilesError) throw profilesError;
+
+      if (profiles) {
+        const sortedData = [...profiles].sort((a: any, b: any) => {
           const dateA = new Date(a.updated_at || 0).getTime();
           const dateB = new Date(b.updated_at || 0).getTime();
           return dateB - dateA;
@@ -101,11 +101,11 @@ const AdminView: React.FC = () => {
       });
       if (error) throw error;
       
-      // Manually insert into profiles if needed (Supabase usually has a trigger, but let's be safe)
       if (data.user) {
         await supabase.from('profiles').upsert({
           id: data.user.id,
           username: newUser.username || newUser.email.split('@')[0],
+          email: newUser.email, // Store email in profile table
           role: newUser.role
         });
       }
@@ -217,7 +217,7 @@ const AdminView: React.FC = () => {
                       {user.username || 'Anonymous'}
                       {user.role === 'admin' && <Shield size={10} className="text-blue-500" />}
                     </div>
-                    <div className="text-[9px] font-bold text-zinc-500 uppercase">{user.email || 'No Linked Email'}</div>
+                    <div className="text-[9px] font-bold text-zinc-500 uppercase">{user.email || 'System Identity'}</div>
                   </div>
                 </div>
                 <div className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${
