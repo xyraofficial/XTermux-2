@@ -37,12 +37,30 @@ const AdminView: React.FC = () => {
   }, []);
 
   const fetchUsers = async () => {
-    const { data } = await supabase.from('profiles').select('*').limit(10);
-    if (data) setUsers(data);
+    const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
+    if (error) {
+      showToast('Error fetching users', 'error');
+    } else if (data) {
+      setUsers(data);
+    }
   };
 
-  const handleAction = (action: string) => {
-    showToast(`${action} simulated in development mode`, 'info');
+  const handleAction = async (action: string, targetId: string) => {
+    if (action === 'Edit Role') {
+      const { error } = await supabase.from('profiles').update({ role: 'admin' }).eq('id', targetId);
+      if (error) showToast('Error updating role', 'error');
+      else {
+        showToast('Role updated to admin', 'success');
+        fetchUsers();
+      }
+    } else if (action === 'Restrict Access') {
+      const { error } = await supabase.from('profiles').update({ role: 'restricted' }).eq('id', targetId);
+      if (error) showToast('Error restricting user', 'error');
+      else {
+        showToast('User access restricted', 'success');
+        fetchUsers();
+      }
+    }
   };
 
   if (loading) return (
@@ -87,8 +105,8 @@ const AdminView: React.FC = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => handleAction('Edit Role')} className="p-2 bg-zinc-800 rounded-lg text-zinc-400"><Key size={14} /></button>
-                <button onClick={() => handleAction('Restrict Access')} className="p-2 bg-red-500/10 rounded-lg text-red-500"><Lock size={14} /></button>
+                <button onClick={() => handleAction('Edit Role', user.id)} className="p-2 bg-zinc-800 rounded-lg text-zinc-400"><Key size={14} /></button>
+                <button onClick={() => handleAction('Restrict Access', user.id)} className="p-2 bg-red-500/10 rounded-lg text-red-500"><Lock size={14} /></button>
               </div>
             </div>
           ))}
