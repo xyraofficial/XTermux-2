@@ -116,8 +116,53 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
   const t = translations[language];
 
+  if (isSyncing) {
+    return (
+      <div className="fixed inset-0 z-[500] flex flex-col items-center justify-center bg-black gap-6 animate-in fade-in duration-500">
+        <div className="relative">
+          {/* Outer Ring */}
+          <div className="w-24 h-24 border-4 border-accent/10 border-t-accent rounded-full animate-spin shadow-[0_0_30px_rgba(var(--accent-rgb),0.2)]" />
+          {/* Inner Ring Reverse */}
+          <div className="absolute inset-2 w-20 h-20 border-4 border-white/5 border-b-white/20 rounded-full animate-[spin_1.5s_linear_infinite_reverse]" />
+          {/* Core Glow */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-4 h-4 bg-accent rounded-full animate-pulse shadow-[0_0_20px_rgba(var(--accent-rgb),0.8)]" />
+          </div>
+        </div>
+
+        <div className="space-y-3 text-center">
+          <div className="flex flex-col items-center gap-1">
+            <h3 className="text-sm font-black text-white uppercase tracking-[0.4em] italic animate-pulse">
+              Syncing Protocol
+            </h3>
+            <div className="flex items-center gap-1">
+              <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-accent/50" />
+              <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">
+                Establishing Neural Link
+              </span>
+              <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-accent/50" />
+            </div>
+          </div>
+          
+          {/* Progress Bar Mock */}
+          <div className="w-48 h-1 bg-zinc-900 rounded-full overflow-hidden mx-auto border border-white/5">
+            <div className="h-full bg-accent animate-[progress_1.5s_ease-in-out_infinite]" style={{ width: '60%' }} />
+          </div>
+        </div>
+
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes progress {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0%); }
+            100% { transform: translateX(100%); }
+          }
+        `}} />
+      </div>
+    );
+  }
+
   return (
-    <div className="px-4 py-8 space-y-10 pb-32 max-w-3xl mx-auto">
+    <div className="px-4 py-8 space-y-10 pb-32 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
       <PremiumModal 
         isOpen={showPremiumModal} 
         onClose={() => setShowPremiumModal(false)} 
@@ -165,23 +210,9 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <div className="absolute -top-20 -left-20 w-48 h-48 bg-accent/10 rounded-full blur-[80px] pointer-events-none" />
         
         <div className="relative z-10 text-center space-y-6">
-          <div className="flex flex-col items-center gap-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 rounded-full border border-accent/20 mb-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-              <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">{t.status}</span>
-            </div>
-
-            {isSyncing ? (
-              <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10 animate-pulse">
-                <div className="w-2 h-2 border border-accent border-t-transparent rounded-full animate-spin" />
-                <span className="text-[8px] font-black text-zinc-400 uppercase tracking-widest italic">Syncing Protocol...</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 px-3 py-1 bg-accent/5 rounded-full border border-accent/10">
-                <div className="w-1 h-1 bg-accent rounded-full shadow-[0_0_5px_rgba(var(--accent-rgb),0.5)]" />
-                <span className="text-[8px] font-black text-accent uppercase tracking-widest italic">Neural Link Active</span>
-              </div>
-            )}
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 rounded-full border border-accent/20 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">{t.status}</span>
           </div>
           
           <div className="space-y-2">
