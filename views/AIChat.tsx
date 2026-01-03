@@ -179,12 +179,12 @@ const AIChat: React.FC = () => {
       if (msgError) throw msgError;
 
       const groqInstance = new Groq({
-        apiKey: import.meta.env.VITE_GROQ_API_KEY || '',
+        apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || '',
         dangerouslyAllowBrowser: true
       });
 
       if (!groqInstance.apiKey || groqInstance.apiKey === 'dummy_key') {
-        showToast("Groq API Key (VITE_GROQ_API_KEY) is missing in Secrets", "error");
+        showToast("AI Key not configured", "error");
         setIsLoading(false);
         return;
       }
@@ -345,26 +345,10 @@ const AIChat: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 pb-24 shrink-0 relative z-10">
-        <div className="flex items-center gap-2 bg-zinc-900 p-1.5 rounded-2xl border border-white/5 shadow-2xl">
-          <textarea 
-            value={input} 
-            onChange={(e) => setInput(e.target.value)} 
-            placeholder={t.placeholder} 
-            className="flex-1 bg-transparent text-white py-2 px-3 resize-none focus:outline-none text-xs max-h-24 no-scrollbar" 
-            rows={1} 
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-          />
-          <button 
-            onClick={handleSend} 
-            disabled={!input.trim() || isLoading} 
-            className="p-3 bg-accent text-black rounded-xl active:scale-95 transition-all shadow-lg hover:brightness-110"
-          >
+      <div className="p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 pb-20 shrink-0">
+        <div className="flex items-center gap-2 bg-zinc-900 p-1.5 rounded-2xl border border-white/5">
+          <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder={t.placeholder} className="flex-1 bg-transparent text-white py-2 px-3 resize-none focus:outline-none text-xs max-h-24 no-scrollbar" rows={1} />
+          <button onClick={handleSend} disabled={!input.trim() || isLoading} className="p-3 bg-accent text-black rounded-xl active:scale-95 transition-all">
             {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           </button>
         </div>

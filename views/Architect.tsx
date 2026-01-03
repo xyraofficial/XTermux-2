@@ -27,6 +27,11 @@ const BUILD_PHASES = [
     { threshold: 100, label: 'Finalizing Build', icon: <ShieldCheck size={24} /> },
 ];
 
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || '',
+  dangerouslyAllowBrowser: true
+});
+
 const Architect: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -101,25 +106,19 @@ const Architect: React.FC = () => {
     setPendingResult(null);
 
     try {
-      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+      const apiKey = process.env.GROQ_API_KEY || process.env.API_KEY;
       if (!apiKey) {
-        showToast('Groq API Key (VITE_GROQ_API_KEY) is missing in Secrets', 'error');
+        showToast('API Key missing', 'error');
         setIsGenerating(false);
         return;
       }
       
-      const groqInstance = new Groq({
-        apiKey: apiKey,
-        dangerouslyAllowBrowser: true
-      });
-
-      const response = await groqInstance.chat.completions.create({
+      const response = await groq.chat.completions.create({
         messages: [
           { 
             role: "system", 
             content: `You are a professional Termux script architect. 
             You MUST return ONLY a valid JSON object.
-            Do NOT use double asterisks (**) for bolding in the "code" field.
             
             JSON Structure:
             {
@@ -127,7 +126,7 @@ const Architect: React.FC = () => {
               "description": "Short explanation",
               "language": "bash/python",
               "dependencies": ["pkg1", "pkg2"],
-              "code": "The full code here. Pure code only, no markdown bolding inside code.",
+              "code": "The full code here",
               "instructions": "Step-by-step markdown list on how to install and run this specific script."
             }`
           },
@@ -162,7 +161,7 @@ const Architect: React.FC = () => {
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[100px] rounded-full" />
 
-      <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-6 relative z-10 no-scrollbar pb-32">
+      <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-6 relative z-10 no-scrollbar">
         {!result && !isGenerating && (
             <div className="mt-12 flex flex-col items-center text-center space-y-6 animate-in fade-in slide-in-from-bottom-10 duration-1000">
                 <div className="relative">
@@ -298,7 +297,7 @@ const Architect: React.FC = () => {
       </div>
 
       {/* iOS Centered Input Bar - Positioned at Bottom like AI Chat */}
-      <div className="p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 pb-24 shrink-0 relative z-20">
+      <div className="p-4 bg-transparent shrink-0 relative z-20 mb-4">
         <div className="max-w-4xl mx-auto">
             <div className="bg-zinc-900/70 backdrop-blur-2xl p-2 rounded-[2.5rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                 <textarea
@@ -308,12 +307,6 @@ const Architect: React.FC = () => {
                     className="flex-1 bg-transparent text-white py-3 px-5 resize-none focus:outline-none text-[14px] font-medium leading-tight max-h-24 no-scrollbar placeholder:text-zinc-700 text-center"
                     rows={1}
                     disabled={isGenerating}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleGenerate();
-                      }
-                    }}
                 />
                 <button 
                     onClick={handleGenerate} 
