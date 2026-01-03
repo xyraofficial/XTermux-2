@@ -222,22 +222,29 @@ const About: React.FC = () => {
           <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-[0.3em]">{user?.email}</p>
         </div>
 
-        <div className="flex justify-center gap-3">
+        <div className="flex flex-wrap justify-center items-center gap-3">
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{user?.profile?.role || 'USER'}</span>
-          {user?.profile?.role === 'admin' && (
-            <button 
-              onClick={() => {
-                // We'll use a custom event to tell App to navigate to Admin
-                window.dispatchEvent(new CustomEvent('navigate-to-admin'));
-              }}
-              className="px-4 py-1.5 bg-red-500/10 border border-red-500/20 rounded-xl text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center gap-1 active:scale-95 transition-all"
-            >
-              <Shield size={10} /> Panel
-            </button>
-          )}
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
           <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-zinc-500 uppercase tracking-widest">v{APP_VERSION}</span>
         </div>
+
+        {user?.profile?.role === 'admin' && (
+          <div className="pt-4 border-t border-white/5">
+            <button 
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('navigate-to-admin'));
+              }}
+              className="group relative w-full py-4 bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 rounded-3xl flex items-center justify-center gap-3 overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-95"
+            >
+              <div className="absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Shield size={20} className="text-red-500 group-hover:rotate-12 transition-transform duration-300" />
+              <div className="text-left">
+                <p className="text-[11px] font-black text-red-500 uppercase tracking-[0.2em]">Admin Control Panel</p>
+                <p className="text-[8px] font-bold text-red-500/40 uppercase tracking-widest">Access System Architect & Scripts</p>
+              </div>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">
