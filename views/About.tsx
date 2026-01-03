@@ -69,7 +69,10 @@ const About: React.FC = () => {
       premium: "प्रीमियम स्थिति",
       free: "मुफ़्त सदस्य",
       pro: "Nexus प्रीमियम",
-      upgrade: "अपग्रेड शुरू करें"
+      upgrade: "अपग्रेड शुरू करें",
+      license: "लाइसेंस कुंजी",
+      expiry: "वैधता",
+      notSet: "निर्धारित नहीं"
     }
   };
 
