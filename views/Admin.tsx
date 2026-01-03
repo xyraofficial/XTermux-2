@@ -50,12 +50,26 @@ const Admin: React.FC = () => {
   };
 
   const fetchUsers = async () => {
-    let query = supabase.from('profiles').select('*').order('created_at', { ascending: false });
-    if (searchQuery) {
-      query = query.or(`username.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%`);
+    setLoading(true);
+    try {
+      // Fetch user emails from auth.users via a secure RPC or profiles table if available
+      // Note: In Supabase, auth.users is protected. We usually sync emails to profiles table.
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*');
+
+      if (error) throw error;
+      
+      const filteredData = (data || []).sort((a, b) => 
+        new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+      );
+
+      setUsers(filteredData);
+    } catch (err: any) {
+      showToast(err.message, 'error');
+    } finally {
+      setLoading(false);
     }
-    const { data } = await query.limit(20);
-    if (data) setUsers(data);
   };
 
   const fetchAnalytics = async () => {
@@ -238,12 +252,17 @@ const Admin: React.FC = () => {
               placeholder="Search users..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && fetchUsers()}
               className="w-full bg-zinc-900/50 border border-white/5 rounded-2xl pl-12 pr-6 py-4 text-sm text-white outline-none" 
             />
           </div>
           <div className="space-y-3">
-            {users.map((user, i) => (
+            {users
+              .filter(u => 
+                !searchQuery || 
+                (u.username?.toLowerCase().includes(searchQuery.toLowerCase())) || 
+                (u.email?.toLowerCase().includes(searchQuery.toLowerCase()))
+              )
+              .map((user, i) => (
               <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${user.is_premium ? 'bg-yellow-500/10 border border-yellow-500/20' : 'bg-zinc-800'}`}>
