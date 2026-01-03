@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Key, Calendar, User as UserIcon, Loader2, Copy, Users, BarChart3, Bell, Trash2, Search } from 'lucide-react';
+import { Shield, Plus, Key, Calendar, User as UserIcon, Loader2, Copy, Users, BarChart3, Bell, Trash2, Search, X } from 'lucide-react';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
@@ -24,6 +24,8 @@ const Admin: React.FC = () => {
     totalLicenses: 0,
     usedLicenses: 0
   });
+
+  const [selectedUser, setSelectedUser] = useState<any>(null);
 
   useEffect(() => {
     checkAdmin();
@@ -52,8 +54,6 @@ const Admin: React.FC = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      // Fetch user emails from auth.users via a secure RPC or profiles table if available
-      // Note: In Supabase, auth.users is protected. We usually sync emails to profiles table.
       const { data, error } = await supabase
         .from('profiles')
         .select('*');
@@ -133,38 +133,7 @@ const Admin: React.FC = () => {
   };
 
   const handleRemoveLicense = async (lic: any) => {
-    // Custom beautiful confirmation dialog instead of window.confirm
-    const confirmed = await new Promise((resolve) => {
-      showToast(
-        <div className="flex flex-col gap-3 p-1">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-red-500/10 rounded-lg flex items-center justify-center">
-              <Trash2 size={16} className="text-red-500" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-white uppercase tracking-tight">Confirm Deletion</p>
-              <p className="text-[8px] text-zinc-500 uppercase font-bold">This will revoke user premium</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <button 
-              onClick={() => { resolve(true); }}
-              className="flex-1 py-2.5 bg-red-500 text-white text-[9px] font-black rounded-xl uppercase shadow-lg shadow-red-500/20 active:scale-95 transition-all"
-            >
-              Confirm Delete
-            </button>
-            <button 
-              onClick={() => { resolve(false); }}
-              className="flex-1 py-2.5 bg-zinc-800 text-zinc-400 text-[9px] font-black rounded-xl uppercase border border-white/5 active:scale-95 transition-all"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>,
-        'info'
-      );
-    });
-
+    const confirmed = window.confirm(`Revoke premium for ${lic.used_by_email || lic.key}?`);
     if (!confirmed) return;
     
     setLoading(true);
@@ -213,7 +182,6 @@ const Admin: React.FC = () => {
 
   return (
     <div className="p-4 space-y-6 pb-32 bg-black min-h-full">
-      {/* Header */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-3">
           <Shield className="text-red-500" size={24} />
@@ -294,21 +262,23 @@ const Admin: React.FC = () => {
               )
               .map((user, i) => (
               <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${user.is_premium ? 'bg-yellow-500/10 border border-yellow-500/20' : 'bg-zinc-800'}`}>
+                <div 
+                  className="flex items-center gap-3 cursor-pointer group"
+                  onClick={() => setSelectedUser(user)}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${user.is_premium ? 'bg-yellow-500/10 border border-yellow-500/20' : 'bg-zinc-800'}`}>
                     <UserIcon size={18} className={user.is_premium ? 'text-yellow-500' : 'text-zinc-500'} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <p className="text-xs font-black text-white">{user.username || 'Anonymous'}</p>
+                      <p className="text-xs font-black text-white group-hover:text-red-500 transition-colors">{user.username || 'Anonymous'}</p>
                       {user.is_premium && (
                         <span className="bg-yellow-500 text-black text-[7px] font-black px-1 rounded uppercase">Premium</span>
                       )}
                     </div>
-                    <p className="text-[9px] text-zinc-500 font-mono">{user.email || 'No Email'}</p>
-                    {user.license_key && (
-                      <p className="text-[8px] text-blue-400 font-mono uppercase mt-0.5">Key: {user.license_key}</p>
-                    )}
+                    <p className="text-[9px] text-zinc-500 font-mono italic">
+                      {user.email || (user.username ? `${user.username.toLowerCase()}@xtermux.id` : 'No Identity')}
+                    </p>
                   </div>
                 </div>
                 <button 
@@ -341,6 +311,83 @@ const Admin: React.FC = () => {
             <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-3xl space-y-1">
               <p className="text-[9px] font-black text-zinc-500 uppercase">Used Keys</p>
               <p className="text-2xl font-black text-green-500 italic">{stats.usedLicenses}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedUser && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
+            
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-lg font-black text-white uppercase tracking-tight italic">User Protocol</h3>
+              <button onClick={() => setSelectedUser(null)} className="p-2 text-zinc-500 hover:text-white transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center gap-4 bg-black/40 p-4 rounded-3xl border border-white/5">
+                <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center shrink-0 border border-white/10">
+                  <UserIcon size={32} className={selectedUser.is_premium ? 'text-yellow-500' : 'text-zinc-500'} />
+                </div>
+                <div>
+                  <p className="text-lg font-black text-white uppercase italic leading-tight">{selectedUser.username || 'Anonymous'}</p>
+                  <p className="text-xs font-mono text-zinc-500 truncate">
+                    {selectedUser.email || (selectedUser.username ? `${selectedUser.username.toLowerCase()}@xtermux.id` : 'N/A')}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-black/40 p-4 rounded-3xl border border-white/5">
+                  <p className="text-[8px] font-black text-zinc-600 uppercase mb-1">Status</p>
+                  <p className={`text-[10px] font-black uppercase ${selectedUser.is_premium ? 'text-yellow-500' : 'text-green-500'}`}>
+                    {selectedUser.is_premium ? 'Premium' : 'Free Member'}
+                  </p>
+                </div>
+                <div className="bg-black/40 p-4 rounded-3xl border border-white/5">
+                  <p className="text-[8px] font-black text-zinc-600 uppercase mb-1">Protocol</p>
+                  <p className="text-[10px] font-black text-white uppercase">{selectedUser.role || 'User'}</p>
+                </div>
+              </div>
+
+              {selectedUser.is_premium && (
+                <div className="bg-blue-500/5 p-4 rounded-3xl border border-blue-500/10 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Key size={12} className="text-blue-500" />
+                    <p className="text-[8px] font-black text-blue-500 uppercase tracking-widest">Active License</p>
+                  </div>
+                  <p className="text-[10px] font-mono text-white bg-black/40 p-3 rounded-2xl border border-white/5 break-all">
+                    {selectedUser.license_key || 'Manual Activation'}
+                  </p>
+                  {selectedUser.license_expiry && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <Calendar size={12} className="text-zinc-600" />
+                      <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest">
+                        Expiry: {new Date(selectedUser.license_expiry).toLocaleDateString()}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="bg-black/40 p-4 rounded-3xl border border-white/5">
+                <p className="text-[8px] font-black text-zinc-600 uppercase mb-1">Neural ID</p>
+                <p className="text-[9px] font-mono text-zinc-500 truncate">{selectedUser.id}</p>
+              </div>
+
+              <button 
+                onClick={() => {
+                  togglePremium(selectedUser.id, selectedUser.is_premium);
+                  setSelectedUser(null);
+                }}
+                className={`w-full py-4 font-black rounded-3xl transition-all active:scale-95 text-[11px] uppercase tracking-widest ${selectedUser.is_premium ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 'bg-green-500/10 text-green-500 border border-green-500/20'}`}
+              >
+                {selectedUser.is_premium ? 'Revoke Premium Access' : 'Grant Premium Access'}
+              </button>
             </div>
           </div>
         </div>

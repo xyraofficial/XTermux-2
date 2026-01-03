@@ -251,7 +251,7 @@ const About: React.FC = () => {
         isOpen={showPremiumModal} 
         onClose={() => setShowPremiumModal(false)} 
         onUpgrade={() => {
-          window.location.href = 'mailto:xyraofficialsup@gmail.com?subject=Premium%20Upgrade%20Request';
+          // Logic for upgrade is now handled inside PremiumModal via Activation
         }}
       />
       <div className="bg-zinc-900/50 border border-white/5 rounded-[2.5rem] p-6 text-center space-y-6 relative overflow-hidden">
