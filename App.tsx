@@ -11,8 +11,7 @@ import HomeView from './views/Home';
 import PackagesView from './views/Packages';
 import GuidesView from './views/Guides';
 import AboutView from './views/About';
-import AIChatView from './views/AIChat';
-import ArchitectView from './views/Architect';
+import UnifiedAIView from './views/UnifiedAI';
 import ScriptsView from './views/Scripts';
 import ConfirmEmailView from './views/ConfirmEmail';
 import ResetPasswordView from './views/ResetPassword';
@@ -36,7 +35,7 @@ const AppContent: React.FC = () => {
     hi: { home: "होम", tools: "टूल्स", ai: "AI Builder", chat: "AI Chat", codex: "कोडेक्स", user: "उपयोगकर्ता" }
   };
 
-  const t = translations[language];
+  const t = translations[language as keyof typeof translations] || translations.en;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -56,7 +55,6 @@ const AppContent: React.FC = () => {
     const path = window.location.pathname.toLowerCase();
     const search = window.location.search.toLowerCase();
     
-    // Check path and search for confirm/reset keywords
     if (path === '/help') return ViewState.HELP;
     if (path === '/privacy') return ViewState.PRIVACY;
     if (path === '/terms') return ViewState.TERMS;
@@ -64,10 +62,8 @@ const AppContent: React.FC = () => {
     if (path === '/packages') return ViewState.PACKAGES;
     if (path === '/guides') return ViewState.GUIDES;
     if (path === '/scripts') return ViewState.SCRIPTS;
-    if (path === '/ai-chat') return ViewState.AI_CHAT;
-    if (path === '/ai-builder') return ViewState.AI_BUILDER;
+    if (path === '/ai') return ViewState.AI_CHAT;
     
-    // Improved detection for Supabase auth links
     if (path.includes('confirm-email') || search.includes('type=signup')) return ViewState.CONFIRM_EMAIL;
     if (path.includes('reset-password') || search.includes('type=recovery')) return ViewState.RESET_PASSWORD;
     
@@ -124,8 +120,8 @@ const AppContent: React.FC = () => {
       case ViewState.HOME: path = '/'; break;
       case ViewState.ARCHITECT: path = '/architect'; break;
       case ViewState.PACKAGES: path = '/packages'; break;
-      case ViewState.AI_CHAT: path = '/ai-chat'; break;
-      case ViewState.AI_BUILDER: path = '/ai-builder'; break;
+      case ViewState.AI_CHAT: path = '/ai'; break;
+      case ViewState.AI_BUILDER: path = '/ai'; break;
       case ViewState.GUIDES: path = '/guides'; break;
       case ViewState.SCRIPTS: path = '/scripts'; break;
       case ViewState.ABOUT: path = '/about'; break;
@@ -147,8 +143,8 @@ const AppContent: React.FC = () => {
       case ViewState.SCRIPTS: return <div {...viewProps}><ScriptsView /></div>;
       case ViewState.GUIDES: return <div {...viewProps}><GuidesView /></div>;
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
-      case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
-      case ViewState.AI_BUILDER: return <div {...viewProps}><ArchitectView /></div>;
+      case ViewState.AI_CHAT: 
+      case ViewState.AI_BUILDER: return <div {...viewProps}><UnifiedAIView /></div>;
       case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>;
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
@@ -204,13 +200,14 @@ const AppContent: React.FC = () => {
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         main { position: relative; z-index: 1; height: 100%; width: 100%; }
+        .prose-xs { font-size: 0.75rem; line-height: 1.25rem; }
       `}</style>
 
       <ToastContainer />
       
       <main 
         tabIndex={-1}
-        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${([ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-y-auto h-full bg-black no-scrollbar' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar')}`}
+        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${([ViewState.AI_CHAT, ViewState.AI_BUILDER, ViewState.ARCHITECT].includes(currentView) ? 'overflow-y-auto h-full bg-black no-scrollbar' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar')}`}
       >
         {renderContent()}
       </main>
@@ -229,7 +226,7 @@ const AppContent: React.FC = () => {
             <div className="max-w-lg mx-auto flex items-center justify-around h-[70px] px-1">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={18} />} label={t.home} />
                 <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={18} />} label={t.tools} />
-                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label={t.chat} />
+                <NavButton active={currentView === ViewState.AI_CHAT || currentView === ViewState.AI_BUILDER} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label="AI" />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={18} />} label={t.codex} />
                 <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={18} />} label={t.user} />
                 {isAdmin && (
@@ -269,7 +266,9 @@ const AppContent: React.FC = () => {
 };
 
 const App: React.FC = () => (
-    <AppContent />
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
 );
 
 export default App;
