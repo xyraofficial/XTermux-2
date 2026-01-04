@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Eraser, Menu, X, Code, Terminal, Cpu, Zap, Settings, MessageSquare, Box, Layers, ShieldCheck, Info, ChevronRight, Sparkles, ChevronDown, Check } from 'lucide-react';
+import { Send, Bot, User, Loader2, Eraser, Menu, X, Code, Terminal, Cpu, Zap, Settings, MessageSquare, Box, Layers, ShieldCheck, Info, ChevronRight, Sparkles, ChevronDown, Check, Globe, Search, CpuIcon, Activity } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
@@ -14,13 +14,17 @@ interface AIModel {
   name: string;
   provider: string;
   description: string;
+  icon: React.ReactNode;
 }
 
 const AVAILABLE_MODELS: AIModel[] = [
-  { id: 'deepseek/deepseek-chat', name: 'DeepSeek Chat', provider: 'DeepSeek', description: 'Fast and efficient for code and general chat' },
-  { id: 'google/gemini-flash-1.5', name: 'Gemini Flash 1.5', provider: 'Google', description: 'Ultra-fast and capable' },
-  { id: 'meta-llama/llama-3.1-8b-instruct', name: 'Llama 3.1 8B', provider: 'Meta', description: 'Modern open-weight model' },
-  { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'OpenAI', description: 'Smart and capable small model' }
+  { id: 'deepseek/deepseek-chat', name: 'DeepSeek V3', provider: 'DeepSeek', description: 'Powerhouse for coding & logic', icon: <CpuIcon size={14} /> },
+  { id: 'google/gemini-pro-1.5', name: 'Gemini 1.5 Pro', provider: 'Google', description: 'Massive context & multimodal', icon: <Globe size={14} /> },
+  { id: 'google/gemini-flash-1.5', name: 'Gemini 1.5 Flash', provider: 'Google', description: 'Ultra-fast & efficient', icon: <Zap size={14} /> },
+  { id: 'anthropic/claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', description: 'Most human-like & creative', icon: <Sparkles size={14} /> },
+  { id: 'meta-llama/llama-3.1-405b', name: 'Llama 3.1 405B', provider: 'Meta', description: 'State-of-the-art open model', icon: <Activity size={14} /> },
+  { id: 'openai/gpt-4o', name: 'GPT-4o', provider: 'OpenAI', description: 'The industry standard', icon: <Bot size={14} /> },
+  { id: 'mistralai/mistral-large', name: 'Mistral Large', provider: 'Mistral', description: 'European coding excellence', icon: <Terminal size={14} /> }
 ];
 
 interface ArchitectResponse {
@@ -35,7 +39,7 @@ interface ArchitectResponse {
 const UnifiedAI: React.FC = () => {
   const { language } = useLanguage();
   const [mode, setMode] = useState<AIMode>('CHAT');
-  const [selectedModels, setSelectedModels] = useState<string[]>(['deepseek/deepseek-chat']);
+  const [selectedModel, setSelectedModel] = useState<string>('deepseek/deepseek-chat');
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [sessions, setSessions] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
@@ -44,13 +48,12 @@ const UnifiedAI: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Architect specific state
   const [architectResult, setArchitectResult] = useState<ArchitectResponse | null>(null);
 
   const translations = {
-    en: { chat: "Neural Link", architect: "X-Architect", placeholder: "Ask anything or describe a tool...", modeLabel: "Select Matrix", modelSelect: "Model Selection" },
-    id: { chat: "Tautan Syaraf", architect: "X-Arsitek", placeholder: "Tanya apa saja atau jelaskan alat...", modeLabel: "Pilih Matriks", modelSelect: "Pilih Model" },
-    hi: { chat: "न्यूरल लिंक", architect: "X-आर्किटेक्ट", placeholder: "कुछ भी पूछें या टूल का वर्णन करें...", modeLabel: "मैट्रिक्स चुनें", modelSelect: "मॉडल चयन" }
+    en: { chat: "Neural Link", architect: "X-Architect", placeholder: "Ask anything...", modeLabel: "Select Matrix", modelSelect: "Model Core" },
+    id: { chat: "Tautan Syaraf", architect: "X-Arsitek", placeholder: "Tanya apa saja...", modeLabel: "Pilih Matriks", modelSelect: "Inti Model" },
+    hi: { chat: "न्यूरल लिंक", architect: "X-आर्किटेक्ट", placeholder: "कुछ भी पूछें...", modeLabel: "मैट्रिक्स चुनें", modelSelect: "मॉडल कोर" }
   };
 
   const t = translations[language as keyof typeof translations] || translations.en;
@@ -64,42 +67,15 @@ const UnifiedAI: React.FC = () => {
       if (!user) return;
       const { data } = await supabase.from('chat_sessions').select('*, chat_messages(*)').eq('user_id', user.id).order('created_at', { ascending: false });
       if (data) {
-        const formatted = data.map((s: any) => ({
+        setSessions(data.map((s: any) => ({
           id: s.id, title: s.title,
           messages: (s.chat_messages || []).sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-        }));
-        setSessions(formatted);
+        })));
       }
     } catch (err) { console.error(err); }
   };
 
-  const toggleModel = (modelId: string) => {
-    setSelectedModels(prev => 
-      prev.includes(modelId) 
-        ? prev.filter(id => id !== modelId) 
-        : [...prev, modelId]
-    );
-  };
-
-  const callAI = async (payload: any, modelList: string[]) => {
-    let lastError = null;
-    for (const modelId of modelList) {
-      try {
-        const response = await fetch('/api/ai/chat/completions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...payload, model: modelId })
-        });
-        const data = await response.json();
-        if (response.ok && data.choices?.[0]?.message) return data;
-        lastError = data.error?.message || response.statusText;
-      } catch (e: any) {
-        lastError = e.message;
-        console.warn(`Model ${modelId} failed:`, e);
-      }
-    }
-    throw new Error(lastError || "All selected models failed.");
-  };
+  const currentModelData = AVAILABLE_MODELS.find(m => m.id === selectedModel);
 
   const handleSend = async () => {
     const userMsg = input.trim();
@@ -107,189 +83,219 @@ const UnifiedAI: React.FC = () => {
     setInput('');
     setIsLoading(true);
 
-    const activeModels = selectedModels.length > 0 ? selectedModels : ['deepseek/deepseek-chat'];
-
     if (mode === 'CHAT') {
       const newMessages = [...messages, { role: 'user', content: userMsg }];
       setMessages(newMessages);
       try {
-        const data = await callAI({
-          messages: [{ role: "system", content: "You are XTermux AI. Professional, concise, tech-focused. Use Markdown." }, ...newMessages],
-          max_tokens: 1024
-        }, activeModels);
-        const content = data.choices[0]?.message?.content || 'Link failed. Retry.';
-        setMessages(prev => [...prev, { role: 'assistant', content }]);
-      } catch (err: any) { 
-        showToast(err.message || "AI Link Failed", "error"); 
-      }
+        const response = await fetch('/api/ai/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [{ role: "system", content: "You are XTermux AI. Professional, concise, tech-focused." }, ...newMessages],
+            model: selectedModel,
+            max_tokens: 2048
+          })
+        });
+        const data = await response.json();
+        setMessages(prev => [...prev, { role: 'assistant', content: data.choices[0]?.message?.content || 'Error link.' }]);
+      } catch (err) { showToast("AI Link Failed", "error"); }
     } else {
       setArchitectResult(null);
       try {
-        const data = await callAI({
-          messages: [
-            { role: "system", content: "You are a professional Termux script architect. Return ONLY valid JSON block. Schema: { \"scriptName\": string, \"description\": string, \"language\": string, \"dependencies\": string[], \"code\": string, \"instructions\": string }. No markdown outside the JSON block." },
-            { role: "user", content: `Build this tool: ${userMsg}` }
-          ],
-          max_tokens: 1024
-        }, activeModels);
+        const response = await fetch('/api/ai/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [
+              { role: "system", content: "You are a professional Termux script architect. Return ONLY valid JSON: { \"scriptName\": \"\", \"description\": \"\", \"language\": \"\", \"dependencies\": [], \"code\": \"\", \"instructions\": \"\" }" },
+              { role: "user", content: userMsg }
+            ],
+            model: selectedModel,
+            max_tokens: 2048
+          })
+        });
+        const data = await response.json();
         const apiContent = data.choices[0]?.message?.content || '';
         const jsonMatch = apiContent.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          setArchitectResult(JSON.parse(jsonMatch[0]));
-        } else {
-          throw new Error("Invalid format received from AI.");
-        }
-      } catch (err: any) { 
-        showToast(err.message || "Build sequence failed.", "error"); 
-      }
+        if (jsonMatch) setArchitectResult(JSON.parse(jsonMatch[0]));
+        else throw new Error("Format error");
+      } catch (err) { showToast("Build sequence failed.", "error"); }
     }
     setIsLoading(false);
   };
 
   return (
-    <div className="flex h-full w-full bg-[#050505] overflow-hidden text-zinc-300 font-sans">
-      <aside className={`fixed lg:relative z-[100] w-72 h-full bg-[#0a0a0a] border-r border-white/5 transition-all duration-500 ease-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+    <div className="flex h-full w-full bg-[#030303] overflow-hidden text-zinc-300 font-sans">
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md lg:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`fixed lg:relative z-[110] w-72 h-full bg-[#080808] border-r border-white/5 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="flex flex-col h-full p-6">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center shadow-[0_0_15px_var(--accent-color)]">
-                <Cpu size={18} className="text-black" />
+              <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center shadow-[0_0_20px_var(--accent-color)]">
+                <Cpu size={20} className="text-black" />
               </div>
-              <h1 className="text-sm font-black uppercase tracking-[0.2em] text-white">Core Link</h1>
+              <h1 className="text-sm font-black uppercase tracking-[0.25em] text-white">X-Core</h1>
             </div>
             <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-2 text-zinc-500 hover:text-white transition-colors"><X size={20} /></button>
           </div>
 
           <div className="space-y-1 mb-8">
-            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest px-2 mb-3">{t.modeLabel}</p>
-            <button onClick={() => setMode('CHAT')} className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${mode === 'CHAT' ? 'bg-accent/10 border border-accent/20 text-accent' : 'hover:bg-white/5 border border-transparent text-zinc-500'}`}>
+            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] px-2 mb-3">{t.modeLabel}</p>
+            <button onClick={() => { setMode('CHAT'); setArchitectResult(null); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 ${mode === 'CHAT' ? 'bg-accent/10 border border-accent/20 text-accent' : 'hover:bg-white/5 text-zinc-500'}`}>
               <MessageSquare size={18} /> <span className="text-xs font-bold">{t.chat}</span>
             </button>
-            <button onClick={() => setMode('ARCHITECT')} className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${mode === 'ARCHITECT' ? 'bg-accent/10 border border-accent/20 text-accent' : 'hover:bg-white/5 border border-transparent text-zinc-500'}`}>
+            <button onClick={() => { setMode('ARCHITECT'); setMessages([]); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 ${mode === 'ARCHITECT' ? 'bg-accent/10 border border-accent/20 text-accent' : 'hover:bg-white/5 text-zinc-500'}`}>
               <Box size={18} /> <span className="text-xs font-bold">{t.architect}</span>
             </button>
           </div>
 
-          <div className="mb-8 relative">
-            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest px-2 mb-3">{t.modelSelect}</p>
-            <button 
-              onClick={() => setShowModelDropdown(!showModelDropdown)}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-900 border border-white/5 text-[11px] font-bold text-zinc-400 hover:text-white transition-all"
-            >
-              <span className="truncate">{selectedModels.length === 0 ? "Any Model" : `${selectedModels.length} Selected`}</span>
-              <ChevronDown size={14} className={`transition-transform ${showModelDropdown ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {showModelDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 z-[110] bg-zinc-900 border border-white/10 rounded-2xl p-2 shadow-2xl animate-in fade-in zoom-in-95 max-h-60 overflow-y-auto no-scrollbar">
-                {AVAILABLE_MODELS.map(model => (
-                  <button 
-                    key={model.id}
-                    onClick={() => toggleModel(model.id)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all text-left group"
-                  >
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${selectedModels.includes(model.id) ? 'bg-accent border-accent' : 'border-zinc-700'}`}>
-                      {selectedModels.includes(model.id) && <Check size={10} className="text-black" />}
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-bold text-zinc-300 group-hover:text-accent">{model.name}</p>
-                      <p className="text-[9px] text-zinc-500 truncate">{model.provider}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="mb-8">
+            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] px-2 mb-3">{t.modelSelect}</p>
+            <div className="relative">
+              <button onClick={() => setShowModelDropdown(!showModelDropdown)} className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl bg-[#0d0d0d] border border-white/5 text-xs font-bold text-zinc-300 hover:border-accent/30 transition-all">
+                <div className="flex items-center gap-2">
+                  <span className="text-accent">{currentModelData?.icon}</span>
+                  <span className="truncate">{currentModelData?.name}</span>
+                </div>
+                <ChevronDown size={14} className={`transition-transform duration-300 ${showModelDropdown ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {showModelDropdown && (
+                <div className="absolute top-full left-0 right-0 mt-3 z-[120] bg-[#121212] border border-white/10 rounded-[2rem] p-3 shadow-[0_20px_50px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 slide-in-from-top-4 duration-300 overflow-hidden">
+                  <div className="max-h-80 overflow-y-auto no-scrollbar space-y-1">
+                    {AVAILABLE_MODELS.map(model => (
+                      <button 
+                        key={model.id}
+                        onClick={() => { setSelectedModel(model.id); setShowModelDropdown(false); }}
+                        className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all text-left ${selectedModel === model.id ? 'bg-accent/10 border border-accent/20' : 'hover:bg-white/5 border border-transparent'}`}
+                      >
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedModel === model.id ? 'bg-accent text-black' : 'bg-zinc-800 text-zinc-400'}`}>
+                          {model.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className={`text-xs font-black ${selectedModel === model.id ? 'text-accent' : 'text-zinc-200'}`}>{model.name}</p>
+                          <p className="text-[10px] text-zinc-500 truncate">{model.description}</p>
+                        </div>
+                        {selectedModel === model.id && <Check size={14} className="text-accent shrink-0" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto no-scrollbar space-y-2">
-            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest px-2 mb-3">Recent Uplinks</p>
+          <div className="flex-1 overflow-y-auto no-scrollbar">
+            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.2em] px-2 mb-3">History</p>
             {sessions.map(s => (
-              <button key={s.id} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-xs text-zinc-500 hover:text-zinc-200 transition-all text-left truncate">
-                <Terminal size={14} className="opacity-50 shrink-0" /> <span className="truncate">{s.title}</span>
+              <button key={s.id} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-xs text-zinc-500 transition-all truncate text-left mb-1">
+                <Terminal size={14} className="opacity-40" /> <span className="truncate">{s.title}</span>
               </button>
             ))}
           </div>
 
-          <div className="mt-auto pt-6">
-            <button onClick={() => { setMessages([]); setArchitectResult(null); }} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-xs font-bold text-zinc-400 hover:text-white transition-all">
-              <Eraser size={14} /> <span>Purge Buffer</span>
-            </button>
-          </div>
+          <button onClick={() => { setMessages([]); setArchitectResult(null); }} className="mt-4 flex items-center justify-center gap-2 w-full p-4 rounded-2xl bg-zinc-900/50 hover:bg-red-500/10 hover:text-red-400 transition-all text-xs font-black uppercase tracking-widest text-zinc-500 border border-transparent hover:border-red-500/20">
+            <Eraser size={14} /> Purge Buffer
+          </button>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col h-full relative overflow-hidden bg-black/50">
-        <header className="px-6 py-5 border-b border-white/5 flex items-center justify-between shrink-0 bg-black/40 backdrop-blur-xl">
-          <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors"><Menu size={20} /></button>
-          <div className="flex items-center gap-3">
-            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-accent animate-pulse shadow-[0_0_8px_var(--accent-color)]' : 'bg-zinc-700'}`} />
-            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{isLoading ? 'Processing...' : `${mode} Active`}</span>
-          </div>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-full relative bg-[#030303]">
+        <header className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-[#050505]/80 backdrop-blur-3xl sticky top-0 z-[50]">
           <div className="flex items-center gap-4">
-            <button className="p-2 text-zinc-500 hover:text-white transition-colors"><Settings size={18} /></button>
-            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-black font-bold text-[10px]">USR</div>
+            <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-2.5 bg-zinc-900 border border-white/5 rounded-xl text-zinc-400"><Menu size={20} /></button>
+            <div className="flex items-center gap-2.5">
+              <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-accent animate-ping' : 'bg-zinc-700'}`} />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">{isLoading ? 'Processing' : mode}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex flex-col items-end mr-2">
+              <span className="text-[10px] font-black text-white uppercase tracking-tighter leading-none">{currentModelData?.name}</span>
+              <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">{currentModelData?.provider}</span>
+            </div>
+            <div className="w-9 h-9 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center"><User size={18} className="text-zinc-500" /></div>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-6 lg:p-10 space-y-8 no-scrollbar pb-40">
+        <div className="flex-1 overflow-y-auto p-5 sm:p-8 lg:p-12 space-y-10 no-scrollbar pb-40">
           {mode === 'CHAT' ? (
             messages.length > 0 ? messages.map((msg, i) => (
-              <div key={i} className={`flex gap-6 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
-                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
-                  {msg.role === 'user' ? <User size={18} className="text-zinc-400" /> : <Bot size={18} className="text-accent" />}
+              <div key={i} className={`flex gap-4 sm:gap-6 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-6 duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]`}>
+                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${msg.role === 'user' ? 'bg-zinc-900 border-white/10' : 'bg-accent/5 border-accent/20'}`}>
+                  {msg.role === 'user' ? <User size={18} className="text-zinc-400" /> : <Bot size={20} className="text-accent" />}
                 </div>
-                <div className={`max-w-[85%] lg:max-w-[70%] p-5 rounded-[2rem] text-sm leading-relaxed border ${msg.role === 'user' ? 'bg-accent text-black font-bold border-transparent' : 'bg-zinc-900/40 border-white/5 text-zinc-300 backdrop-blur-md'}`}>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                <div className={`relative max-w-[90%] sm:max-w-[80%] lg:max-w-[75%] p-5 sm:p-7 rounded-[2rem] text-[13px] sm:text-sm leading-relaxed border shadow-2xl ${msg.role === 'user' ? 'bg-accent text-black font-bold border-transparent rounded-tr-none' : 'bg-zinc-900/50 border-white/5 text-zinc-200 backdrop-blur-3xl rounded-tl-none'}`}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: ({node, ...props}) => <code className="bg-black/50 px-1.5 py-0.5 rounded text-accent" {...props} /> }}>{msg.content}</ReactMarkdown>
                 </div>
               </div>
             )) : (
-              <div className="h-full flex flex-col items-center justify-center text-center opacity-40 grayscale">
-                <Bot size={40} className="text-accent mb-4" />
-                <h3 className="text-lg font-black text-white uppercase tracking-widest">Neural Link established</h3>
-                <p className="text-xs text-zinc-500 max-w-xs mt-2">Initialize conversation with XTermux Core AI.</p>
+              <div className="h-full flex flex-col items-center justify-center text-center py-20 animate-in zoom-in-90 duration-1000">
+                <div className="w-24 h-24 rounded-[2.5rem] bg-zinc-900/50 border border-white/5 flex items-center justify-center mb-8 shadow-inner relative">
+                  <div className="absolute inset-0 bg-accent/10 rounded-[2.5rem] blur-2xl animate-pulse" />
+                  <Bot size={48} className="text-accent relative z-10" />
+                </div>
+                <h3 className="text-xl font-black text-white uppercase tracking-[0.3em]">X-Neural Link</h3>
+                <p className="text-[11px] text-zinc-600 max-w-xs mt-3 uppercase font-black tracking-widest leading-loose">Waiting for uplink. Describe your request to the Core.</p>
               </div>
             )
           ) : architectResult ? (
-            <div className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-700">
-              <div className="bg-gradient-to-br from-zinc-900 to-black p-8 lg:p-12 rounded-[3rem] border border-white/10 shadow-3xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-[10px] font-black text-accent uppercase">{architectResult.language}</span>
+            <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in zoom-in-95 duration-700">
+              <div className="bg-gradient-to-br from-[#0a0a0a] to-black p-8 sm:p-12 rounded-[3.5rem] border border-white/5 shadow-[0_50px_100px_rgba(0,0,0,0.5)]">
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-full text-[10px] font-black text-accent uppercase tracking-widest">{architectResult.language}</span>
+                  <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black text-zinc-600 uppercase tracking-widest">Optimized Build</span>
                 </div>
-                <h3 className="text-3xl font-black text-white mb-4 tracking-tighter">{architectResult.scriptName}</h3>
-                <p className="text-zinc-400 text-sm italic mb-10 leading-relaxed max-w-2xl">"{architectResult.description}"</p>
-                <div className="flex flex-wrap gap-2 mb-10">
+                <h3 className="text-3xl sm:text-4xl font-black text-white mb-6 tracking-tighter leading-tight">{architectResult.scriptName}</h3>
+                <p className="text-zinc-400 text-sm sm:text-base italic mb-12 leading-relaxed opacity-80">"{architectResult.description}"</p>
+                <div className="flex flex-wrap gap-2.5 mb-12">
                   {architectResult.dependencies.map((dep, idx) => (
-                    <span key={idx} className="px-3 py-1.5 bg-zinc-800 rounded-lg text-[10px] font-bold text-zinc-300 border border-white/5">{dep}</span>
+                    <span key={idx} className="px-4 py-2 bg-zinc-900 border border-white/5 rounded-xl text-[10px] font-black text-zinc-500 uppercase">{dep}</span>
                   ))}
                 </div>
-                <CodeBlock code={architectResult.code} label={architectResult.language} />
-                <div className="mt-12 p-8 bg-black/40 border border-white/5 rounded-3xl prose prose-invert prose-sm max-w-none">
+                <div className="rounded-[2.5rem] overflow-hidden border border-white/5 shadow-inner">
+                  <CodeBlock code={architectResult.code} label={architectResult.language} />
+                </div>
+                <div className="mt-12 p-8 sm:p-10 bg-white/[0.02] border border-white/5 rounded-[2.5rem] prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-headings:text-white prose-headings:font-black prose-headings:uppercase prose-headings:tracking-widest">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{architectResult.instructions}</ReactMarkdown>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center opacity-40 grayscale">
-              <Box size={40} className="text-accent mb-4" />
-              <h3 className="text-lg font-black text-white uppercase tracking-widest">X-Architect ready</h3>
-              <p className="text-xs text-zinc-500 max-w-xs mt-2">Describe the tool you need built.</p>
+            <div className="h-full flex flex-col items-center justify-center text-center py-20 animate-in zoom-in-90 duration-1000">
+              <div className="w-24 h-24 rounded-[2.5rem] bg-zinc-900/50 border border-white/5 flex items-center justify-center mb-8 shadow-inner relative">
+                <div className="absolute inset-0 bg-accent/10 rounded-[2.5rem] blur-2xl animate-pulse" />
+                <Box size={48} className="text-accent relative z-10" />
+              </div>
+              <h3 className="text-xl font-black text-white uppercase tracking-[0.3em]">X-Architect</h3>
+              <p className="text-[11px] text-zinc-600 max-w-xs mt-3 uppercase font-black tracking-widest leading-loose">Blueprint mode active. Enter your tool specifications to begin compilation.</p>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-10 bg-gradient-to-t from-black via-black/90 to-transparent">
-          <div className="max-w-5xl mx-auto relative">
-            <div className={`flex items-center bg-zinc-900/80 backdrop-blur-2xl p-2 rounded-[2.5rem] border transition-all duration-500 ${isLoading ? 'border-accent/40 shadow-[0_0_30px_rgba(34,197,94,0.1)]' : 'border-white/5 shadow-2xl'}`}>
+        <div className="p-6 sm:p-8 lg:p-12 bg-gradient-to-t from-[#030303] via-[#030303]/90 to-transparent sticky bottom-0 z-[60]">
+          <div className="max-w-5xl mx-auto relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-accent/20 to-transparent rounded-[3rem] blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
+            <div className={`relative flex items-center bg-[#0d0d0d] p-2.5 rounded-[3rem] border transition-all duration-700 ${isLoading ? 'border-accent/50 shadow-[0_0_50px_rgba(34,197,94,0.15)]' : 'border-white/5 shadow-3xl group-focus-within:border-accent/30'}`}>
               <textarea 
                 value={input} onChange={(e) => setInput(e.target.value)} 
                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                 placeholder={t.placeholder} 
-                className="flex-1 bg-transparent text-white py-4 px-6 resize-none focus:outline-none text-sm placeholder:text-zinc-600 max-h-40 no-scrollbar" rows={1} 
+                className="flex-1 bg-transparent text-white py-4 px-6 resize-none focus:outline-none text-sm placeholder:text-zinc-700 max-h-40 no-scrollbar font-medium" rows={1} 
               />
-              <button onClick={handleSend} disabled={!input.trim() || isLoading} className={`p-5 rounded-full transition-all ${!input.trim() || isLoading ? 'bg-zinc-800 text-zinc-600' : 'bg-accent text-black shadow-lg hover:-translate-y-1'}`}>
-                {isLoading ? <Loader2 size={22} className="animate-spin" /> : <Send size={22} />}
+              <button onClick={handleSend} disabled={!input.trim() || isLoading} className={`p-5 rounded-full transition-all duration-500 ${!input.trim() || isLoading ? 'bg-zinc-800 text-zinc-600' : 'bg-accent text-black shadow-[0_10px_25px_rgba(34,197,94,0.3)] hover:-translate-y-1 active:scale-95'}`}>
+                {isLoading ? <Loader2 size={24} className="animate-spin" /> : <Send size={24} />}
               </button>
+            </div>
+            <div className="flex justify-center mt-5 gap-6">
+              <span className="text-[9px] font-black text-zinc-700 uppercase tracking-[0.2em]">{isLoading ? 'Uplink active' : 'System ready'}</span>
             </div>
           </div>
         </div>
