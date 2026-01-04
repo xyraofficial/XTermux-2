@@ -18,8 +18,8 @@ interface AIModel {
 
 const AVAILABLE_MODELS: AIModel[] = [
   { id: 'deepseek/deepseek-chat', name: 'DeepSeek Chat', provider: 'DeepSeek', description: 'Fast and efficient for code and general chat' },
-  { id: 'google/gemini-pro-1.5', name: 'Gemini Pro 1.5', provider: 'Google', description: 'Advanced reasoning and large context' },
-  { id: 'anthropic/claude-3-haiku', name: 'Claude 3 Haiku', provider: 'Anthropic', description: 'Speed-optimized model' },
+  { id: 'google/gemini-flash-1.5', name: 'Gemini Flash 1.5', provider: 'Google', description: 'Ultra-fast and capable' },
+  { id: 'meta-llama/llama-3.1-8b-instruct', name: 'Llama 3.1 8B', provider: 'Meta', description: 'Modern open-weight model' },
   { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', provider: 'OpenAI', description: 'Smart and capable small model' }
 ];
 
@@ -82,6 +82,7 @@ const UnifiedAI: React.FC = () => {
   };
 
   const callAI = async (payload: any, modelList: string[]) => {
+    let lastError = null;
     for (const modelId of modelList) {
       try {
         const response = await fetch('/api/ai/chat/completions', {
@@ -89,12 +90,15 @@ const UnifiedAI: React.FC = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...payload, model: modelId })
         });
-        if (response.ok) return await response.json();
-      } catch (e) {
-        console.warn(`Model ${modelId} failed, trying next...`);
+        const data = await response.json();
+        if (response.ok && data.choices?.[0]?.message) return data;
+        lastError = data.error?.message || response.statusText;
+      } catch (e: any) {
+        lastError = e.message;
+        console.warn(`Model ${modelId} failed:`, e);
       }
     }
-    throw new Error("All selected models failed.");
+    throw new Error(lastError || "All selected models failed.");
   };
 
   const handleSend = async () => {
@@ -115,7 +119,9 @@ const UnifiedAI: React.FC = () => {
         }, activeModels);
         const content = data.choices[0]?.message?.content || 'Link failed. Retry.';
         setMessages(prev => [...prev, { role: 'assistant', content }]);
-      } catch (err) { showToast("AI Link Failed", "error"); }
+      } catch (err: any) { 
+        showToast(err.message || "AI Link Failed", "error"); 
+      }
     } else {
       setArchitectResult(null);
       try {
@@ -131,10 +137,10 @@ const UnifiedAI: React.FC = () => {
         if (jsonMatch) {
           setArchitectResult(JSON.parse(jsonMatch[0]));
         } else {
-          throw new Error("Invalid format");
+          throw new Error("Invalid format received from AI.");
         }
-      } catch (err) { 
-        showToast("Build sequence failed. Try simpler prompt.", "error"); 
+      } catch (err: any) { 
+        showToast(err.message || "Build sequence failed.", "error"); 
       }
     }
     setIsLoading(false);
@@ -175,7 +181,7 @@ const UnifiedAI: React.FC = () => {
             </button>
             
             {showModelDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 z-[110] bg-zinc-900 border border-white/10 rounded-2xl p-2 shadow-2xl animate-in fade-in zoom-in-95">
+              <div className="absolute top-full left-0 right-0 mt-2 z-[110] bg-zinc-900 border border-white/10 rounded-2xl p-2 shadow-2xl animate-in fade-in zoom-in-95 max-h-60 overflow-y-auto no-scrollbar">
                 {AVAILABLE_MODELS.map(model => (
                   <button 
                     key={model.id}
