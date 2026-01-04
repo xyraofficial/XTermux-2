@@ -184,7 +184,33 @@ const AIChat: React.FC = () => {
       });
 
       if (!groqInstance.apiKey || groqInstance.apiKey === 'dummy_key') {
-        showToast("AI Key not configured", "error");
+        // Fallback to Replit OpenAI Integration
+        const response = await fetch('/api/ai/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [
+              { role: "system", content: "Short technical answers in Markdown." },
+              ...messages.map(m => ({ 
+                role: (m.role === 'model' || m.role === 'assistant') ? 'assistant' : 'user', 
+                content: m.content 
+              })),
+              { role: 'user', content: userMsg }
+            ],
+            model: "gpt-4o",
+          })
+        });
+
+        if (!response.ok) {
+          showToast("AI Link Failed", "error");
+          setIsLoading(false);
+          return;
+        }
+
+        const data = await response.json();
+        const fullContent = data.choices[0]?.message?.content || '';
+        setMessages(prev => [...prev, { role: 'model', content: fullContent }]);
+        await supabase.from('chat_messages').insert([{ session_id: sessionId, role: 'model', content: fullContent }]);
         setIsLoading(false);
         return;
       }
