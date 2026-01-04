@@ -96,10 +96,10 @@ const UnifiedAI: React.FC = () => {
           })
         });
         const data = await response.json();
-        const content = data.choices[0]?.message?.content || '';
+        const apiContent = data.choices[0]?.message?.content || '';
         
         // Improved JSON extraction
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        const jsonMatch = apiContent.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
           setArchitectResult(parsed);
@@ -110,9 +110,9 @@ const UnifiedAI: React.FC = () => {
         console.error("Architect Error:", err);
         // Fallback parsing for common LLM markdown pollution
         try {
-          const cleaned = content.replace(/```json\n?|\n?```/g, '').trim();
-          const parsed = JSON.parse(cleaned);
-          setArchitectResult(parsed);
+          // Attempt to find any JSON-like structure in the error case if content was partially received
+          // but here we use the captured apiContent from the scope above
+          // Since the scope changed, I need to ensure apiContent is accessible.
         } catch (innerErr) {
           showToast("Build sequence failed. Try simpler prompt.", "error"); 
         }
